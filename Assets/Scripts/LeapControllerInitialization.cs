@@ -9,6 +9,7 @@ public class LeapControllerInitialization : MonoBehaviour
 
     void Start()
     {
+        Application.targetFrameRate = 60;
         controller = new Controller();
         StartCoroutine(InitializeLeap());
     }
