@@ -13,3 +13,23 @@ public enum GESTURESTATE
     PINCH
 }
 
+public enum ERRORTYPE
+{
+    CONNECTION,
+    DETECTION
+}
+
+public enum TRACKINGSTATE
+{
+    NOTRACKING,
+    TRACKING,
+    ACTIVE
+}
+
+
+public enum SNACKBARTYPE
+{
+    WARNING,
+    ERROR,
+    SUCCESS
+}
