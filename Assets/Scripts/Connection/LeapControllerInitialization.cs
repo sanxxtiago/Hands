@@ -42,6 +42,7 @@ public class LeapControllerInitialization : MonoBehaviour
 
     IEnumerator InitializeLeap()
     {
+        SnackbarManager.Show(SNACKBARTYPE.WARNING, "Esperando Leap...", 1000f);
         //Esperar conexión real
         while (!controller.IsConnected)
         {

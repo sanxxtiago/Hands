@@ -53,19 +53,8 @@ public class InteractionManager : MonoBehaviour
             Vector3 targetPos = handPositions[hand] + positionOffsets[hand];
             Quaternion targetRot = handRotations[hand] * rotationOffsets[hand];
 
-            // // 🧈 suavizado
-            // obj.transform.position = Vector3.Lerp(
-            //     obj.transform.position,
-            //     targetPos,
-            //     positionSmooth * dt
-            // );
-
-            // obj.transform.rotation = Quaternion.Slerp(
-            //     obj.transform.rotation,
-            //     targetRot,
-            //     rotationSmooth * dt
-            // );
             Rigidbody rb = obj.GetComponent<Rigidbody>();
+            if (rb.isKinematic) continue;
 
             Vector3 velocity = (targetPos - rb.position) * positionSmooth;
             rb.velocity = velocity;
@@ -93,8 +82,15 @@ public class InteractionManager : MonoBehaviour
         GameObject closest = hits[0].gameObject;
         float minDist = Vector3.Distance(e.handPosition, closest.transform.position);
 
-        Rigidbody rb = closest.GetComponent<Rigidbody>();
+        Grabbable grabbable = closest.GetComponent<Grabbable>();
 
+        if (grabbable == null || !grabbable.CanBeGrabbed())
+            return;
+            
+        grabbable.Grab();
+        grabbable.OnForcedRelease += HandleForcedRelease;
+
+        Rigidbody rb = closest.GetComponent<Rigidbody>();
         rb.useGravity = false;
         rb.drag = 10f;
         rb.angularDrag = 10f;
@@ -132,6 +128,7 @@ public class InteractionManager : MonoBehaviour
 
         GameObject obj = grabbedObjects[e.hand];
         Rigidbody rb = obj.GetComponent<Rigidbody>();
+        obj.GetComponent<Grabbable>().Release();
 
         if (rb != null)
         {
@@ -160,10 +157,37 @@ public class InteractionManager : MonoBehaviour
             e.handPosition,
             Time.deltaTime * handSmooth
         );
-        
-        handPositions[e.hand] = e.handPosition;
+
         handRotations[e.hand] = e.handRotation;
-        Vector3 velocity = (e.handPosition - handPositions[e.hand]) / Time.deltaTime;
-        handVelocities[e.hand] = velocity;
+        if (handPositions.ContainsKey(e.hand))
+        {
+            Vector3 velocity = (e.handPosition - handPositions[e.hand]) / Time.deltaTime;
+            handVelocities[e.hand] = velocity;
+        }
+
+        handPositions[e.hand] = e.handPosition;
+    }
+
+    void HandleForcedRelease(Grabbable g)
+    {
+        HAND? handToRemove = null;
+
+        foreach (var pair in grabbedObjects)
+        {
+            if (pair.Value == g.gameObject)
+            {
+                handToRemove = pair.Key;
+                break;
+            }
+        }
+
+        if (handToRemove.HasValue)
+        {
+            HAND hand = handToRemove.Value;
+
+            grabbedObjects.Remove(hand);
+            positionOffsets.Remove(hand);
+            rotationOffsets.Remove(hand);
+        }
     }
 }

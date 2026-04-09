@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class DebugCollider : MonoBehaviour
 {
+    public bool show = false;
     private BoxCollider col;
 
     void Awake()
@@ -10,6 +11,8 @@ public class DebugCollider : MonoBehaviour
     }
     void Update()
     {
+        if (!show) return;
+
         DrawBoxCollider(col);
     }
 

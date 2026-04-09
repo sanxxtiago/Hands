@@ -24,7 +24,7 @@ public class Snackbar : MonoBehaviour
     {
         group.alpha = 0;
     }
-    private void Config(SNACKBARTYPE snackBarType, string msg)
+    private void Config(SNACKBARTYPE snackBarType, string msg, float time)
     {
         group.DOKill();
 
@@ -43,16 +43,16 @@ public class Snackbar : MonoBehaviour
 
         message.text = msg;
 
-        Show();
+        Show(time);
     }
 
-    void Show()
+    void Show(float duration)
     {
         group.alpha = 0;
         group.DOFade(1, 0.3f);
 
-        DOVirtual.DelayedCall(2f, Hide);
-        Invoke(nameof(Hide), 2f);
+        DOVirtual.DelayedCall(duration, Hide);
+        //Invoke(nameof(Hide), duration);
     }
 
     void Hide()
