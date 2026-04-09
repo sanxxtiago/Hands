@@ -52,7 +52,7 @@ public class Snackbar : MonoBehaviour
         group.DOFade(1, 0.3f);
 
         DOVirtual.DelayedCall(2f, Hide);
-        Invoke("Hide", 2f);
+        Invoke(nameof(Hide), 2f);
     }
 
     void Hide()
