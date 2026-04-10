@@ -1,6 +1,8 @@
 public class PieceBehaviour : Grabbable
 {
+    public INSERTTYPE pieceType;
     public bool isSnapped;
+    public bool requireRotation = false;
 
     public override bool CanInteract(HAND hand)
     {

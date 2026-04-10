@@ -24,6 +24,7 @@ public class Grabbable : Interactable
         IsGrabbed = true;
 
         rb.useGravity = false;
+        rb.isKinematic = true;
         rb.drag = 10f;
         rb.angularDrag = 10f;
     }
@@ -36,7 +37,7 @@ public class Grabbable : Interactable
         float rotSmooth
     )
     {
-        if (rb == null || rb.isKinematic) return;
+        if (rb == null) return;
 
         Vector3 velocity = (targetPos - rb.position) * posSmooth;
         rb.velocity = velocity;
@@ -52,9 +53,9 @@ public class Grabbable : Interactable
     public override void OnGrabEnd(HAND hand, Vector3 releaseVelocity)
     {
         IsGrabbed = false;
-
-        rb.drag = 0f;
-        rb.angularDrag = 0.05f;
+        rb.isKinematic = false;
+        rb.drag = 10f;
+        rb.angularDrag = 10f;
         rb.velocity = releaseVelocity;
     }
 
@@ -63,6 +64,8 @@ public class Grabbable : Interactable
         if (!IsGrabbed) return;
 
         IsGrabbed = false;
+        rb.isKinematic = false;
+
         InvokeForcedRelease();
     }
 }

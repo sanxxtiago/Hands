@@ -33,3 +33,13 @@ public enum SNACKBARTYPE
     ERROR,
     SUCCESS
 }
+
+public enum INSERTTYPE
+{
+    SQUARE = 0,
+    CIRCLE = 1,
+    STAR = 2,
+    DONUT = 3
+}
+
+
