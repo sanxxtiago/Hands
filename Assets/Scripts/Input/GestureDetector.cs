@@ -9,15 +9,20 @@ public class GestureDetector : MonoBehaviour
     public event Action<GestureInputEventArgs> OnGrabEnd;
     public event Action<GestureInputEventArgs> OnPinchStart;
     public event Action<GestureInputEventArgs> OnPinchEnd;
+    public event Action<GestureInputEventArgs> OnRotateStart;
+    public event Action<GestureInputEventArgs> OnRotateEnd;
+
     public event Action<GestureInputEventArgs> OnHandUpdate;
+    public event Action<GestureInputEventArgs> OnRotateUpdate;
+
+
 
     public LeapProvider leapProvider;
     public float grabStrengthThreshold = 0.8f;
     public float pinchStrengthThreshold = 0.8f;
 
-
     private Dictionary<HAND, GESTURESTATE> handStates = new();
-
+    private RotationDetector rotationDetector = new RotationDetector();
     void Update()
     {
         foreach (var hand in leapProvider.CurrentFrame.Hands)
@@ -30,33 +35,80 @@ public class GestureDetector : MonoBehaviour
             float grab = hand.GrabStrength;
             float pinch = hand.PinchStrength;
 
-            GESTURESTATE newState = GESTURESTATE.IDLE;
+            OnHandUpdate?.Invoke(
+                new GestureInputEventArgs(currentHand, handPos, rotation, velocity, grab, pinch)
+            );
 
-            OnHandUpdate?.Invoke(new GestureInputEventArgs(currentHand, handPos, rotation, velocity, grab, pinch));
+            bool isGrab = grab > grabStrengthThreshold;
+            bool isPinch = pinch > pinchStrengthThreshold;
 
-            if (grab > grabStrengthThreshold)
-                newState = GESTURESTATE.GRAB;
-            else if (pinch > pinchStrengthThreshold)
-                newState = GESTURESTATE.PINCH;
+            bool isRotate = rotationDetector.IsRotating(
+                currentHand,
+                rotation,
+                grab,
+                pinch,
+                velocity
+            );
+
+            bool rotateEnded = rotationDetector.HasRotationEnded(currentHand);
 
             handStates.TryGetValue(currentHand, out GESTURESTATE prevState);
+
+            // =========================
+            // GESTURE STATE (GRAB / PINCH / IDLE)
+            // =========================
+            GESTURESTATE newState = GESTURESTATE.IDLE;
+
+            if (isGrab)
+                newState = GESTURESTATE.GRAB;
+            else if (isPinch)
+                newState = GESTURESTATE.PINCH;
+            else
+                newState = GESTURESTATE.IDLE;
+
+            GestureInputEventArgs e = new GestureInputEventArgs(
+                currentHand, handPos, rotation, velocity, grab, pinch
+            );
+
+            // =========================
+            // STATE TRANSITIONS
+            // =========================
+
             if (prevState != newState)
             {
-                // SALIDAS
                 if (prevState == GESTURESTATE.GRAB)
-                    OnGrabEnd?.Invoke(new GestureInputEventArgs(currentHand, handPos, rotation, velocity, grab, pinch));
+                    OnGrabEnd?.Invoke(e);
 
                 if (prevState == GESTURESTATE.PINCH)
-                    OnPinchEnd?.Invoke(new GestureInputEventArgs(currentHand, handPos, rotation, velocity, grab, pinch));
+                    OnPinchEnd?.Invoke(e);
 
-                // ENTRADAS
                 if (newState == GESTURESTATE.GRAB)
-                    OnGrabStart?.Invoke(new GestureInputEventArgs(currentHand, handPos, rotation, velocity, grab, pinch));
+                    OnGrabStart?.Invoke(e);
 
                 if (newState == GESTURESTATE.PINCH)
-                    OnPinchStart?.Invoke(new GestureInputEventArgs(currentHand, handPos, rotation, velocity, grab, pinch));
+                    OnPinchStart?.Invoke(e);
 
                 handStates[currentHand] = newState;
+            }
+
+            // =========================
+            // ROTATION (INDEPENDENT SYSTEM)
+            // =========================
+
+            if (isRotate && prevState != GESTURESTATE.ROTATE)
+            {
+                OnRotateStart?.Invoke(e);
+            }
+
+            if (isRotate)
+            {
+                OnRotateUpdate?.Invoke(e);
+            }
+
+            if (prevState == GESTURESTATE.ROTATE && rotateEnded)
+            {
+                OnRotateEnd?.Invoke(e);
+                rotationDetector.Reset(currentHand);
             }
         }
     }

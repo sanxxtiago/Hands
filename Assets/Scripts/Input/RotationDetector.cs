@@ -1,0 +1,57 @@
+using System.Collections.Generic;
+using UnityEngine;
+using Leap;
+
+public class RotationDetector
+{
+    private Dictionary<HAND, Quaternion> lastRotation = new();
+    private Dictionary<HAND, float> rotationAccum = new();
+
+    public float rotateThreshold = 25f;
+    public float noiseThreshold = 1f;
+    private Dictionary<HAND, float> lastRotationTime = new();
+    public float rotationEndDelay = 0.25f;
+
+    public bool IsRotating(HAND hand, Quaternion currentRot, float grab, float pinch, Vector3 velocity)
+    {
+        if (!lastRotation.ContainsKey(hand))
+        {
+            lastRotation[hand] = currentRot;
+            rotationAccum[hand] = 0;
+            return false;
+        }
+
+        float angleDelta = Quaternion.Angle(lastRotation[hand], currentRot);
+
+        bool isFree = grab < 0.2f && pinch < 0.2f;
+        bool isStable = velocity.magnitude < 0.3f;
+
+        if (isFree && isStable)
+        {
+            if (angleDelta > noiseThreshold)
+                rotationAccum[hand] += angleDelta;
+        }
+        else
+        {
+            rotationAccum[hand] = 0;
+        }
+
+        lastRotation[hand] = currentRot;
+        lastRotationTime[hand] = Time.time;
+
+        return rotationAccum[hand] >= rotateThreshold;
+    }
+
+    public bool HasRotationEnded(HAND hand)
+    {
+        if (!lastRotationTime.ContainsKey(hand))
+            return false;
+
+        return (Time.time - lastRotationTime[hand]) > rotationEndDelay;
+    }
+
+    public void Reset(HAND hand)
+    {
+        rotationAccum[hand] = 0;
+    }
+}

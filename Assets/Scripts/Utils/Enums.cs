@@ -10,7 +10,8 @@ public enum GESTURESTATE
 {
     IDLE,
     GRAB,
-    PINCH
+    PINCH,
+    ROTATE
 }
 
 public enum ERRORTYPE

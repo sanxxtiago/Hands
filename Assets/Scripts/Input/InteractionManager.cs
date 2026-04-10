@@ -27,13 +27,18 @@ public class InteractionManager : MonoBehaviour
     {
         detector.OnGrabStart += HandleGrabStart;
         detector.OnGrabEnd += HandleGrabEnd;
+        detector.OnRotateStart += HandleRotateStart;
+        detector.OnRotateEnd += HandleRotateEnd;
         detector.OnHandUpdate += HandleHandUpdate;
+        
     }
 
     void OnDisable()
     {
         detector.OnGrabStart -= HandleGrabStart;
         detector.OnGrabEnd -= HandleGrabEnd;
+        detector.OnRotateStart -= HandleRotateStart;
+        detector.OnRotateEnd -= HandleRotateEnd;
         detector.OnHandUpdate -= HandleHandUpdate;
     }
 
@@ -157,5 +162,16 @@ public class InteractionManager : MonoBehaviour
             positionOffsets.Remove(hand);
             rotationOffsets.Remove(hand);
         }
+    }
+
+    private void HandleRotateStart(GestureInputEventArgs e)
+    {
+        SnackbarManager.Show(SNACKBARTYPE.SUCCESS, "ROTANDO!!!!!");
+    }
+
+    private void HandleRotateEnd(GestureInputEventArgs e)
+    {
+        SnackbarManager.Show(SNACKBARTYPE.ERROR, "NOOOO ROTANDO!!!!!");
+        
     }
 }
