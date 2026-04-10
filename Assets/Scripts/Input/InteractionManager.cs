@@ -12,7 +12,7 @@ public class InteractionManager : MonoBehaviour
     public float rotationSmooth = 15f;
     public float handSmooth = 20f;
 
-    private Dictionary<HAND, GameObject> grabbedObjects = new();
+    private Dictionary<HAND, Interactable> grabbedObjects = new();
 
     private Dictionary<HAND, Vector3> handPositions = new();
     private Dictionary<HAND, Quaternion> handRotations = new();
@@ -44,29 +44,21 @@ public class InteractionManager : MonoBehaviour
         foreach (var pair in grabbedObjects)
         {
             HAND hand = pair.Key;
-            GameObject obj = pair.Value;
+            Interactable interactable = pair.Value;
 
             if (!handPositions.ContainsKey(hand) || !handRotations.ContainsKey(hand))
                 continue;
 
-            //targets con offset
             Vector3 targetPos = handPositions[hand] + positionOffsets[hand];
             Quaternion targetRot = handRotations[hand] * rotationOffsets[hand];
 
-            Rigidbody rb = obj.GetComponent<Rigidbody>();
-            if (rb.isKinematic) continue;
-
-            Vector3 velocity = (targetPos - rb.position) * positionSmooth;
-            rb.velocity = velocity;
-
-            Quaternion delta = targetRot * Quaternion.Inverse(rb.rotation);
-            delta.ToAngleAxis(out float angle, out Vector3 axis);
-
-            if (angle > 180f) angle -= 360f;
-
-            Vector3 angularVelocity = angle * Mathf.Deg2Rad * rotationSmooth * axis;
-
-            rb.angularVelocity = angularVelocity;
+            interactable.OnGrabUpdate(
+                hand,
+                targetPos,
+                targetRot,
+                positionSmooth,
+                rotationSmooth
+            );
         }
     }
 
@@ -78,22 +70,8 @@ public class InteractionManager : MonoBehaviour
         Collider[] hits = Physics.OverlapSphere(e.handPosition, grabRadius, grabbableLayer);
         if (hits.Length == 0) return;
 
-        //closest
-        GameObject closest = hits[0].gameObject;
-        float minDist = Vector3.Distance(e.handPosition, closest.transform.position);
-
-        Grabbable grabbable = closest.GetComponent<Grabbable>();
-
-        if (grabbable == null || !grabbable.CanBeGrabbed())
-            return;
-            
-        grabbable.Grab();
-        grabbable.OnForcedRelease += HandleForcedRelease;
-
-        Rigidbody rb = closest.GetComponent<Rigidbody>();
-        rb.useGravity = false;
-        rb.drag = 10f;
-        rb.angularDrag = 10f;
+        GameObject closest = null;
+        float minDist = float.MaxValue;
 
         foreach (var hit in hits)
         {
@@ -105,20 +83,21 @@ public class InteractionManager : MonoBehaviour
             }
         }
 
-        grabbedObjects[e.hand] = closest;
+        Interactable interactable = closest.GetComponent<Interactable>();
 
-        //offsets
+        if (interactable == null || !interactable.CanInteract(e.hand))
+            return;
+
+        grabbedObjects[e.hand] = interactable;
+
+        interactable.OnGrabStart(e.hand, e.handPosition, e.handRotation);
+        interactable.OnForcedRelease += HandleForcedRelease;
+
+        // offsets (siguen igual)
         positionOffsets[e.hand] = closest.transform.position - e.handPosition;
 
-        if (handRotations.ContainsKey(e.hand))
-        {
-            rotationOffsets[e.hand] =
-                Quaternion.Inverse(handRotations[e.hand]) * closest.transform.rotation;
-        }
-        else
-        {
-            rotationOffsets[e.hand] = Quaternion.identity;
-        }
+        rotationOffsets[e.hand] =
+            Quaternion.Inverse(e.handRotation) * closest.transform.rotation;
     }
 
     void HandleGrabEnd(GestureInputEventArgs e)
@@ -126,25 +105,14 @@ public class InteractionManager : MonoBehaviour
         if (!grabbedObjects.ContainsKey(e.hand))
             return;
 
-        GameObject obj = grabbedObjects[e.hand];
-        Rigidbody rb = obj.GetComponent<Rigidbody>();
-        obj.GetComponent<Grabbable>().Release();
+        Interactable interactable = grabbedObjects[e.hand];
 
-        if (rb != null)
-        {
-            // Restaurar física
-            //rb.useGravity = true;
-            rb.drag = 0f;
-            rb.angularDrag = 0.05f;
+        interactable.OnGrabEnd(e.hand, handVelocities[e.hand]);
+        interactable.OnForcedRelease -= HandleForcedRelease;
 
-            rb.velocity = handVelocities[e.hand];
-        }
-
-        //Se limpian los diccionarios
         grabbedObjects.Remove(e.hand);
         positionOffsets.Remove(e.hand);
         rotationOffsets.Remove(e.hand);
-
     }
 
     void HandleHandUpdate(GestureInputEventArgs e)
@@ -168,13 +136,13 @@ public class InteractionManager : MonoBehaviour
         handPositions[e.hand] = e.handPosition;
     }
 
-    void HandleForcedRelease(Grabbable g)
+    void HandleForcedRelease(Interactable target)
     {
         HAND? handToRemove = null;
 
         foreach (var pair in grabbedObjects)
         {
-            if (pair.Value == g.gameObject)
+            if (pair.Value == target)
             {
                 handToRemove = pair.Key;
                 break;

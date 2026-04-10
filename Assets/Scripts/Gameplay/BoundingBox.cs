@@ -1,17 +1,27 @@
 using UnityEngine;
 
-public class DebugCollider : MonoBehaviour
+public class BoundingBox : MonoBehaviour
 {
-    public bool show = false;
+    public bool debugBox = false;
     private BoxCollider col;
 
+    public static BoundingBox Instance = null;
     void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+
         col = GetComponent<BoxCollider>();
     }
+
     void Update()
     {
-        if (!show) return;
+        if (!debugBox) return;
 
         DrawBoxCollider(col);
     }
@@ -52,4 +62,17 @@ public class DebugCollider : MonoBehaviour
         Debug.DrawLine(points[3], points[7], Color.red);
     }
 
+    public Vector3 ClampInsideBox(Vector3 worldPosition)
+    {
+        Vector3 localPos = transform.InverseTransformPoint(worldPosition);
+
+        Vector3 min = col.center - col.size * 0.5f;
+        Vector3 max = col.center + col.size * 0.5f;
+
+        localPos.x = Mathf.Clamp(localPos.x, min.x, max.x);
+        localPos.y = Mathf.Clamp(localPos.y, min.y, max.y);
+        localPos.z = Mathf.Clamp(localPos.z, min.z, max.z);
+
+        return transform.TransformPoint(localPos);
+    }
 }

@@ -1,18 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class PieceBehaviour : Grabbable
 {
-    public bool isSnapped = false;
-    public bool IsGrabbedNow;
+    public bool isSnapped;
 
-    void Update()
-    {
-        IsGrabbedNow = IsGrabbed;
-    }
-     public override bool CanBeGrabbed()
+    public override bool CanInteract(HAND hand)
     {
         return !isSnapped;
+    }
+
+    public void Snap()
+    {
+        isSnapped = true;
+        rb.isKinematic = true;
     }
 }

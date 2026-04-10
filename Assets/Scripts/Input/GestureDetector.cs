@@ -12,6 +12,9 @@ public class GestureDetector : MonoBehaviour
     public event Action<GestureInputEventArgs> OnHandUpdate;
 
     public LeapProvider leapProvider;
+    public float grabStrengthThreshold = 0.8f;
+    public float pinchStrengthThreshold = 0.8f;
+
 
     private Dictionary<HAND, GESTURESTATE> handStates = new();
 
@@ -31,9 +34,9 @@ public class GestureDetector : MonoBehaviour
 
             OnHandUpdate?.Invoke(new GestureInputEventArgs(currentHand, handPos, rotation, velocity, grab, pinch));
 
-            if (grab > 0.8f)
+            if (grab > grabStrengthThreshold)
                 newState = GESTURESTATE.GRAB;
-            else if (pinch > 0.8f)
+            else if (pinch > pinchStrengthThreshold)
                 newState = GESTURESTATE.PINCH;
 
             handStates.TryGetValue(currentHand, out GESTURESTATE prevState);
