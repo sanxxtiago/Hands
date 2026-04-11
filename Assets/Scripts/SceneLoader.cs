@@ -4,7 +4,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class SceneLoader : MonoBehaviour
 {
-
+    void Start()
+    {
+        GameManager.Instance.StartExercise();
+    }
     void Update()
     {
         if (Input.GetKey(KeyCode.R))

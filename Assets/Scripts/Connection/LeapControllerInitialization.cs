@@ -32,9 +32,7 @@ public class LeapControllerInitialization : MonoBehaviour
         //Se desconectó
         if (!isConnected && wasConnected)
         {
-            Debug.Log("Leap desconectado");
             OnLeapDisconnected?.Invoke();
-            // aquí puedes lanzar otro evento si quieres snackbar de error
         }
 
         wasConnected = isConnected;
@@ -43,7 +41,7 @@ public class LeapControllerInitialization : MonoBehaviour
     IEnumerator InitializeLeap()
     {
         SnackbarManager.Show(SNACKBARTYPE.WARNING, "Esperando Leap...", 1000f);
-        //Esperar conexión real
+        //Esperar conexión real 
         while (!controller.IsConnected)
         {
             Debug.Log("Esperando Leap...");

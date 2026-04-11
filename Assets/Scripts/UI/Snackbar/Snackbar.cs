@@ -15,7 +15,7 @@ public class Snackbar : MonoBehaviour
     public Image bg;
     public CanvasGroup group;
     public TMP_Text message;
-
+    Tween hideTween;
     void OnEnable()
     {
         SnackbarManager.OnShow += Config;
@@ -48,11 +48,15 @@ public class Snackbar : MonoBehaviour
 
     void Show(float duration)
     {
+        group.DOKill();
+
+        if (hideTween != null && hideTween.IsActive())
+            hideTween.Kill();
+
         group.alpha = 0;
         group.DOFade(1, 0.3f);
 
-        DOVirtual.DelayedCall(duration, Hide);
-        //Invoke(nameof(Hide), duration);
+        hideTween = DOVirtual.DelayedCall(duration, Hide);
     }
 
     void Hide()
@@ -63,5 +67,10 @@ public class Snackbar : MonoBehaviour
     void OnDisable()
     {
         SnackbarManager.OnShow -= Config;
+
+        group.DOKill();
+
+        if (hideTween != null && hideTween.IsActive())
+            hideTween.Kill();
     }
 }

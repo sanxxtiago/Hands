@@ -43,4 +43,12 @@ public enum INSERTTYPE
     DONUT = 3
 }
 
+public enum GAMESTATE
+{
+    IDLE,          // esperando
+    COUNTDOWN,     // 3,2,1
+    PLAYING,       // ejercicio activo
+    RESULTS        // mostrar métricas
+}
+
 

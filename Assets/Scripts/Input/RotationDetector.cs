@@ -4,6 +4,7 @@ using Leap;
 
 public class RotationDetector
 {
+    private Dictionary<HAND, bool> isRotating = new();
     private Dictionary<HAND, Quaternion> lastRotation = new();
     private Dictionary<HAND, float> rotationAccum = new();
 
@@ -12,12 +13,43 @@ public class RotationDetector
     private Dictionary<HAND, float> lastRotationTime = new();
     public float rotationEndDelay = 0.25f;
 
-    public bool IsRotating(HAND hand, Quaternion currentRot, float grab, float pinch, Vector3 velocity)
+    // public bool IsRotating(HAND hand, Quaternion currentRot, float grab, float pinch, Vector3 velocity)
+    // {
+    //     if (!lastRotation.ContainsKey(hand))
+    //     {
+    //         lastRotation[hand] = currentRot;
+    //         rotationAccum[hand] = 0;
+    //         return false;
+    //     }
+
+    //     float angleDelta = Quaternion.Angle(lastRotation[hand], currentRot);
+
+    //     bool isFree = grab < 0.2f && pinch < 0.2f;
+    //     bool isStable = velocity.magnitude < 0.3f;
+
+    //     if (isFree && isStable)
+    //     {
+    //         if (angleDelta > noiseThreshold)
+    //             rotationAccum[hand] += angleDelta;
+    //     }
+    //     else
+    //     {
+    //         rotationAccum[hand] = 0;
+    //     }
+
+    //     lastRotation[hand] = currentRot;
+    //     lastRotationTime[hand] = Time.time;
+
+    //     return rotationAccum[hand] >= rotateThreshold;
+    // }
+
+    public bool UpdateRotation(HAND hand, Quaternion currentRot, float grab, float pinch, Vector3 velocity)
     {
         if (!lastRotation.ContainsKey(hand))
         {
             lastRotation[hand] = currentRot;
             rotationAccum[hand] = 0;
+            isRotating[hand] = false;
             return false;
         }
 
@@ -26,10 +58,21 @@ public class RotationDetector
         bool isFree = grab < 0.2f && pinch < 0.2f;
         bool isStable = velocity.magnitude < 0.3f;
 
-        if (isFree && isStable)
+        if (isFree && isStable && angleDelta > noiseThreshold)
         {
-            if (angleDelta > noiseThreshold)
-                rotationAccum[hand] += angleDelta;
+            rotationAccum[hand] += angleDelta;
+
+            if (!isRotating[hand] && rotationAccum[hand] >= rotateThreshold)
+            {
+                isRotating[hand] = true;
+                lastRotationTime[hand] = Time.time;
+                return true; // 🔥 SOLO dispara una vez (inicio)
+            }
+
+            if (isRotating[hand])
+            {
+                lastRotationTime[hand] = Time.time;
+            }
         }
         else
         {
@@ -37,17 +80,27 @@ public class RotationDetector
         }
 
         lastRotation[hand] = currentRot;
-        lastRotationTime[hand] = Time.time;
-
-        return rotationAccum[hand] >= rotateThreshold;
+        return false;
     }
 
     public bool HasRotationEnded(HAND hand)
     {
-        if (!lastRotationTime.ContainsKey(hand))
+        if (!isRotating.ContainsKey(hand) || !isRotating[hand])
             return false;
 
-        return (Time.time - lastRotationTime[hand]) > rotationEndDelay;
+        if ((Time.time - lastRotationTime[hand]) > rotationEndDelay)
+        {
+            isRotating[hand] = false;
+            rotationAccum[hand] = 0;
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool IsCurrentlyRotating(HAND hand)
+    {
+        return isRotating.ContainsKey(hand) && isRotating[hand];
     }
 
     public void Reset(HAND hand)

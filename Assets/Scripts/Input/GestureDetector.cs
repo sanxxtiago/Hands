@@ -15,8 +15,6 @@ public class GestureDetector : MonoBehaviour
     public event Action<GestureInputEventArgs> OnHandUpdate;
     public event Action<GestureInputEventArgs> OnRotateUpdate;
 
-
-
     public LeapProvider leapProvider;
     public float grabStrengthThreshold = 0.8f;
     public float pinchStrengthThreshold = 0.8f;
@@ -41,8 +39,8 @@ public class GestureDetector : MonoBehaviour
 
             bool isGrab = grab > grabStrengthThreshold;
             bool isPinch = pinch > pinchStrengthThreshold;
-
-            bool isRotate = rotationDetector.IsRotating(
+            bool canRotate = !isGrab && !isPinch;
+            bool isRotate = canRotate && rotationDetector.UpdateRotation(
                 currentHand,
                 rotation,
                 grab,
@@ -94,18 +92,20 @@ public class GestureDetector : MonoBehaviour
             // =========================
             // ROTATION (INDEPENDENT SYSTEM)
             // =========================
-
-            if (isRotate && prevState != GESTURESTATE.ROTATE)
+            // START
+            if (isRotate)
             {
                 OnRotateStart?.Invoke(e);
             }
 
-            if (isRotate)
+            // UPDATE (solo si está rotando)
+            if (rotationDetector.IsCurrentlyRotating(currentHand))
             {
                 OnRotateUpdate?.Invoke(e);
             }
 
-            if (prevState == GESTURESTATE.ROTATE && rotateEnded)
+            // END
+            if (rotateEnded)
             {
                 OnRotateEnd?.Invoke(e);
                 rotationDetector.Reset(currentHand);

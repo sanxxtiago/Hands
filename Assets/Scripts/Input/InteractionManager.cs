@@ -37,8 +37,10 @@ public class InteractionManager : MonoBehaviour
     {
         detector.OnGrabStart -= HandleGrabStart;
         detector.OnGrabEnd -= HandleGrabEnd;
+
         detector.OnRotateStart -= HandleRotateStart;
         detector.OnRotateEnd -= HandleRotateEnd;
+        
         detector.OnHandUpdate -= HandleHandUpdate;
     }
 
@@ -172,6 +174,5 @@ public class InteractionManager : MonoBehaviour
     private void HandleRotateEnd(GestureInputEventArgs e)
     {
         SnackbarManager.Show(SNACKBARTYPE.ERROR, "NOOOO ROTANDO!!!!!");
-        
     }
 }
