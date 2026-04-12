@@ -33,6 +33,9 @@ public class ErgonomicsTracker : MonoBehaviour
     private float handFrame;
     private float wristFrame;
     private float forearmFrame;
+    private float handIntensityAccum;
+    private float wristIntensityAccum;
+    private float forearmIntensityAccum;
 
     private bool hasDataThisFrame;
     private int lastProcessedFrame = -1;
@@ -54,15 +57,26 @@ public class ErgonomicsTracker : MonoBehaviour
 
         if (hasDataThisFrame)
         {
-            //intensidad
-            handAccum += handFrame * dt;
-            wristAccum += wristFrame * dt;
-            forearmAccum += forearmFrame * dt;
+            float handI = Mathf.Clamp01(handFrame);
+            float wristI = Mathf.Clamp01(wristFrame);
+            float forearmI = Mathf.Clamp01(forearmFrame);
 
-            //actividad por zona (con thresholds independientes)
+            // acumulado total (lo que ya tienes)
+            handAccum += handI * dt;
+            wristAccum += wristI * dt;
+            forearmAccum += forearmI * dt;
+
             bool handActive = handFrame > handThreshold;
             bool wristActive = wristFrame > wristThreshold;
             bool forearmActive = forearmFrame > forearmThreshold;
+
+            //intensidad separada
+            if (handActive) handIntensityAccum += handI * dt;
+            if (wristActive) wristIntensityAccum += wristI * dt;
+            if (forearmActive) forearmIntensityAccum += forearmI * dt;
+
+            //actividad por zona (con thresholds independientes)
+
 
             if (handActive) handActiveTime += dt;
             if (wristActive) wristActiveTime += dt;
@@ -152,6 +166,15 @@ public class ErgonomicsTracker : MonoBehaviour
     public (float hand, float wrist, float forearm) GetRawTotals()
     {
         return (handAccum, wristAccum, forearmAccum);
+    }
+
+    public (float hand, float wrist, float forearm) GetAverageIntensity()
+    {
+        return (
+            Mathf.Clamp01(handActiveTime > 0 ? handIntensityAccum / handActiveTime : 0),
+            Mathf.Clamp01(wristActiveTime > 0 ? wristIntensityAccum / wristActiveTime : 0),
+            Mathf.Clamp01(forearmActiveTime > 0 ? forearmIntensityAccum / forearmActiveTime : 0)
+        );
     }
 
     public float GetTotalTime() => totalTime;

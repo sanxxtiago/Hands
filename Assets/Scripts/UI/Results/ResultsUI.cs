@@ -64,6 +64,10 @@ public class ResultsUI : MonoBehaviour
         rightArmRelativeResult.SetTextResult(rightRelativeData, 0, 0, false);
         leftArmRelativeResult.PaintOnResults(leftRelativeData);
         leftArmRelativeResult.SetTextResult(leftRelativeData, 0, 0, false);
+
+        //Mostrar intensidades promedio
+        rightArmAbsoluteResult.LogAverageIntensity(RightTracker.GetAverageIntensity());
+        leftArmAbsoluteResult.LogAverageIntensity(LeftTracker.GetAverageIntensity());
     }
 
 }

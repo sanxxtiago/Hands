@@ -73,4 +73,14 @@ public class ArmResultUI : ArmColor
         wristImage.color = targetWrist;
         foreArmImage.color = targetForearm;
     }
+
+    public void LogAverageIntensity((float hand, float wrist, float forearm) data)
+{
+    Debug.Log(
+        $"[Average Intensity]\n" +
+        $"Mano: {Mathf.Round(data.hand * 100f)}%\n" +
+        $"Muñeca: {Mathf.Round(data.wrist * 100f)}%\n" +
+        $"Antebrazo: {Mathf.Round(data.forearm * 100f)}%"
+    );
+}
 }

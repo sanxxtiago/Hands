@@ -1,33 +1,37 @@
 using UnityEngine;
+
 public class ErgonomicsCalculator
 {
-    public float handThreshold = 0.1f;
-    public float wristThreshold = 0.5f;
-    public float forearmThreshold = 0.05f;
+    public float handThreshold = 0.05f;
+    public float wristThreshold = 2f;      // grados
+    public float forearmThreshold = 0.1f;  // velocidad mínima
 
-    public float wristScale = 10f;
-    public float forearmScale = 1.0f;
+    public float wristScale = 30f;
+    public float forearmScale = 1.5f;
 
     private Quaternion lastRotation;
     private bool hasLastRotation = false;
 
-    //Calcula la actividad de cada zona X frame
+    private Vector3 lastVelocity;
+    private bool hasLastVelocity = false;
+
     public (float hand, float wrist, float forearm) CalculateActivity(GestureInputEventArgs e)
     {
         // =========================
-        // HAND
+        // HAND (movimiento global real)
         // =========================
-        float rawHand = Mathf.Max(e.grabStrenght, e.pinchStrenght);
-        float handActivity = ApplyDeadzone01(rawHand, handThreshold);
+        float handSpeed = e.handVelocity.magnitude;
+        float handActivity = ApplyDeadzone01(handSpeed, handThreshold);
 
         // =========================
-        // WRIST
+        // WRIST (cambio de rotación)
         // =========================
         float wristActivity = 0f;
 
         if (hasLastRotation)
         {
             float angle = Quaternion.Angle(lastRotation, e.handRotation);
+
             angle = Mathf.Max(0f, angle - wristThreshold);
             wristActivity = Mathf.Clamp01(angle / wristScale);
         }
@@ -36,11 +40,12 @@ public class ErgonomicsCalculator
         hasLastRotation = true;
 
         // =========================
-        // FOREARM
+        // FOREARM (movimiento global filtrado)
         // =========================
-        float speed = e.handVelocity.magnitude;
-        speed = Mathf.Max(0f, speed - forearmThreshold);
-        float forearmActivity = Mathf.Clamp01(speed / forearmScale);
+        float forearmSpeed = e.handVelocity.magnitude;
+
+        forearmSpeed = Mathf.Max(0f, forearmSpeed - forearmThreshold);
+        float forearmActivity = Mathf.Clamp01(forearmSpeed / forearmScale);
 
         return (handActivity, wristActivity, forearmActivity);
     }
