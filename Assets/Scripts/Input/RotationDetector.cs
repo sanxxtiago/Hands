@@ -4,13 +4,13 @@ using Leap;
 
 public class RotationDetector
 {
-    private Dictionary<HAND, bool> isRotating = new();
-    private Dictionary<HAND, Quaternion> lastRotation = new();
-    private Dictionary<HAND, float> rotationAccum = new();
+    private Dictionary<HandType, bool> isRotating = new();
+    private Dictionary<HandType, Quaternion> lastRotation = new();
+    private Dictionary<HandType, float> rotationAccum = new();
 
     public float rotateThreshold = 25f;
     public float noiseThreshold = 1f;
-    private Dictionary<HAND, float> lastRotationTime = new();
+    private Dictionary<HandType, float> lastRotationTime = new();
     public float rotationEndDelay = 0.25f;
 
     // public bool IsRotating(HAND hand, Quaternion currentRot, float grab, float pinch, Vector3 velocity)
@@ -43,7 +43,7 @@ public class RotationDetector
     //     return rotationAccum[hand] >= rotateThreshold;
     // }
 
-    public bool UpdateRotation(HAND hand, Quaternion currentRot, float grab, float pinch, Vector3 velocity)
+    public bool UpdateRotation(HandType hand, Quaternion currentRot, float grab, float pinch, Vector3 velocity)
     {
         if (!lastRotation.ContainsKey(hand))
         {
@@ -83,7 +83,7 @@ public class RotationDetector
         return false;
     }
 
-    public bool HasRotationEnded(HAND hand)
+    public bool HasRotationEnded(HandType hand)
     {
         if (!isRotating.ContainsKey(hand) || !isRotating[hand])
             return false;
@@ -98,12 +98,12 @@ public class RotationDetector
         return false;
     }
 
-    public bool IsCurrentlyRotating(HAND hand)
+    public bool IsCurrentlyRotating(HandType hand)
     {
         return isRotating.ContainsKey(hand) && isRotating[hand];
     }
 
-    public void Reset(HAND hand)
+    public void Reset(HandType hand)
     {
         rotationAccum[hand] = 0;
     }

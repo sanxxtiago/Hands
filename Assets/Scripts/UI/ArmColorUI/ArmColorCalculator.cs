@@ -1,7 +1,11 @@
+using UnityEngine;
+
 public class ArmColorCalculator : ArmColor
 {
     public GestureDetector gestureDetector;
-    private ErgonomicsCalculator calculator = new ErgonomicsCalculator();
+
+    private Quaternion lastRotation;
+    private bool hasRotation;
 
     private void OnEnable()
     {
@@ -17,7 +21,11 @@ public class ArmColorCalculator : ArmColor
     {
         if (e.hand != hand) return;
 
-        var (h, w, f) = calculator.CalculateActivity(e);
+        var (h, w, f) = ErgonomicsCalculatorUI.Calculate(
+            e,
+            ref lastRotation,
+            ref hasRotation
+        );
 
         ApplyAll(h, w, f);
     }

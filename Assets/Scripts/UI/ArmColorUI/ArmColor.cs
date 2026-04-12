@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public abstract class ArmColor : MonoBehaviour
 {
-    public HAND hand;
+    public HandType hand;
 
     public Color defaultColor;
     public Color paintColor;

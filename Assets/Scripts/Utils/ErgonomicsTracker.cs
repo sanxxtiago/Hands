@@ -3,36 +3,43 @@ using UnityEngine;
 public class ErgonomicsTracker : MonoBehaviour
 {
     public GestureDetector gestureDetector;
-    public HAND hand;
+    public HandType hand;
 
     private ErgonomicsCalculator calculator = new ErgonomicsCalculator();
 
-    // acumuladores por zona (intensidad)
-    private float handAccum;
-    private float wristAccum;
-    private float forearmAccum;
+    // =========================
+    // SENSIBILIDAD (solo intensidad)
+    // =========================
+    [Header("Sensitivity")]
+    public float handSensitivity = 2f;
+    public float wristSensitivity = 3f;
+    public float forearmSensitivity = 1.5f;
 
-    // tiempo total del ejercicio
+    // =========================
+    // TIEMPO TOTAL
+    // =========================
     private float totalTime;
 
-    // tiempo donde NO hubo actividad
+    // inactividad global
     private float inactiveTime;
 
-    // 🔥 thresholds independientes
-    [Header("Activity Thresholds")]
-    public float handThreshold = 0.05f;
-    public float wristThreshold = 0.08f;
-    public float forearmThreshold = 0.1f;
-
-    // tiempo activo por zona
+    // =========================
+    // DISTRIBUCIÓN (TIEMPO - RAW)
+    // =========================
     private float handActiveTime;
     private float wristActiveTime;
     private float forearmActiveTime;
 
-    // valores por frame
-    private float handFrame;
-    private float wristFrame;
-    private float forearmFrame;
+    // =========================
+    // RAW INPUT (SIN SENSIBILIDAD)
+    // =========================
+    private float rawHand;
+    private float rawWrist;
+    private float rawForearm;
+
+    // =========================
+    // INTENSIDAD (CON SENSIBILIDAD)
+    // =========================
     private float handIntensityAccum;
     private float wristIntensityAccum;
     private float forearmIntensityAccum;
@@ -57,45 +64,42 @@ public class ErgonomicsTracker : MonoBehaviour
 
         if (hasDataThisFrame)
         {
-            float handI = Mathf.Clamp01(handFrame);
-            float wristI = Mathf.Clamp01(wristFrame);
-            float forearmI = Mathf.Clamp01(forearmFrame);
+            // =========================
+            // INTENSIDAD (CON SENSIBILIDAD)
+            // =========================
+            float handI = Mathf.Clamp01(rawHand * handSensitivity);
+            float wristI = Mathf.Clamp01(rawWrist * wristSensitivity);
+            float forearmI = Mathf.Clamp01(rawForearm * forearmSensitivity);
 
-            // acumulado total (lo que ya tienes)
-            handAccum += handI * dt;
-            wristAccum += wristI * dt;
-            forearmAccum += forearmI * dt;
-
-            bool handActive = handFrame > handThreshold;
-            bool wristActive = wristFrame > wristThreshold;
-            bool forearmActive = forearmFrame > forearmThreshold;
-
-            //intensidad separada
-            if (handActive) handIntensityAccum += handI * dt;
-            if (wristActive) wristIntensityAccum += wristI * dt;
-            if (forearmActive) forearmIntensityAccum += forearmI * dt;
-
-            //actividad por zona (con thresholds independientes)
-
+            // =========================
+            // DISTRIBUCIÓN (TIEMPO - RAW)
+            // =========================
+            bool handActive = rawHand > 0.01f;
+            bool wristActive = rawWrist > 0.01f;
+            bool forearmActive = rawForearm > 0.01f;
 
             if (handActive) handActiveTime += dt;
             if (wristActive) wristActiveTime += dt;
             if (forearmActive) forearmActiveTime += dt;
 
-            //actividad global CORRECTA
-            bool isAnyActive = handActive || wristActive || forearmActive;
+            // =========================
+            // INTENSIDAD ACUMULADA
+            // =========================
+            handIntensityAccum += handI * dt;
+            wristIntensityAccum += wristI * dt;
+            forearmIntensityAccum += forearmI * dt;
 
-            if (!isAnyActive)
+            // =========================
+            // INACTIVIDAD GLOBAL (RAW)
+            // =========================
+            float totalActivity = (rawHand + rawWrist + rawForearm) / 3f;
+
+            if (totalActivity <= 0.01f)
                 inactiveTime += dt;
-        }
-        else
-        {
-            //sin datos → asumimos inactividad
-            //inactiveTime += dt;
         }
 
         // reset frame
-        handFrame = wristFrame = forearmFrame = 0f;
+        rawHand = rawWrist = rawForearm = 0f;
         hasDataThisFrame = false;
     }
 
@@ -103,21 +107,23 @@ public class ErgonomicsTracker : MonoBehaviour
     {
         if (e.hand != hand) return;
 
-        //solo 1 vez por frame
         if (Time.frameCount == lastProcessedFrame) return;
         lastProcessedFrame = Time.frameCount;
 
         var (handA, wristA, forearmA) = calculator.CalculateActivity(e);
 
-        //solo cachear
-        handFrame = handA;
-        wristFrame = wristA;
-        forearmFrame = forearmA;
+        // SOLO RAW
+        rawHand = handA;
+        rawWrist = wristA;
+        rawForearm = forearmA;
 
         hasDataThisFrame = true;
     }
 
-    //MÉTRICAS
+    // =========================
+    // MÉTRICAS
+    // =========================
+
     public (float hand, float wrist, float forearm) GetAbsoluteUsage()
     {
         if (totalTime <= 0) return (0, 0, 0);
@@ -157,23 +163,15 @@ public class ErgonomicsTracker : MonoBehaviour
     {
         if (totalTime <= 0) return 0;
 
-        float activeTime =
-            totalTime - inactiveTime;
-
-        return activeTime / totalTime;
-    }
-
-    public (float hand, float wrist, float forearm) GetRawTotals()
-    {
-        return (handAccum, wristAccum, forearmAccum);
+        return (totalTime - inactiveTime) / totalTime;
     }
 
     public (float hand, float wrist, float forearm) GetAverageIntensity()
     {
         return (
-            Mathf.Clamp01(handActiveTime > 0 ? handIntensityAccum / handActiveTime : 0),
-            Mathf.Clamp01(wristActiveTime > 0 ? wristIntensityAccum / wristActiveTime : 0),
-            Mathf.Clamp01(forearmActiveTime > 0 ? forearmIntensityAccum / forearmActiveTime : 0)
+            handActiveTime > 0 ? handIntensityAccum / handActiveTime : 0,
+            wristActiveTime > 0 ? wristIntensityAccum / wristActiveTime : 0,
+            forearmActiveTime > 0 ? forearmIntensityAccum / forearmActiveTime : 0
         );
     }
 
@@ -181,15 +179,19 @@ public class ErgonomicsTracker : MonoBehaviour
 
     public void ResetData()
     {
-        handAccum = 0;
-        wristAccum = 0;
-        forearmAccum = 0;
+        totalTime = 0;
+        inactiveTime = 0;
 
         handActiveTime = 0;
         wristActiveTime = 0;
         forearmActiveTime = 0;
 
-        totalTime = 0;
-        inactiveTime = 0;
+        handIntensityAccum = 0;
+        wristIntensityAccum = 0;
+        forearmIntensityAccum = 0;
+
+        rawHand = 0;
+        rawWrist = 0;
+        rawForearm = 0;
     }
 }

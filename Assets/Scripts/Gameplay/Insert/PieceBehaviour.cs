@@ -4,7 +4,7 @@ public class PieceBehaviour : Grabbable
     public bool isSnapped;
     public bool requireRotation = false;
 
-    public override bool CanInteract(HAND hand)
+    public override bool CanInteract(HandType hand)
     {
         return !isSnapped;
     }

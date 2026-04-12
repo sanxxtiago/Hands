@@ -12,16 +12,16 @@ public class InteractionManager : MonoBehaviour
     public float rotationSmooth = 15f;
     public float handSmooth = 20f;
 
-    private Dictionary<HAND, Interactable> grabbedObjects = new();
+    private Dictionary<HandType, Interactable> grabbedObjects = new();
 
-    private Dictionary<HAND, Vector3> handPositions = new();
-    private Dictionary<HAND, Quaternion> handRotations = new();
+    private Dictionary<HandType, Vector3> handPositions = new();
+    private Dictionary<HandType, Quaternion> handRotations = new();
 
-    private Dictionary<HAND, Vector3> positionOffsets = new();
-    private Dictionary<HAND, Quaternion> rotationOffsets = new();
+    private Dictionary<HandType, Vector3> positionOffsets = new();
+    private Dictionary<HandType, Quaternion> rotationOffsets = new();
 
-    private Dictionary<HAND, Vector3> handVelocities = new();
-    private Dictionary<HAND, Vector3> smoothHandPositions = new();
+    private Dictionary<HandType, Vector3> handVelocities = new();
+    private Dictionary<HandType, Vector3> smoothHandPositions = new();
 
     void OnEnable()
     {
@@ -50,7 +50,7 @@ public class InteractionManager : MonoBehaviour
 
         foreach (var pair in grabbedObjects)
         {
-            HAND hand = pair.Key;
+            HandType hand = pair.Key;
             Interactable interactable = pair.Value;
 
             if (!handPositions.ContainsKey(hand) || !handRotations.ContainsKey(hand))
@@ -145,7 +145,7 @@ public class InteractionManager : MonoBehaviour
 
     void HandleForcedRelease(Interactable target)
     {
-        HAND? handToRemove = null;
+        HandType? handToRemove = null;
 
         foreach (var pair in grabbedObjects)
         {
@@ -158,7 +158,7 @@ public class InteractionManager : MonoBehaviour
 
         if (handToRemove.HasValue)
         {
-            HAND hand = handToRemove.Value;
+            HandType hand = handToRemove.Value;
 
             grabbedObjects.Remove(hand);
             positionOffsets.Remove(hand);

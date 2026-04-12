@@ -1,7 +1,6 @@
-using System;
 
 
-public enum HAND
+public enum HandType
 {
     LEFT = 1,
     RIGHT = 0
@@ -14,6 +13,18 @@ public enum GESTURESTATE
     ROTATE
 }
 
+public enum GestureType
+{
+    Grab,
+    Pinch
+}
+
+public enum MotionZone
+{
+    Wrist,
+    Forearm,
+    Hand
+}
 public enum ERRORTYPE
 {
     CONNECTION,

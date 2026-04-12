@@ -3090,7 +3090,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 692508681}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: beb58f1ff1482944ebe3959720d70a11, type: 3}
   m_Name: 
@@ -3512,13 +3512,16 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 852880523}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f2c6ccfdac248594baaf63f136fb4ba0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   gestureDetector: {fileID: 540416931}
   hand: 0
+  handSensitivity: 2
+  wristSensitivity: 3
+  forearmSensitivity: 1.5
 --- !u!114 &852880525
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3526,13 +3529,16 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 852880523}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f2c6ccfdac248594baaf63f136fb4ba0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   gestureDetector: {fileID: 540416931}
   hand: 1
+  handSensitivity: 2
+  wristSensitivity: 3
+  forearmSensitivity: 1.5
 --- !u!1 &939109714
 GameObject:
   m_ObjectHideFlags: 0
@@ -6188,7 +6194,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1722297170}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3ac63c3417b0fb748bdfebb9051fae8a, type: 3}
   m_Name: 
@@ -7281,7 +7287,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1956825091}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ad8b34d1757b7ac4888cf336c51fb45b, type: 3}
   m_Name: 
@@ -8547,6 +8553,9 @@ GameObject:
   - component: {fileID: 5270838611174572071}
   - component: {fileID: 5270838611174572072}
   - component: {fileID: 5270838611174572073}
+  - component: {fileID: 5270838611174572076}
+  - component: {fileID: 5270838611174572075}
+  - component: {fileID: 5270838611174572074}
   m_Layer: 0
   m_Name: XR Leap Provider Manager
   m_TagString: Untagged
@@ -8594,7 +8603,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5270838611174572064}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9c78e0df18f2ac84883fb8ec0a4aef37, type: 3}
   m_Name: 
@@ -8607,7 +8616,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5270838611174572064}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 56a0fcb1cc3e26540ab042a844e31875, type: 3}
   m_Name: 
@@ -8620,13 +8629,51 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5270838611174572064}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8ebe6b4eff9f1144dac80169c9ed03bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   leapProvider: {fileID: 5270838611174572065}
   delay: 0.5
+--- !u!114 &5270838611174572074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5270838611174572064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86b95d3f86ac27342b80dfe7d273639f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5270838611174572075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5270838611174572064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72ec8a6a5790bb9469323983c2e454dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leapProvider: {fileID: 5270838611174572076}
+--- !u!114 &5270838611174572076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5270838611174572064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 180bc425a6c531a409355efa95a0b10e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _provider: {fileID: 8681616449363907123}
 --- !u!4 &5879262599337542989
 Transform:
   m_ObjectHideFlags: 0

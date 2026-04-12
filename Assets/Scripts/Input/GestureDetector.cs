@@ -19,13 +19,13 @@ public class GestureDetector : MonoBehaviour
     public float grabStrengthThreshold = 0.8f;
     public float pinchStrengthThreshold = 0.8f;
 
-    private Dictionary<HAND, GESTURESTATE> handStates = new();
+    private Dictionary<HandType, GESTURESTATE> handStates = new();
     private RotationDetector rotationDetector = new RotationDetector();
     void Update()
     {
         foreach (var hand in leapProvider.CurrentFrame.Hands)
         {
-            HAND currentHand = hand.IsLeft ? HAND.LEFT : HAND.RIGHT;
+            HandType currentHand = hand.IsLeft ? HandType.LEFT : HandType.RIGHT;
 
             Vector3 handPos = hand.PalmPosition;
             Quaternion rotation = hand.Rotation;

@@ -19,7 +19,7 @@ public class Grabbable : Interactable
 
         rb.MovePosition(smooth);
     }
-    public override void OnGrabStart(HAND hand, Vector3 handPos, Quaternion handRot)
+    public override void OnGrabStart(HandType hand, Vector3 handPos, Quaternion handRot)
     {
         IsGrabbed = true;
 
@@ -30,7 +30,7 @@ public class Grabbable : Interactable
     }
 
     public override void OnGrabUpdate(
-        HAND hand,
+        HandType hand,
         Vector3 targetPos,
         Quaternion targetRot,
         float posSmooth,
@@ -50,7 +50,7 @@ public class Grabbable : Interactable
         rb.angularVelocity = angle * Mathf.Deg2Rad * rotSmooth * axis;
     }
 
-    public override void OnGrabEnd(HAND hand, Vector3 releaseVelocity)
+    public override void OnGrabEnd(HandType hand, Vector3 releaseVelocity)
     {
         IsGrabbed = false;
         rb.isKinematic = false;
