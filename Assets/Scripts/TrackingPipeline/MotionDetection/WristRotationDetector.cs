@@ -4,19 +4,22 @@ public class WristRotationDetector : IMotionDetector
 {
     public float threshold = 0.2f;
 
-    public MotionData Evaluate(HandDataSnapshot snap)
+    public MotionData Evaluate(HandDataSnapshot current, HandDataSnapshot previous)
     {
-        float angle = snap.palmRotation.eulerAngles.z;
+        float angle = Vector3.Angle(
+            current.palmNormal,
+            current.forearmDirection
+        );
 
-        float normalized = Mathf.Abs(angle) / 180f;
+        float normalized = Mathf.Clamp01(angle / 90f);
 
         return new MotionData
         {
-            zone = MotionZone.Wrist,
-            handType = snap.handType,
+            zone = MotionZone.WristFlexion,
+            handType = current.handType,
             value = normalized,
             isActive = normalized > threshold,
-            frameId = snap.frameId
+            frameId = current.frameId
         };
     }
 }

@@ -1,4 +1,5 @@
 using Leap;
+using UnityEngine;
 
 public class HandSnapshotBuilder
 {
@@ -12,9 +13,18 @@ public class HandSnapshotBuilder
             var snapshot = new HandDataSnapshot
             {
                 frameId = frame.Id,
+                timestamp = Time.time,
+
                 handType = hand.IsLeft ? HandType.LEFT : HandType.RIGHT,
 
                 palmPosition = hand.PalmPosition,
+                wristPosition = hand.WristPosition,
+                elbowPosition = hand.Arm.ElbowPosition,
+
+                palmNormal = hand.PalmNormal,
+                handDirection = hand.Direction,
+                forearmDirection = hand.Arm.Direction,
+
                 palmRotation = hand.Rotation,
                 forearmRotation = hand.Arm.Rotation,
 

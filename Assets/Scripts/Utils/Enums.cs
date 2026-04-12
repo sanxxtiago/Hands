@@ -23,7 +23,11 @@ public enum MotionZone
 {
     Wrist,
     Forearm,
-    Hand
+    Hand,
+    WristFlexion,
+    Supination,
+    Pronation,
+    HandElevation
 }
 public enum ERRORTYPE
 {

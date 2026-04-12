@@ -1,63 +1,60 @@
+using System.Collections.Generic;
+
 public static class MetricsSummaryBuilder
 {
     public static ExerciseSummary Build(ExerciseMetricsTracker tracker)
     {
-        var runtime = tracker.GetRuntimeSnapshot();
+        var zones = new List<MotionZone>(tracker.GetTrackedZones());
 
-        float totalFrames = 0;
-        float totalActiveFrames = 0;
+        int count = zones.Count;
 
-        float[] absolute = new float[3];
-        float[] relative = new float[3];
+        float[] absolute = new float[count];
+        float[] relative = new float[count];
+        float[] intensity = new float[count];
 
-        var zones = new MotionZone[]
+        float totalActiveTime = tracker.GetActiveTime();
+        float totalZoneActiveTime = 0f;
+
+        // 🔹 Primera pasada
+        for (int i = 0; i < count; i++)
         {
-            MotionZone.Hand,
-            MotionZone.Wrist,
-            MotionZone.Forearm
-        };
-
-        for (int i = 0; i < zones.Length; i++)
-        {
-            var zone = zones[i];
-
-            var record = tracker.GetZoneRecord(zone);
-
-            totalFrames += record.totalFrames;
-            totalActiveFrames += record.activeFrames;
+            var record = tracker.GetZoneRecord(zones[i]);
 
             absolute[i] = record.totalFrames == 0
                 ? 0
                 : (float)record.activeFrames / record.totalFrames;
+
+            intensity[i] = record.totalFrames == 0
+                ? 0
+                : record.accumulatedValue / record.totalFrames;
+
+            totalZoneActiveTime += record.activeTime;
         }
 
-        for (int i = 0; i < zones.Length; i++)
+        // 🔹 Segunda pasada (distribución)
+        for (int i = 0; i < count; i++)
         {
-            var zone = zones[i];
-            var record = tracker.GetZoneRecord(zone);
+            var record = tracker.GetZoneRecord(zones[i]);
 
-            relative[i] = totalActiveFrames == 0
+            relative[i] = totalZoneActiveTime == 0
                 ? 0
-                : (float)record.activeFrames / totalActiveFrames;
+                : record.activeTime / totalZoneActiveTime;
         }
 
         return new ExerciseSummary
         {
-            handType = runtime.handType,
-            absoluteUsage = absolute,
-            relativeUsage = relative,
-            totalDurationSeconds = runtime.elapsedSeconds,
-            totalActiveSeconds = totalActiveFrames / 115f // Leap ~115fps aprox
+            handType = tracker.GetRuntimeSnapshot().handType,
+
+            zones = zones.ToArray(),
+
+            absoluteUsage = absolute,   // % de activación
+            relativeUsage = relative,   // distribución de uso
+            intensity = intensity,     // 🔥 calidad de uso
+
+            totalDurationSeconds = tracker.GetRuntimeSnapshot().elapsedSeconds,
+            totalActiveSeconds = totalActiveTime,
+
+            activityRatio = tracker.GetActivityRatio() // 🔥 clave en prevención
         };
     }
-    
-}
-
-public struct ExerciseSummary
-{
-    public HandType handType;
-    public float[] absoluteUsage;
-    public float[] relativeUsage;
-    public float totalDurationSeconds;
-    public float totalActiveSeconds;
 }

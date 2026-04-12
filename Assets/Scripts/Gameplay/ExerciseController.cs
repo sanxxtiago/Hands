@@ -74,18 +74,29 @@ public abstract class ExerciseController : MonoBehaviour
     {
         Debug.Log($"===== {label} =====");
 
-        Debug.Log("-- Uso absoluto --");
-        Debug.Log($"Hand: {summary.absoluteUsage[0] * 100f:F1}%");
-        Debug.Log($"Wrist: {summary.absoluteUsage[1] * 100f:F1}%");
-        Debug.Log($"Forearm: {summary.absoluteUsage[2] * 100f:F1}%");
+        var zones = summary.zones;
 
-        Debug.Log("-- Uso relativo --");
-        Debug.Log($"Hand: {summary.relativeUsage[0] * 100f:F1}%");
-        Debug.Log($"Wrist: {summary.relativeUsage[1] * 100f:F1}%");
-        Debug.Log($"Forearm: {summary.relativeUsage[2] * 100f:F1}%");
+        Debug.Log("-- Uso absoluto (activación) --");
+        for (int i = 0; i < zones.Length; i++)
+        {
+            Debug.Log($"{zones[i]}: {summary.absoluteUsage[i] * 100f:F1}%");
+        }
+
+        Debug.Log("-- Uso relativo (distribución) --");
+        for (int i = 0; i < zones.Length; i++)
+        {
+            Debug.Log($"{zones[i]}: {summary.relativeUsage[i] * 100f:F1}%");
+        }
+
+        Debug.Log("-- Intensidad de movimiento --");
+        for (int i = 0; i < zones.Length; i++)
+        {
+            Debug.Log($"{zones[i]}: {summary.intensity[i]:F3}");
+        }
 
         Debug.Log($"Duración total: {summary.totalDurationSeconds:F2}s");
         Debug.Log($"Tiempo activo: {summary.totalActiveSeconds:F2}s");
+        Debug.Log($"Ratio actividad: {summary.activityRatio:P1}");
     }
 
     private void OnFrameReceived(FrameMotionData frame)

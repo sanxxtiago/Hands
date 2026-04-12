@@ -2,5 +2,5 @@ using UnityEngine.XR;
 
 public interface IMotionDetector
 {
-    public MotionData Evaluate(HandDataSnapshot snap);
+    MotionData Evaluate(HandDataSnapshot current, HandDataSnapshot previous);
 }

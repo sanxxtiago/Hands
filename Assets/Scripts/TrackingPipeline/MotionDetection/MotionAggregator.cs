@@ -1,16 +1,19 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 public class MotionAggregator
 {
     private readonly HandType _handType;
 
-    private readonly List<IMotionDetector> _motionDetectors = new List<IMotionDetector>();
-    private readonly List<IGestureDetector> _gestureDetectors = new List<IGestureDetector>();
+    private readonly List<IMotionDetector> _motionDetectors;
+    private readonly List<IGestureDetector> _gestureDetectors;
+
+    private HandDataSnapshot _previousSnapshot;
 
     public MotionAggregator(
-     HandType handType,
-     List<IMotionDetector> motionDetectors,
-     List<IGestureDetector> gestureDetectors)
+        HandType handType,
+        List<IMotionDetector> motionDetectors,
+        List<IGestureDetector> gestureDetectors)
     {
         _handType = handType;
 
@@ -18,33 +21,43 @@ public class MotionAggregator
         _gestureDetectors = gestureDetectors ?? new List<IGestureDetector>();
     }
 
-    public FrameMotionData Process(HandDataSnapshot snap)
+    public FrameMotionData Process(HandDataSnapshot current)
     {
-        var motions = new List<MotionData>(3);
-        var gestureStates = new List<GestureState>(2);
+        if (_previousSnapshot.frameId == current.frameId)
+            return default;
+            
+        // ⚠️ 1. Filtrar por mano
+        if (current.handType != _handType)
+            return default;
 
-        // 1. MOTION DETECTION (continuo)
+        var motions = new List<MotionData>(_motionDetectors.Count);
+        var gestures = new List<GestureState>(_gestureDetectors.Count);
+
+        // ⚙️ 2. MOTION DETECTION (con contexto temporal)
         foreach (var detector in _motionDetectors)
         {
-            MotionData data = detector.Evaluate(snap);
+            MotionData data = detector.Evaluate(current, _previousSnapshot);
             motions.Add(data);
         }
 
-        // 2. GESTURE DETECTION (estado continuo)
+        // ✋ 3. GESTURES (no necesitan previous por ahora)
         foreach (var detector in _gestureDetectors)
         {
-            GestureState state = detector.Evaluate(snap);
-            gestureStates.Add(state);
+            GestureState state = detector.Evaluate(current);
+            gestures.Add(state);
         }
 
-        // 3. BUILD FRAME OUTPUT
+        // 🧠 4. Guardar estado para siguiente frame
+        _previousSnapshot = current;
+
+        // 📦 5. Output
         return new FrameMotionData
         {
-            frameId = snap.frameId,
-            handType = snap.handType,
-            timestamp = UnityEngine.Time.time,
+            frameId = current.frameId,
+            handType = current.handType,
+            timestamp = Time.time,
             motions = motions,
-            gestures = gestureStates
+            gestures = gestures
         };
     }
 }

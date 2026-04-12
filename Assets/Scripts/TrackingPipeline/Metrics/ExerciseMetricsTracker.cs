@@ -5,7 +5,8 @@ public class ExerciseMetricsTracker
 {
     private readonly HandType _handType;
 
-    private Dictionary<MotionZone, ZoneUsageRecord> _records;
+    private Dictionary<MotionZone, ZoneUsageRecord> _records =
+        new Dictionary<MotionZone, ZoneUsageRecord>();
 
     private int _totalFrames;
     private float _elapsedTime;
@@ -14,13 +15,6 @@ public class ExerciseMetricsTracker
     public ExerciseMetricsTracker(HandType handType)
     {
         _handType = handType;
-
-        _records = new Dictionary<MotionZone, ZoneUsageRecord>
-        {
-            { MotionZone.Hand, new ZoneUsageRecord { zone = MotionZone.Hand } },
-            { MotionZone.Wrist, new ZoneUsageRecord { zone = MotionZone.Wrist } },
-            { MotionZone.Forearm, new ZoneUsageRecord { zone = MotionZone.Forearm } }
-        };
     }
 
     public void OnFrameReceived(FrameMotionData frame)
@@ -37,13 +31,24 @@ public class ExerciseMetricsTracker
             if (motion.handType != _handType)
                 continue;
 
+            // Crear zona si no existe (dinámico)
+            if (!_records.ContainsKey(motion.zone))
+            {
+                _records[motion.zone] = new ZoneUsageRecord
+                {
+                    zone = motion.zone
+                };
+            }
+
             var record = _records[motion.zone];
 
             record.totalFrames++;
+            record.accumulatedValue += motion.value; // 🔥 intensidad acumulada
 
             if (motion.isActive)
             {
                 record.activeFrames++;
+                record.activeTime += dt;
                 anyActiveThisFrame = true;
             }
 
@@ -56,41 +61,35 @@ public class ExerciseMetricsTracker
 
     public RuntimeMetrics GetRuntimeSnapshot()
     {
-        float[] usage = new float[3];
-
-        usage[0] = SafeDivide(_records[MotionZone.Hand]);
-        usage[1] = SafeDivide(_records[MotionZone.Wrist]);
-        usage[2] = SafeDivide(_records[MotionZone.Forearm]);
-
         return new RuntimeMetrics
         {
             handType = _handType,
-            usageByZone = usage,
             elapsedSeconds = _elapsedTime
         };
     }
+
     public void Reset()
     {
         _totalFrames = 0;
         _elapsedTime = 0f;
         _activeTime = 0f;
 
-        _records[MotionZone.Hand] = new ZoneUsageRecord { zone = MotionZone.Hand };
-        _records[MotionZone.Wrist] = new ZoneUsageRecord { zone = MotionZone.Wrist };
-        _records[MotionZone.Forearm] = new ZoneUsageRecord { zone = MotionZone.Forearm };
+        _records.Clear();
     }
-    
-    private float SafeDivide(ZoneUsageRecord record)
-    {
-        if (record.totalFrames == 0)
-            return 0f;
 
-        return (float)record.activeFrames / record.totalFrames;
-    }
     public ZoneUsageRecord GetZoneRecord(MotionZone zone)
     {
-        return _records[zone];
+        if (_records.ContainsKey(zone))
+            return _records[zone];
+
+        return new ZoneUsageRecord { zone = zone };
     }
+
+    public IEnumerable<MotionZone> GetTrackedZones()
+    {
+        return _records.Keys;
+    }
+
     public float GetActiveTime()
     {
         return _activeTime;
