@@ -3,19 +3,12 @@ using System;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance;
-
     public GAMESTATE currentState;
     public CountdownUI countdown;
     public event Action OnCountdownStart;
     public event Action OnGameStart;
     public event Action OnGameEnd;
     public event Action OnResults;
-
-    private void Awake()
-    {
-        Instance = this;
-    }
 
     private void OnEnable()
     {

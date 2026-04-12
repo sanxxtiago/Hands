@@ -4,9 +4,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class SceneLoader : MonoBehaviour
 {
+    public GameManager gameManager;
     void Start()
     {
-        GameManager.Instance.StartExercise();
+        gameManager.StartExercise();
     }
     void Update()
     {

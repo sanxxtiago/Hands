@@ -11,7 +11,8 @@ public class ErgonomicsCalculator
     private Quaternion lastRotation;
     private bool hasLastRotation = false;
 
-    public (float hand, float wrist, float forearm) Calculate(GestureInputEventArgs e)
+    //Calcula la actividad de cada zona X frame
+    public (float hand, float wrist, float forearm) CalculateActivity(GestureInputEventArgs e)
     {
         // =========================
         // HAND

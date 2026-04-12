@@ -6,7 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Snackbar : MonoBehaviour
+public class SnackbarUI : MonoBehaviour
 {
     //public string message;
     public Color error;

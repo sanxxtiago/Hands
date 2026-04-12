@@ -3,6 +3,7 @@ using System.Collections;
 
 public abstract class ExerciseController : MonoBehaviour
 {
+    public GameManager gameManager;
     protected ErgonomicsTracker LeftTracker => TrackerManager.Instance.left;
     protected ErgonomicsTracker RightTracker => TrackerManager.Instance.right;
 
@@ -11,11 +12,11 @@ public abstract class ExerciseController : MonoBehaviour
     protected float duration = 30f;
     private void OnEnable()
     {
-        GameManager.Instance.OnGameStart += StartExercise;
+        gameManager.OnGameStart += StartExercise;
     }
     void OnDisable()
     {
-        GameManager.Instance.OnGameStart -= StartExercise;
+        gameManager.OnGameStart -= StartExercise;
     }
 
     IEnumerator ExerciseRoutine()
@@ -44,7 +45,7 @@ public abstract class ExerciseController : MonoBehaviour
 
         isRunning = false;
 
-        GameManager.Instance.EndExercise();
+        gameManager.EndExercise();
     }
 
     public void StartExercise()
@@ -54,18 +55,32 @@ public abstract class ExerciseController : MonoBehaviour
 
     protected void ShowResults()
     {
-        var left = LeftTracker.GetPercentages();
-        var right = RightTracker.GetPercentages();
+        ShowHandResults("LEFT HAND", LeftTracker);
+        ShowHandResults("RIGHT HAND", RightTracker);
+    }
 
-        Debug.Log("===== LEFT HAND =====");
-        Debug.Log($"Mano: {left.hand * 100f:F1}%");
-        Debug.Log($"Muñeca: {left.wrist * 100f:F1}%");
-        Debug.Log($"Antebrazo: {left.forearm * 100f:F1}%");
+    void ShowHandResults(string label, ErgonomicsTracker tracker)
+    {
+        var abs = tracker.GetAbsoluteUsage();
+        var rel = tracker.GetRelativeDistribution();
+        float inactive = tracker.GetInactivePercentage();
+        float active = tracker.GetActivePercentage();
 
-        Debug.Log("===== RIGHT HAND =====");
-        Debug.Log($"Mano: {right.hand * 100f:F1}%");
-        Debug.Log($"Muñeca: {right.wrist * 100f:F1}%");
-        Debug.Log($"Antebrazo: {right.forearm * 100f:F1}%");
+        Debug.Log($"===== {label} =====");
+
+        Debug.Log("-- Uso absoluto (sobre tiempo total) --");
+        Debug.Log($"Mano: {abs.hand * 100f:F1}%");
+        Debug.Log($"Muñeca: {abs.wrist * 100f:F1}%");
+        Debug.Log($"Antebrazo: {abs.forearm * 100f:F1}%");
+
+        Debug.Log("-- Distribución del movimiento (solo actividad) --");
+        Debug.Log($"Mano: {rel.hand * 100f:F1}%");
+        Debug.Log($"Muñeca: {rel.wrist * 100f:F1}%");
+        Debug.Log($"Antebrazo: {rel.forearm * 100f:F1}%");
+
+        Debug.Log("-- Actividad --");
+        Debug.Log($"Activo: {active * 100f:F1}%");
+        Debug.Log($"Inactivo: {inactive * 100f:F1}%");
     }
 
     protected abstract void OnExerciseStart();

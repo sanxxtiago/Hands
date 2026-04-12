@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class CountdownUI : MonoBehaviour
 {
+    public GameManager gameManager;
     public event Action OnCountdownFinished;
     public CanvasGroup canvasGroup;
     public TMP_Text text;
@@ -17,12 +18,12 @@ public class CountdownUI : MonoBehaviour
 
     private void OnEnable()
     {
-        GameManager.Instance.OnCountdownStart += StartCountdown;
+        gameManager.OnCountdownStart += StartCountdown;
     }
 
     private void OnDisable()
     {
-        GameManager.Instance.OnCountdownStart -= StartCountdown;
+        gameManager.OnCountdownStart -= StartCountdown;
     }
 
     void StartCountdown()

@@ -19,7 +19,6 @@ public class WallInsertExercise : ExerciseController
 
     protected override void Tick(float timeLeft)
     {
-        Debug.Log("");
     }
 
     // Start is called before the first frame update
