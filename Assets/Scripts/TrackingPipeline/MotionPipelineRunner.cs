@@ -14,29 +14,34 @@ public class MotionPipelineRunner : MonoBehaviour
     {
         snapshotBuilder = new HandSnapshotBuilder();
 
-        var motionDetectors = new List<IMotionDetector>
-    {
-        new WristRotationDetector(),
-        new ForearmRotationDetector(),
-        new HandPositionDetector()
-    };
-
-        var gestureDetectors = new List<IGestureDetector>
-    {
-        new GrabGestureDetector(),
-        new PinchGestureDetector()
-    };
-
         leftAggregator = new MotionAggregator(
             HandType.LEFT,
-            motionDetectors,
-            gestureDetectors
+            new List<IMotionDetector>
+            {
+                //new WristRotationDetector(),
+                new ForearmRotationDetector(),
+                // new HandPositionDetector()
+            },
+            new List<IGestureDetector>
+            {
+                //new GrabGestureDetector(),
+                //new PinchGestureDetector()
+            }
         );
 
         rightAggregator = new MotionAggregator(
             HandType.RIGHT,
-            motionDetectors,
-            gestureDetectors
+            new List<IMotionDetector>
+            {
+                // new WristRotationDetector(),
+                 new ForearmRotationDetector(),
+                // new HandPositionDetector()
+            },
+            new List<IGestureDetector>
+            {
+                //new GrabGestureDetector(),
+                //new PinchGestureDetector()
+            }
         );
 
         dispatcher = new MotionEventDispatcher();
