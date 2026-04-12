@@ -41,10 +41,12 @@ public class ResultsUI : MonoBehaviour
         var leftAbsoluteData = LeftTracker.GetAbsoluteUsage();
         var leftRelativeData = LeftTracker.GetRelativeDistribution();
 
-        float rightActivity = RightTracker.GetActivePercentage();
+        //float rightActivity = RightTracker.GetActivePercentage();
+        float rightActivity = RightTracker.GetTotalActivePercentage();
         float rightInactivity = RightTracker.GetInactivePercentage();
 
-        float leftActivity = LeftTracker.GetActivePercentage();
+        float leftActivity = LeftTracker.GetTotalActivePercentage();
+        //float leftActivity = LeftTracker.GetActivePercentage();
         float leftInactivity = LeftTracker.GetInactivePercentage();
 
         group.DOKill();

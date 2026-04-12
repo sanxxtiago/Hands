@@ -7,7 +7,7 @@ public class ErgonomicsTracker : MonoBehaviour
 
     private ErgonomicsCalculator calculator = new ErgonomicsCalculator();
 
-    // acumuladores por zona
+    // acumuladores por zona (intensidad)
     private float handAccum;
     private float wristAccum;
     private float forearmAccum;
@@ -18,8 +18,24 @@ public class ErgonomicsTracker : MonoBehaviour
     // tiempo donde NO hubo actividad
     private float inactiveTime;
 
-    // umbral mínimo para considerar "actividad"
-    private float activityThreshold = 0.01f;
+    // 🔥 thresholds independientes
+    [Header("Activity Thresholds")]
+    public float handThreshold = 0.05f;
+    public float wristThreshold = 0.08f;
+    public float forearmThreshold = 0.1f;
+
+    // tiempo activo por zona
+    private float handActiveTime;
+    private float wristActiveTime;
+    private float forearmActiveTime;
+
+    // valores por frame
+    private float handFrame;
+    private float wristFrame;
+    private float forearmFrame;
+
+    private bool hasDataThisFrame;
+    private int lastProcessedFrame = -1;
 
     private void OnEnable()
     {
@@ -31,75 +47,108 @@ public class ErgonomicsTracker : MonoBehaviour
         gestureDetector.OnHandUpdate -= Track;
     }
 
+    void Update()
+    {
+        float dt = Time.deltaTime;
+        totalTime += dt;
+
+        if (hasDataThisFrame)
+        {
+            //intensidad
+            handAccum += handFrame * dt;
+            wristAccum += wristFrame * dt;
+            forearmAccum += forearmFrame * dt;
+
+            //actividad por zona (con thresholds independientes)
+            bool handActive = handFrame > handThreshold;
+            bool wristActive = wristFrame > wristThreshold;
+            bool forearmActive = forearmFrame > forearmThreshold;
+
+            if (handActive) handActiveTime += dt;
+            if (wristActive) wristActiveTime += dt;
+            if (forearmActive) forearmActiveTime += dt;
+
+            //actividad global CORRECTA
+            bool isAnyActive = handActive || wristActive || forearmActive;
+
+            if (!isAnyActive)
+                inactiveTime += dt;
+        }
+        else
+        {
+            //sin datos → asumimos inactividad
+            //inactiveTime += dt;
+        }
+
+        // reset frame
+        handFrame = wristFrame = forearmFrame = 0f;
+        hasDataThisFrame = false;
+    }
+
     void Track(GestureInputEventArgs e)
     {
         if (e.hand != hand) return;
 
+        //solo 1 vez por frame
+        if (Time.frameCount == lastProcessedFrame) return;
+        lastProcessedFrame = Time.frameCount;
+
         var (handA, wristA, forearmA) = calculator.CalculateActivity(e);
 
-        float dt = Time.deltaTime;
+        //solo cachear
+        handFrame = handA;
+        wristFrame = wristA;
+        forearmFrame = forearmA;
 
-        // acumular tiempo total SIEMPRE
-        totalTime += dt;
-
-        // acumular uso por zona
-        handAccum += handA * dt;
-        wristAccum += wristA * dt;
-        forearmAccum += forearmA * dt;
-
-        // detectar si hubo actividad real
-        float totalActivity = handA + wristA + forearmA;
-
-        if (totalActivity < activityThreshold)
-        {
-            inactiveTime += dt;
-        }
+        hasDataThisFrame = true;
     }
 
-    // =========================
-    // 📊 MÉTRICAS
-    // =========================
-
-    // 🔹 1. Uso absoluto (respecto al tiempo total)
+    //MÉTRICAS
     public (float hand, float wrist, float forearm) GetAbsoluteUsage()
     {
         if (totalTime <= 0) return (0, 0, 0);
 
         return (
-            handAccum / totalTime,
-            wristAccum / totalTime,
-            forearmAccum / totalTime
+            handActiveTime / totalTime,
+            wristActiveTime / totalTime,
+            forearmActiveTime / totalTime
         );
     }
 
-    // 🔹 2. Distribución relativa (solo cuando hubo actividad)
     public (float hand, float wrist, float forearm) GetRelativeDistribution()
     {
-        float total = handAccum + wristAccum + forearmAccum;
+        float totalActive = handActiveTime + wristActiveTime + forearmActiveTime;
 
-        if (total <= 0) return (0, 0, 0);
+        if (totalActive <= 0) return (0, 0, 0);
 
         return (
-            handAccum / total,
-            wristAccum / total,
-            forearmAccum / total
+            handActiveTime / totalActive,
+            wristActiveTime / totalActive,
+            forearmActiveTime / totalActive
         );
     }
 
-    // 🔹 3. Inactividad
     public float GetInactivePercentage()
     {
         if (totalTime <= 0) return 0;
         return inactiveTime / totalTime;
     }
 
-    // 🔹 opcional: tiempo activo real
     public float GetActivePercentage()
     {
         return 1f - GetInactivePercentage();
     }
 
-    // 🔹 raw data (por si luego quieres cosas más pro)
+    public float GetTotalActivePercentage()
+    {
+        if (totalTime <= 0) return 0;
+
+        float activeTime =
+            totalTime - inactiveTime;
+
+        return activeTime / totalTime;
+    }
+
     public (float hand, float wrist, float forearm) GetRawTotals()
     {
         return (handAccum, wristAccum, forearmAccum);
@@ -112,6 +161,10 @@ public class ErgonomicsTracker : MonoBehaviour
         handAccum = 0;
         wristAccum = 0;
         forearmAccum = 0;
+
+        handActiveTime = 0;
+        wristActiveTime = 0;
+        forearmActiveTime = 0;
 
         totalTime = 0;
         inactiveTime = 0;
