@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ArmColorCalculator : ArmColor
+public class ArmRuntimeUI : ArmColor
 {
     public GestureDetector gestureDetector;
 

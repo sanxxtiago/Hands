@@ -4,7 +4,7 @@ using UnityEngine;
 public abstract class ExerciseController : MonoBehaviour
 {
     public GameManager gameManager;
-
+    public ResultsUI resultsUI;
     protected ExerciseMetricsTracker leftTracker;
     protected ExerciseMetricsTracker rightTracker;
 
@@ -62,13 +62,16 @@ public abstract class ExerciseController : MonoBehaviour
     }
 
     protected void ShowResults()
-    {
-        var leftSummary = MetricsSummaryBuilder.Build(leftTracker);
-        var rightSummary = MetricsSummaryBuilder.Build(rightTracker);
+{
+    var leftSummary = MetricsSummaryBuilder.Build(leftTracker);
+    var rightSummary = MetricsSummaryBuilder.Build(rightTracker);
 
-        DebugPrintSummary("LEFT HAND", leftSummary);
-        DebugPrintSummary("RIGHT HAND", rightSummary);
-    }
+    //DebugPrintSummary("LEFT HAND", leftSummary);
+    //DebugPrintSummary("RIGHT HAND", rightSummary);
+
+    //NUEVO
+    resultsUI.Display(leftSummary, rightSummary);
+}
 
     private void DebugPrintSummary(string label, ExerciseSummary summary)
     {

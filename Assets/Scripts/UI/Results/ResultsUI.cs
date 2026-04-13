@@ -7,67 +7,111 @@ using UnityEngine;
 
 public class ResultsUI : MonoBehaviour
 {
-    private ErgonomicsTracker LeftTracker => TrackerManager.Instance.left;
-    private ErgonomicsTracker RightTracker => TrackerManager.Instance.right;
-    public GameManager gameManager;
     public ArmResultUI rightArmAbsoluteResult;
     public ArmResultUI rightArmRelativeResult;
 
     public ArmResultUI leftArmAbsoluteResult;
     public ArmResultUI leftArmRelativeResult;
 
+    [Header("LEFT - ABS")]
+    public TMP_Text leftAbsHand;
+    public TMP_Text leftAbsWrist;
+    public TMP_Text leftAbsForearm;
+
+    [Header("LEFT - REL")]
+    public TMP_Text leftRelHand;
+    public TMP_Text leftRelWrist;
+    public TMP_Text leftRelForearm;
+
+    [Header("RIGHT - ABS")]
+    public TMP_Text rightAbsHand;
+    public TMP_Text rightAbsWrist;
+    public TMP_Text rightAbsForearm;
+
+    [Header("RIGHT - REL")]
+    public TMP_Text rightRelHand;
+    public TMP_Text rightRelWrist;
+    public TMP_Text rightRelForearm;
+
+    public TMP_Text leftActivityText;
+    public TMP_Text leftDurationText;
+
+    public TMP_Text rightActivityText;
+    public TMP_Text rightDurationText;
 
     public CanvasGroup group;
 
-    void OnEnable()
-    {
-        gameManager.OnResults += ShowResults;
-    }
-
-    void OnDisable()
-    {
-        gameManager.OnResults -= ShowResults;
-    }
     void Start()
     {
         group.alpha = 0f;
     }
-
-    void ShowResults()
+    public void Display(ExerciseSummary left, ExerciseSummary right)
     {
-        var rightAbsoluteData = RightTracker.GetAbsoluteUsage();
-        var rightRelativeData = RightTracker.GetRelativeDistribution();
-
-        var leftAbsoluteData = LeftTracker.GetAbsoluteUsage();
-        var leftRelativeData = LeftTracker.GetRelativeDistribution();
-
-        //float rightActivity = RightTracker.GetActivePercentage();
-        float rightActivity = RightTracker.GetTotalActivePercentage();
-        float rightInactivity = RightTracker.GetInactivePercentage();
-
-        float leftActivity = LeftTracker.GetTotalActivePercentage();
-        //float leftActivity = LeftTracker.GetActivePercentage();
-        float leftInactivity = LeftTracker.GetInactivePercentage();
-
         group.DOKill();
         group.alpha = 0;
         group.DOFade(1, 0.3f);
 
-        //setea la información absoluta
-        rightArmAbsoluteResult.PaintOnResults(rightAbsoluteData);
-        rightArmAbsoluteResult.SetTextResult(rightAbsoluteData, rightActivity, rightInactivity, true);
-        leftArmAbsoluteResult.PaintOnResults(leftAbsoluteData);
-        leftArmAbsoluteResult.SetTextResult(leftAbsoluteData, leftActivity, leftInactivity, true);
+        //pintar brazos
+        leftArmAbsoluteResult.Paint(left, left.absoluteUsage);
+        rightArmAbsoluteResult.Paint(right, right.absoluteUsage);
 
-        //setea la información relativa
-        rightArmRelativeResult.PaintOnResults(rightRelativeData);
-        rightArmRelativeResult.SetTextResult(rightRelativeData, 0, 0, false);
-        leftArmRelativeResult.PaintOnResults(leftRelativeData);
-        leftArmRelativeResult.SetTextResult(leftRelativeData, 0, 0, false);
+        leftArmRelativeResult.Paint(left, left.relativeUsage);
+        rightArmRelativeResult.Paint(right, right.relativeUsage);
 
-        //Mostrar intensidades promedio
-        rightArmAbsoluteResult.LogAverageIntensity(RightTracker.GetAverageIntensity());
-        leftArmAbsoluteResult.LogAverageIntensity(LeftTracker.GetAverageIntensity());
+        //texto
+        // LEFT ABS
+        SetZoneTexts(left, left.absoluteUsage,
+            leftAbsHand, leftAbsWrist, leftAbsForearm);
+
+        // LEFT REL
+        SetZoneTexts(left, left.relativeUsage,
+            leftRelHand, leftRelWrist, leftRelForearm);
+
+        // RIGHT ABS
+        SetZoneTexts(right, right.absoluteUsage,
+            rightAbsHand, rightAbsWrist, rightAbsForearm);
+
+        // RIGHT REL
+        SetZoneTexts(right, right.relativeUsage,
+            rightRelHand, rightRelWrist, rightRelForearm);
+            
+        //Actividad
+        leftActivityText.text = $"Actividad: {(left.activityRatio * 100f):F1}%";
+        leftDurationText.text = $"Tiempo activo: {left.totalActiveSeconds:F1}s";
+
+        rightActivityText.text = $"Actividad: {(right.activityRatio * 100f):F1}%";
+        rightDurationText.text = $"Tiempo activo: {right.totalActiveSeconds:F1}s";
     }
 
+    void SetZoneTexts(ExerciseSummary summary, float[] values,
+                  TMP_Text handText,
+                  TMP_Text wristText,
+                  TMP_Text forearmText)
+    {
+        float hand = 0f;
+        float wrist = 0f;
+        float forearm = 0f;
+
+        for (int i = 0; i < summary.zones.Length; i++)
+        {
+            switch (summary.zones[i])
+            {
+                case MotionZone.Hand:
+                    hand = values[i];
+                    break;
+
+                case MotionZone.Wrist:
+                    wrist = values[i];
+                    break;
+
+                case MotionZone.Forearm:
+                    forearm = values[i];
+                    break;
+            }
+        }
+
+        handText.text = $"Mano: {(hand * 100f):F1}%";
+        wristText.text = $"Muñeca: {(wrist * 100f):F1}%";
+        forearmText.text = $"Antebrazo: {(forearm * 100f):F1}%";
+    }
 }
