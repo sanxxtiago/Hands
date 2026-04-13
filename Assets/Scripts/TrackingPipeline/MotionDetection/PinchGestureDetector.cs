@@ -12,10 +12,10 @@ public class PinchGestureDetector : IGestureDetector
         float grab = snap.grabStrength;
         float pinchRaw = snap.pinchStrength;
 
-        // ✔ señal efectiva (NO destruyes la original)
+        //señal efectiva
         float effectivePinch = pinchRaw;
 
-        // 🔥 inhibición contextual (correcta)
+        //inhibición contextual (correcta)
         if (grab > 0.7f)
         {
             effectivePinch *= 0.3f;
@@ -23,27 +23,25 @@ public class PinchGestureDetector : IGestureDetector
 
         bool previousState = _isActive;
 
-        // ✔ ENTRADA
+        //ENTRADA
         if (!_isActive && effectivePinch > enterThreshold)
         {
             _isActive = true;
-            Debug.Log($"{snap.handType} PINCH START");
+            //Debug.Log($"{snap.handType} PINCH START");
         }
 
-        // ✔ SALIDA
+        //SALIDA
         else if (_isActive && effectivePinch < exitThreshold)
         {
             _isActive = false;
-            Debug.Log($"{snap.handType} PINCH END");
+            //Debug.Log($"{snap.handType} PINCH END");
         }
 
         return new GestureState
         {
             type = GestureType.Pinch,
             handType = snap.handType,
-
-            strength = pinchRaw, // 🔥 IMPORTANTE: señal real
-
+            strength = pinchRaw,
             isActive = _isActive,
             frameId = snap.frameId
         };

@@ -2,52 +2,45 @@ using UnityEngine;
 
 public class HandPositionDetector : IMotionDetector
 {
-    public float threshold = 0.3f;
+    public float movementThreshold = 0.02f; // metros por frame
+    public float smoothing = 0.2f;
 
-    // Valores definidos en calibración
-    private float minHeight = 0f;
-    private float maxHeight = 0.5f;
-
-    // Offset base (posición neutra del usuario)
-    private float referenceHeight = 0f;
-
-    public void SetCalibration(float min, float max, float reference)
-    {
-        minHeight = min;
-        maxHeight = max;
-        referenceHeight = reference;
-    }
+    private float _smoothedDelta;
 
     public MotionData Evaluate(HandDataSnapshot current, HandDataSnapshot previous)
     {
-        float height = current.palmPosition.y;
+        float delta = 0f;
 
-        // Altura relativa al baseline
-        float relativeHeight = height - referenceHeight;
-
-        // Normalización basada en calibración real
-        float normalized = Mathf.InverseLerp(minHeight, maxHeight, relativeHeight);
-
-        // Velocidad vertical
-        float velocity = 0f;
         if (previous.frameId != 0)
         {
-            float deltaY = current.palmPosition.y - previous.palmPosition.y;
-            float deltaTime = Time.deltaTime;
-            velocity = deltaTime > 0 ? deltaY / deltaTime : 0f;
+            Vector3 deltaPos = current.palmPosition - previous.palmPosition;
+
+            delta = deltaPos.magnitude;
+
+            //eliminar ruido del sensor
+            if (delta < 0.002f)
+                delta = 0f;
         }
+
+        //suavizado
+        float t = 1f - Mathf.Exp(-smoothing * Time.deltaTime * 60f);
+        _smoothedDelta = Mathf.Lerp(_smoothedDelta, delta, t);
+
+        bool isActive = _smoothedDelta > movementThreshold;
+
+        //normalizado para métricas
+        float normalized = Mathf.Clamp01(_smoothedDelta / 0.1f);
 
         return new MotionData
         {
-            zone = MotionZone.HandElevation, // 👈 más específico
+            zone = MotionZone.Hand, // 👈 vuelve a Hand (clave)
             handType = current.handType,
 
             value = normalized,
-            rawAngle = relativeHeight, // aquí es distancia real
-            velocity = velocity,
+            rawAngle = _smoothedDelta, // ahora es distancia, no ángulo
+            velocity = _smoothedDelta / Mathf.Max(Time.deltaTime, 0.0001f),
 
-            isActive = normalized > threshold,
-
+            isActive = isActive,
             frameId = current.frameId
         };
     }

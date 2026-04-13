@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class HandSnapshotBuilder
 {
-    public HandDataSnapshot[] Build(Frame frame)
+    public HandDataSnapshot?[] Build(Frame frame)
     {
         HandDataSnapshot left = default;
         HandDataSnapshot right = default;
@@ -38,6 +38,6 @@ public class HandSnapshotBuilder
                 right = snapshot;
         }
 
-        return new HandDataSnapshot[] { left, right };
+        return new HandDataSnapshot?[] { left, right };
     }
 }

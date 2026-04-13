@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class ForearmRotationDetector : IMotionDetector
 {
-    public float threshold = 5f;
+    public float threshold = 3f;
     public float smoothing = 0.2f;
 
     private float _smoothedDelta;
-    public bool debug = true;
+    public bool debug = false;
 
     public MotionData Evaluate(HandDataSnapshot current, HandDataSnapshot previous)
     {
@@ -19,23 +19,25 @@ public class ForearmRotationDetector : IMotionDetector
 
             delta = Quaternion.Angle(Quaternion.identity, deltaRotation);
         }
+        if (delta < 0.5f)
+            delta = 0f;
 
         _smoothedDelta = Mathf.Lerp(_smoothedDelta, delta, smoothing);
 
         bool isActive = _smoothedDelta > threshold;
-        float normalized = Mathf.Clamp01(_smoothedDelta / 90f);
+        float normalized = Mathf.Clamp01(_smoothedDelta / 30f);
 
         if (debug)
             Debug.Log($"[FOREARM] {current.handType} | Delta: {_smoothedDelta:F2}° | Active: {isActive}");
 
         return new MotionData
         {
-            zone     = MotionZone.Forearm,
+            zone = MotionZone.Forearm,
             handType = current.handType,
-            value    = normalized,
+            value = normalized,
             rawAngle = _smoothedDelta,
             isActive = isActive,
-            frameId  = current.frameId
+            frameId = current.frameId
         };
     }
 }

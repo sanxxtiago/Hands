@@ -21,37 +21,45 @@ public class MotionAggregator
         _gestureDetectors = gestureDetectors ?? new List<IGestureDetector>();
     }
 
-    public FrameMotionData Process(HandDataSnapshot current)
+    public bool Process(HandDataSnapshot current, out FrameMotionData frame)
     {
-        if (_previousSnapshot.frameId == current.frameId)
-            return default;
-            
-        // ⚠️ 1. Filtrar por mano
+        frame = default;
+
+        // 1. Filtrar por mano
         if (current.handType != _handType)
-            return default;
+            return false;
+
+        // 2. Evitar reprocesar mismo frame
+        if (_previousSnapshot.frameId == current.frameId)
+            return false;
+
+        // 3. Primer frame → no hay delta válido
+        if (_previousSnapshot.frameId == 0)
+        {
+            _previousSnapshot = current;
+            return false;
+        }
 
         var motions = new List<MotionData>(_motionDetectors.Count);
         var gestures = new List<GestureState>(_gestureDetectors.Count);
 
-        // ⚙️ 2. MOTION DETECTION (con contexto temporal)
+        // 4. Motion detectors (usan previous)
         foreach (var detector in _motionDetectors)
         {
-            MotionData data = detector.Evaluate(current, _previousSnapshot);
-            motions.Add(data);
+            motions.Add(detector.Evaluate(current, _previousSnapshot));
         }
 
-        // ✋ 3. GESTURES (no necesitan previous por ahora)
+        // 5. Gesture detectors (estado continuo)
         foreach (var detector in _gestureDetectors)
         {
-            GestureState state = detector.Evaluate(current);
-            gestures.Add(state);
+            gestures.Add(detector.Evaluate(current));
         }
 
-        // 🧠 4. Guardar estado para siguiente frame
+        // 6. Guardar snapshot actual
         _previousSnapshot = current;
 
-        // 📦 5. Output
-        return new FrameMotionData
+        // 7. Construir frame
+        frame = new FrameMotionData
         {
             frameId = current.frameId,
             handType = current.handType,
@@ -59,5 +67,7 @@ public class MotionAggregator
             motions = motions,
             gestures = gestures
         };
+
+        return true;
     }
 }

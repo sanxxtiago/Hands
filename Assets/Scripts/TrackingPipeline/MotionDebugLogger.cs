@@ -24,11 +24,12 @@ public class MotionDebugLogger : MonoBehaviour
                 Debug.Log($"  MOTION {m.zone} | value: {m.value:F2} | active: {m.isActive}");
             }
         }
+        foreach (var g in frame.gestures)
+        {
+            Debug.Log($"  GESTURE {g.type} | strength: {g.strength:F2}");
+        }
     }
 
-    // foreach (var g in frame.gestures)
-    // {
-    //     Debug.Log($"  GESTURE {g.type} | strength: {g.strength:F2}");
-    // }
+
 
 }

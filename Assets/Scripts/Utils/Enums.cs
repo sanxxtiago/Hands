@@ -27,7 +27,9 @@ public enum MotionZone
     WristFlexion,
     Supination,
     Pronation,
-    HandElevation
+    HandElevation,
+    Grab,
+    Pinch
 }
 public enum ERRORTYPE
 {

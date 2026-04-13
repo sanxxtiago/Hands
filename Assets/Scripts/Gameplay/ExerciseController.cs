@@ -72,33 +72,29 @@ public abstract class ExerciseController : MonoBehaviour
 
     private void DebugPrintSummary(string label, ExerciseSummary summary)
     {
-        Debug.Log($"===== {label} =====");
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine($"===== {label} | {summary.handType} =====");
 
-        var zones = summary.zones;
+        sb.AppendLine($"Duración total : {summary.totalDurationSeconds:F2}s");
+        sb.AppendLine($"Tiempo activo  : {summary.totalActiveSeconds:F2}s");
+        sb.AppendLine($"Ratio actividad: {summary.activityRatio:P1}");
+        sb.AppendLine();
 
-        Debug.Log("-- Uso absoluto (activación) --");
-        for (int i = 0; i < zones.Length; i++)
+        sb.AppendLine($"{"Zona",-12} {"Absoluto",10} {"Relativo",10} {"Intensidad",12}");
+        sb.AppendLine(new string('-', 48));
+
+        for (int i = 0; i < summary.zones.Length; i++)
         {
-            Debug.Log($"{zones[i]}: {summary.absoluteUsage[i] * 100f:F1}%");
+            sb.AppendLine(
+                $"{summary.zones[i],-12} " +
+                $"{summary.absoluteUsage[i] * 100f,9:F1}% " +
+                $"{summary.relativeUsage[i] * 100f,9:F1}% " +
+                $"{summary.intensity[i],12:F3}"
+            );
         }
 
-        Debug.Log("-- Uso relativo (distribución) --");
-        for (int i = 0; i < zones.Length; i++)
-        {
-            Debug.Log($"{zones[i]}: {summary.relativeUsage[i] * 100f:F1}%");
-        }
-
-        Debug.Log("-- Intensidad de movimiento --");
-        for (int i = 0; i < zones.Length; i++)
-        {
-            Debug.Log($"{zones[i]}: {summary.intensity[i]:F3}");
-        }
-
-        Debug.Log($"Duración total: {summary.totalDurationSeconds:F2}s");
-        Debug.Log($"Tiempo activo: {summary.totalActiveSeconds:F2}s");
-        Debug.Log($"Ratio actividad: {summary.activityRatio:P1}");
+        Debug.Log(sb.ToString());
     }
-
     private void OnFrameReceived(FrameMotionData frame)
     {
         if (!isRunning) return;

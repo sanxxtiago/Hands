@@ -5,7 +5,7 @@ public class WristRotationDetector : IMotionDetector
     public float smoothing = 0.2f;
 
     private float _smoothedDelta;
-    private bool debug = true;
+    private bool debug = false;
     public MotionData Evaluate(HandDataSnapshot current, HandDataSnapshot previous)
     {
         float delta = 0f;
@@ -23,12 +23,15 @@ public class WristRotationDetector : IMotionDetector
 
             delta = Quaternion.Angle(Quaternion.identity, deltaRotation);
         }
+        if (delta < 0.5f)
+            delta = 0f;
 
-        _smoothedDelta = Mathf.Lerp(_smoothedDelta, delta, smoothing);
+        float t = 1f - Mathf.Exp(-smoothing * Time.deltaTime * 60f);
+        _smoothedDelta = Mathf.Lerp(_smoothedDelta, delta, t);
 
         bool isActive = _smoothedDelta > threshold;
 
-        float normalized = Mathf.Clamp01(_smoothedDelta / 90f);
+        float normalized = Mathf.Clamp01(_smoothedDelta / 30f);
 
         if (debug)
             Debug.Log($"[WRIST] {current.handType} | Delta: {_smoothedDelta:F2}° | Active: {isActive}");

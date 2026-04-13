@@ -5,72 +5,70 @@ public class MotionPipelineRunner : MonoBehaviour
 {
     public LeapDataProvider leapProvider;
 
-    private HandSnapshotBuilder snapshotBuilder;
-    private MotionAggregator leftAggregator;
-    private MotionAggregator rightAggregator;
-    private MotionEventDispatcher dispatcher;
+    private HandSnapshotBuilder _snapshotBuilder;
+    private MotionAggregator _leftAggregator;
+    private MotionAggregator _rightAggregator;
+    private MotionEventDispatcher _dispatcher;
+
+    private HandDataSnapshot _prevLeft;
+    private HandDataSnapshot _prevRight;
 
     void Awake()
     {
-        snapshotBuilder = new HandSnapshotBuilder();
+        _snapshotBuilder = new HandSnapshotBuilder();
 
-        leftAggregator = new MotionAggregator(
+        _leftAggregator = new MotionAggregator(
             HandType.LEFT,
             new List<IMotionDetector>
             {
-                //new WristRotationDetector(),
-                new ForearmRotationDetector(),
-                // new HandPositionDetector()
+            new WristRotationDetector(),
+            new ForearmRotationDetector(),
+            new HandPositionDetector()
             },
             new List<IGestureDetector>
             {
-                //new GrabGestureDetector(),
-                //new PinchGestureDetector()
+            new GrabGestureDetector(),
+            new PinchGestureDetector()
             }
         );
 
-        rightAggregator = new MotionAggregator(
+        _rightAggregator = new MotionAggregator(
             HandType.RIGHT,
             new List<IMotionDetector>
             {
-                // new WristRotationDetector(),
-                 new ForearmRotationDetector(),
-                // new HandPositionDetector()
+            new WristRotationDetector(),
+            new ForearmRotationDetector(),
+            new HandPositionDetector()
             },
             new List<IGestureDetector>
             {
-                //new GrabGestureDetector(),
-                //new PinchGestureDetector()
+            new GrabGestureDetector(),
+            new PinchGestureDetector()
             }
         );
 
-        dispatcher = new MotionEventDispatcher();
+        _dispatcher = new MotionEventDispatcher();
     }
 
-    void OnEnable()
-    {
-        leapProvider.OnFrameReady += OnFrame;
-    }
-
-    void OnDisable()
-    {
-        leapProvider.OnFrameReady -= OnFrame;
-    }
+    void OnEnable() => leapProvider.OnFrameReady += OnFrame;
+    void OnDisable() => leapProvider.OnFrameReady -= OnFrame;
 
     void OnFrame(Leap.Frame frame)
     {
-        var snapshots = snapshotBuilder.Build(frame);
+        HandDataSnapshot?[] snapshots = _snapshotBuilder.Build(frame);
 
-        foreach (var snap in snapshots)
+        foreach (var snapNullable in snapshots)
         {
-            FrameMotionData result;
+            if (snapNullable == null) continue;
 
-            if (snap.handType == HandType.LEFT)
-                result = leftAggregator.Process(snap);
-            else
-                result = rightAggregator.Process(snap);
+            HandDataSnapshot snap = snapNullable.Value;
 
-            dispatcher.Dispatch(result);
+            MotionAggregator aggregator = snap.handType == HandType.LEFT
+                ? _leftAggregator
+                : _rightAggregator;
+
+            if (aggregator.Process(snap, out FrameMotionData result))
+                _dispatcher.Dispatch(result);
         }
     }
 }

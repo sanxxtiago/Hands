@@ -13,25 +13,25 @@ public class GrabGestureDetector : IGestureDetector
 
         bool previousState = _isActive;
 
-        // ✔ ENTRADA
+        //ENTRADA
         if (!_isActive && raw > enterThreshold)
         {
             _isActive = true;
-            Debug.Log("Grab START");
+            //Debug.Log("Grab START");
         }
 
-        // ✔ SALIDA
+        //SALIDA
         else if (_isActive && raw < exitThreshold)
         {
             _isActive = false;
-            Debug.Log("Grab END");
+            //Debug.Log("Grab END");
         }
 
-        // 🔥 ESTADO CONTINUO (HOLD)
+        //ESTADO CONTINUO (HOLD)
         if (_isActive && previousState)
         {
             // esto es HOLD explícito
-            Debug.Log("Grab HOLD");
+            //Debug.Log("Grab HOLD");
         }
 
         return new GestureState
