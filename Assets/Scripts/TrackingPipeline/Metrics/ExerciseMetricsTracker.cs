@@ -142,4 +142,5 @@ public class ExerciseMetricsTracker
         if (_elapsedTime <= 0f) return 0f;
         return _activeTime / _elapsedTime;
     }
+
 }

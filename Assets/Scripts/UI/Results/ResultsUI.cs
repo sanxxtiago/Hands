@@ -33,9 +33,11 @@ public class ResultsUI : MonoBehaviour
     public TMP_Text rightRelWrist;
     public TMP_Text rightRelForearm;
 
+    [Header("LEFT - ACTIVITY")]
     public TMP_Text leftActivityText;
     public TMP_Text leftDurationText;
 
+    [Header("RIGHT - ACTIVITY")]
     public TMP_Text rightActivityText;
     public TMP_Text rightDurationText;
 
@@ -74,12 +76,12 @@ public class ResultsUI : MonoBehaviour
         // RIGHT REL
         SetZoneTexts(right, right.relativeUsage,
             rightRelHand, rightRelWrist, rightRelForearm);
-            
+
         //Actividad
-        leftActivityText.text = $"Actividad: {(left.activityRatio * 100f):F1}%";
+        leftActivityText.text = $"Actividad: {left.activityRatio * 100f:F1}%";
         leftDurationText.text = $"Tiempo activo: {left.totalActiveSeconds:F1}s";
 
-        rightActivityText.text = $"Actividad: {(right.activityRatio * 100f):F1}%";
+        rightActivityText.text = $"Actividad: {right.activityRatio * 100f:F1}%";
         rightDurationText.text = $"Tiempo activo: {right.totalActiveSeconds:F1}s";
     }
 
