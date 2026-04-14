@@ -26,7 +26,6 @@ public abstract class ExerciseController : MonoBehaviour
         leftTracker = new ExerciseMetricsTracker(HandType.LEFT);
         rightTracker = new ExerciseMetricsTracker(HandType.RIGHT);
 
-        MotionEventBus.OnFrame += OnFrameReceived;
 
         StartCoroutine(ExerciseRoutine());
     }
@@ -34,11 +33,11 @@ public abstract class ExerciseController : MonoBehaviour
     IEnumerator ExerciseRoutine()
     {
         isRunning = true;
-
         leftTracker.Reset();
         rightTracker.Reset();
 
         OnExerciseStart();
+        MotionEventBus.OnFrame += OnFrameReceived;
 
         float timer = duration;
 
@@ -50,11 +49,11 @@ public abstract class ExerciseController : MonoBehaviour
             yield return null;
         }
 
+        MotionEventBus.OnFrame -= OnFrameReceived;
         OnExerciseEnd();
 
         ShowResults();
 
-        MotionEventBus.OnFrame -= OnFrameReceived;
 
         isRunning = false;
 
@@ -62,16 +61,16 @@ public abstract class ExerciseController : MonoBehaviour
     }
 
     protected void ShowResults()
-{
-    var leftSummary = MetricsSummaryBuilder.Build(leftTracker);
-    var rightSummary = MetricsSummaryBuilder.Build(rightTracker);
+    {
+        var leftSummary = MetricsSummaryBuilder.Build(leftTracker);
+        var rightSummary = MetricsSummaryBuilder.Build(rightTracker);
 
-    //DebugPrintSummary("LEFT HAND", leftSummary);
-    //DebugPrintSummary("RIGHT HAND", rightSummary);
+        //DebugPrintSummary("LEFT HAND", leftSummary);
+        //DebugPrintSummary("RIGHT HAND", rightSummary);
 
-    //NUEVO
-    resultsUI.Display(leftSummary, rightSummary);
-}
+
+        resultsUI.Display(leftSummary, rightSummary);
+    }
 
     private void DebugPrintSummary(string label, ExerciseSummary summary)
     {

@@ -11,5 +11,5 @@ public struct ExerciseSummary
     public float totalDurationSeconds;
     public float totalActiveSeconds;
 
-    public float activityRatio; // 🔥 uso vs reposo
+    public float activityRatio;
 }

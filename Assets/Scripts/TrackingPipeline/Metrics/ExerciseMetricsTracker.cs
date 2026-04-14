@@ -18,10 +18,18 @@ public class ExerciseMetricsTracker
     {
         _handType = handType;
     }
-
+    private float lastTimestamp = -1f;
     public void OnFrameReceived(FrameMotionData frame)
     {
-        float dt = Time.deltaTime;
+        //float dt = Time.deltaTime;
+        //float dt = Time.time - frame.timestamp;
+        float dt = 0f;
+
+        if (lastTimestamp >= 0f)
+            dt = frame.timestamp - lastTimestamp;
+
+        lastTimestamp = frame.timestamp;
+
         _totalFrames++;
         _elapsedTime += dt;
 
@@ -82,6 +90,8 @@ public class ExerciseMetricsTracker
             _activeTime += dt;
     }
 
+
+    //Para las manos en UI 
     public RuntimeMetrics GetRuntimeSnapshot()
     {
         var usageByZone = new Dictionary<MotionZone, float>();
@@ -105,7 +115,7 @@ public class ExerciseMetricsTracker
         _totalFrames = 0;
         _elapsedTime = 0f;
         _activeTime = 0f;
-
+        lastTimestamp = -1f;
         _records.Clear();
     }
 

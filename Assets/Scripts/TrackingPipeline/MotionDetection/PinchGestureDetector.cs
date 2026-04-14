@@ -39,7 +39,7 @@ public class PinchGestureDetector : IGestureDetector
 
         return new GestureState
         {
-            type = GestureType.Pinch,
+            type = GestureType.PINCH,
             handType = snap.handType,
             strength = pinchRaw,
             isActive = _isActive,

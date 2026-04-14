@@ -3,7 +3,7 @@ using UnityEngine;
 public class GrabGestureDetector : IGestureDetector
 {
     public float enterThreshold = 0.75f;
-    public float exitThreshold = 0.65f;
+    public float exitThreshold = 0.60f;
 
     private bool _isActive = false;
 
@@ -36,10 +36,10 @@ public class GrabGestureDetector : IGestureDetector
 
         return new GestureState
         {
-            type = GestureType.Grab,
+            type = GestureType.GRAB,
             handType = snap.handType,
             strength = raw,
-            isActive = _isActive,
+            isActive = _isActive && previousState,
             frameId = snap.frameId
         };
     }

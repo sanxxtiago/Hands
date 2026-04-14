@@ -5,7 +5,7 @@ public enum HandType
     LEFT = 1,
     RIGHT = 0
 }
-public enum GESTURESTATE
+public enum GestureType
 {
     IDLE,
     GRAB,
@@ -13,10 +13,19 @@ public enum GESTURESTATE
     ROTATE
 }
 
-public enum GestureType
+public enum GesturePhase
+{
+    START,
+    UPDATE,
+    END
+}
+
+public enum InteractionType
 {
     Grab,
-    Pinch
+    Select,
+    Pinch,
+    Rotate
 }
 
 public enum MotionZone

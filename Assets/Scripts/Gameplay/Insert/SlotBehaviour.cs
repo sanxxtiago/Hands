@@ -1,7 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class SlotBehaviour : MonoBehaviour
@@ -72,7 +70,7 @@ public class SlotBehaviour : MonoBehaviour
 
             piece.transform.position = Vector3.Lerp(startPos, snapPoint.position, smoothT);
 
-            // 👇 solo rota si el objeto lo necesita
+            //solo rota si el objeto lo necesita
             if (piece.requireRotation)
             {
                 piece.transform.rotation = Quaternion.Slerp(startRot, targetRot, smoothT);
@@ -85,7 +83,7 @@ public class SlotBehaviour : MonoBehaviour
             yield return null;
         }
 
-        // 👇 asegurar posición final exacta
+        //asegurar posición final exacta
         piece.transform.position = snapPoint.position;
 
         if (piece.requireRotation)
@@ -103,7 +101,7 @@ public class SlotBehaviour : MonoBehaviour
 
         isFilled = true;
 
-        // 👇 opcional: dejarlo fijo pero con collider normal
+        // opcional: dejarlo fijo pero con collider normal
         //col.isTrigger = false;
     }
     // void Snap(PieceBehaviour piece)

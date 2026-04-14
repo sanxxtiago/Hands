@@ -10,9 +10,6 @@ public class MotionPipelineRunner : MonoBehaviour
     private MotionAggregator _rightAggregator;
     private MotionEventDispatcher _dispatcher;
 
-    private HandDataSnapshot _prevLeft;
-    private HandDataSnapshot _prevRight;
-
     void Awake()
     {
         _snapshotBuilder = new HandSnapshotBuilder();

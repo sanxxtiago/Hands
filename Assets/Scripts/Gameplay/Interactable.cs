@@ -4,30 +4,44 @@ public abstract class Interactable : MonoBehaviour
 {
     public event System.Action<Interactable> OnForcedRelease;
 
-    public virtual bool CanInteract(HandType hand) => true;
+    // =========================
+    // CAPABILITIES
+    // =========================
+    public virtual bool CanInteract(InteractionType interactionType) => true;
 
-    public virtual void OnGrabStart(HandType hand, Vector3 handPos, Quaternion handRot) { }
+    // =========================
+    // GRAB
+    // =========================
+    public virtual void OnGrabStart(InteractableData data) { }
 
-    public virtual void OnGrabUpdate(
-        HandType hand,
-        Vector3 targetPos,
-        Quaternion targetRot,
-        float posSmooth,
-        float rotSmooth
-    )
+    public virtual void OnGrabUpdate(InteractableData data) { }
+
+    public virtual void OnGrabEnd(InteractableData data) { }
+
+    // =========================
+    // ROTATE
+    // =========================
+    public virtual void OnRotate(InteractableData data)
     { }
 
-    public virtual void OnGrabEnd(HandType hand, Vector3 releaseVelocity) { }
+    // =========================
+    // PINCH / SELECT
+    // =========================
+    public virtual void OnSelect(InteractableData data) { }
 
-    public virtual void ForceRelease() { }
+    // =========================
+    // FORCE RELEASE
+    // =========================
+    public virtual void ForceRelease()
+    {
+        OnForcedRelease?.Invoke(this);
+    }
 
+    // =========================
+    // UTILS
+    // =========================
     protected Vector3 ClampPosition(Vector3 worldPosition)
     {
         return BoundingBox.Instance.ClampInsideBox(worldPosition);
-    }
-
-    protected void InvokeForcedRelease()
-    {
-        OnForcedRelease?.Invoke(this);
     }
 }

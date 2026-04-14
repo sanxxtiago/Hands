@@ -824,6 +824,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdc38b104739e194480aa74ef36bc944, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsGrabbed: 0
   pieceType: 0
   isSnapped: 0
   requireRotation: 1
@@ -2467,7 +2468,7 @@ GameObject:
   - component: {fileID: 540416931}
   - component: {fileID: 540416932}
   m_Layer: 0
-  m_Name: Gestures
+  m_Name: InteractionManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2495,7 +2496,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 540416928}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 20d00e640cdde4a49859954e61fe3620, type: 3}
   m_Name: 
@@ -2515,14 +2516,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3723bb218496db747955385bd17a5cea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detector: {fileID: 540416931}
   grabRadius: 0.07
-  grabbableLayer:
+  interactableLayer:
     serializedVersion: 2
     m_Bits: 64
-  positionSmooth: 40
-  rotationSmooth: 25
-  handSmooth: 20
 --- !u!1 &540689707
 GameObject:
   m_ObjectHideFlags: 0
@@ -3233,7 +3230,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameManager: {fileID: 1956825092}
   resultsUI: {fileID: 164932822}
-  duration: 5
+  duration: 10
 --- !u!4 &692508683
 Transform:
   m_ObjectHideFlags: 0
@@ -6916,6 +6913,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdc38b104739e194480aa74ef36bc944, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsGrabbed: 0
   pieceType: 1
   isSnapped: 0
   requireRotation: 0
@@ -8534,6 +8532,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdc38b104739e194480aa74ef36bc944, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsGrabbed: 0
   pieceType: 0
   isSnapped: 0
   requireRotation: 1

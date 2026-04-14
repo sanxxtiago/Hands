@@ -3,7 +3,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 
-public class ArmResultUI : ArmColor
+public class ArmResultUI : ArmUI
 {
     private ExerciseSummary _summary;
     private float[] _values;

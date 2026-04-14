@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public abstract class ArmColor : MonoBehaviour
+public abstract class ArmUI : MonoBehaviour
 {
     public HandType hand;
 
