@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 public static class MetricsSummaryBuilder
 {
-    public static ExerciseSummary Build(ExerciseMetricsTracker tracker)
+    public static ExerciseSummary Build(ExerciseMetricsTracker tracker, float duration)
     {
         var zones = new List<MotionZone>(tracker.GetTrackedZones());
         int count = zones.Count;
@@ -43,7 +43,7 @@ public static class MetricsSummaryBuilder
             intensity = intensity,
             totalDurationSeconds = tracker.ElapsedTime,
             totalActiveSeconds = totalActiveTime,
-            activityRatio = tracker.GetActivityRatio()
+            activityRatio = tracker.GetActivityRatio(duration)
         };
     }
 }

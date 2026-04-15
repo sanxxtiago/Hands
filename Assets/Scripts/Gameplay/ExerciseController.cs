@@ -62,8 +62,8 @@ public abstract class ExerciseController : MonoBehaviour
 
     protected void ShowResults()
     {
-        var leftSummary = MetricsSummaryBuilder.Build(leftTracker);
-        var rightSummary = MetricsSummaryBuilder.Build(rightTracker);
+        var leftSummary = MetricsSummaryBuilder.Build(leftTracker, duration);
+        var rightSummary = MetricsSummaryBuilder.Build(rightTracker, duration);
 
         //DebugPrintSummary("LEFT HAND", leftSummary);
         //DebugPrintSummary("RIGHT HAND", rightSummary);
