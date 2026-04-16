@@ -1,46 +1,29 @@
-using System.Collections.Generic;
+using System.Linq;
 
 public static class MetricsSummaryBuilder
 {
     public static ExerciseSummary Build(ExerciseMetricsTracker tracker, float duration)
     {
-        var zones = new List<MotionZone>(tracker.GetTrackedZones());
-        int count = zones.Count;
+        var zones = tracker.GetTrackedZones().ToArray();
+        var records = zones.Select(z => tracker.GetZoneRecord(z)).ToArray();
 
-        float[] absolute = new float[count];
-        float[] relative = new float[count];
-        float[] intensity = new float[count];
-
+        int totalFrames = tracker.TotalFrames;
         float totalActiveTime = tracker.GetActiveTime();
-
-        float totalZoneActiveTime = 0f;
-        for (int i = 0; i < count; i++)
-            totalZoneActiveTime += tracker.GetZoneRecord(zones[i]).activeTime;
-
-        for (int i = 0; i < count; i++)
-        {
-            var record = tracker.GetZoneRecord(zones[i]);
-
-            absolute[i] = tracker.TotalFrames > 0
-                ? (float)record.activeFrames / tracker.TotalFrames
-                : 0f;
-
-            relative[i] = totalZoneActiveTime > 0
-                ? record.activeTime / totalZoneActiveTime
-                : 0f;
-
-            intensity[i] = tracker.TotalFrames > 0
-                ? record.accumulatedValue / tracker.TotalFrames
-                : 0f;
-        }
+        float totalZoneActiveTime = records.Sum(r => r.activeTime);
 
         return new ExerciseSummary
         {
             handType = tracker.HandType,
-            zones = zones.ToArray(),
-            absoluteUsage = absolute,
-            relativeUsage = relative,
-            intensity = intensity,
+            zones = zones,
+            absoluteUsage = records.Select(r => totalFrames > 0
+                ? (float)r.activeFrames / totalFrames
+                : 0f).ToArray(),
+            relativeUsage = records.Select(r => totalZoneActiveTime > 0
+                ? r.activeTime / totalZoneActiveTime
+                : 0f).ToArray(),
+            intensity = records.Select(r => totalFrames > 0
+                ? r.accumulatedValue / totalFrames
+                : 0f).ToArray(),
             totalDurationSeconds = tracker.ElapsedTime,
             totalActiveSeconds = totalActiveTime,
             activityRatio = tracker.GetActivityRatio(duration)
