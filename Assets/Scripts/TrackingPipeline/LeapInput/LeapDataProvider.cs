@@ -13,8 +13,10 @@ public class LeapDataProvider : MonoBehaviour
     Frame frame = _provider.CurrentFrame;
     if (frame == null) return;
 
+#if UNITY_EDITOR
     if (RawFramDebugger)
         Debug.Log($"LEAP FRAME: {frame.Id} | hands: {frame.Hands.Count}");
+#endif
 
     OnFrameReady?.Invoke(frame);
 }

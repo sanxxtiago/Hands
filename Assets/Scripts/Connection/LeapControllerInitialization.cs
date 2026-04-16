@@ -44,7 +44,9 @@ public class LeapControllerInitialization : MonoBehaviour
         //Esperar conexión real 
         while (!controller.IsConnected)
         {
+#if UNITY_EDITOR
             Debug.Log("Esperando Leap...");
+#endif
             yield return null;
         }
         //Esperar a que el provider esté listo
@@ -52,6 +54,8 @@ public class LeapControllerInitialization : MonoBehaviour
         OnLeapConnected?.Invoke();
         //Forzar modo Desktop
         provider.ChangeTrackingMode(LeapServiceProvider.TrackingOptimizationMode.Desktop);
+#if UNITY_EDITOR
         Debug.Log("Modo Desktop aplicado");
+#endif
     }
 }

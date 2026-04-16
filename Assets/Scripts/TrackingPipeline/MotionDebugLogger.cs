@@ -1,5 +1,10 @@
+#if UNITY_EDITOR
 using UnityEngine;
 
+/// <summary>
+/// Editor-only debug logger that prints every motion/gesture frame to the console.
+/// Stripped from production builds to prevent patient-data leakage via logcat.
+/// </summary>
 public class MotionDebugLogger : MonoBehaviour
 {
     void OnEnable()
@@ -14,13 +19,11 @@ public class MotionDebugLogger : MonoBehaviour
 
     void LogFrame(FrameMotionData frame)
     {
-
         foreach (var m in frame.motions)
         {
             if (m.isActive)
             {
                 Debug.Log($"FRAME {frame.frameId} | {frame.handType}");
-
                 Debug.Log($"  MOTION {m.zone} | value: {m.value:F2} | active: {m.isActive}");
             }
         }
@@ -29,7 +32,5 @@ public class MotionDebugLogger : MonoBehaviour
             Debug.Log($"  GESTURE {g.type} | strength: {g.strength:F2}");
         }
     }
-
-
-
 }
+#endif

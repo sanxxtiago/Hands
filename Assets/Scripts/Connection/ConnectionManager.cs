@@ -14,12 +14,16 @@ public class ConnectionManager : MonoBehaviour
     }
     void HandleOnLeapConnected()
     {
+#if UNITY_EDITOR
         Debug.Log("Leap connected!");
+#endif
         SnackbarManager.Show(SNACKBARTYPE.SUCCESS, "Leap connected!");
     }
     void HandleOnLeapDisconnected()
     {
-        Debug.Log("Leap connected!");
+#if UNITY_EDITOR
+        Debug.Log("Leap disconnected!");
+#endif
         SnackbarManager.Show(SNACKBARTYPE.ERROR, "Leap disconnected!");
     }
 

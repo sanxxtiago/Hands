@@ -11,10 +11,12 @@ public class SceneLoader : MonoBehaviour
     }
     void Update()
     {
+#if UNITY_EDITOR
         if (Input.GetKey(KeyCode.R))
         {
             ReloadScene();
         }
+#endif
     }
 
     public void ReloadScene()

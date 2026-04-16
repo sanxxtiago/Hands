@@ -72,6 +72,7 @@ public abstract class ExerciseController : MonoBehaviour
         resultsUI.Display(leftSummary, rightSummary);
     }
 
+#if UNITY_EDITOR
     private void DebugPrintSummary(string label, ExerciseSummary summary)
     {
         var sb = new System.Text.StringBuilder();
@@ -97,6 +98,7 @@ public abstract class ExerciseController : MonoBehaviour
 
         Debug.Log(sb.ToString());
     }
+#endif
     private void OnFrameReceived(FrameMotionData frame)
     {
         if (!isRunning) return;

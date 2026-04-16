@@ -19,6 +19,7 @@ public class BoundingBox : MonoBehaviour
         col = GetComponent<BoxCollider>();
     }
 
+#if UNITY_EDITOR
     void Update()
     {
         if (!debugBox) return;
@@ -61,6 +62,7 @@ public class BoundingBox : MonoBehaviour
         Debug.DrawLine(points[2], points[6], Color.red);
         Debug.DrawLine(points[3], points[7], Color.red);
     }
+#endif
 
     public Vector3 ClampInsideBox(Vector3 worldPosition)
     {

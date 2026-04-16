@@ -140,7 +140,9 @@ public class ExerciseMetricsTracker
     public float GetActivityRatio(float exerciseDuration)
     {
         if (_elapsedTime <= 0f) return 0f;
+#if UNITY_EDITOR
         Debug.Log($"Elapsed: {Mathf.Max(exerciseDuration,_elapsedTime)} | Active: {_activeTime}");
+#endif
         return _activeTime / Mathf.Max(exerciseDuration,_elapsedTime);
 
     }

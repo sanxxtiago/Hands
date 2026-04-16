@@ -26,7 +26,9 @@ public class TabGroup : MonoBehaviour
     {
         if (tabs.Count != contents.Count)
         {
+#if UNITY_EDITOR
             Debug.LogError("Tabs y contents deben tener el mismo tamaño");
+#endif
         }
     }
     void Start()

@@ -27,8 +27,10 @@ public class ForearmRotationDetector : IMotionDetector
         bool isActive = _smoothedDelta > threshold;
         float normalized = Mathf.Clamp01(_smoothedDelta / 30f);
 
+#if UNITY_EDITOR
         if (debug)
             Debug.Log($"[FOREARM] {current.handType} | Delta: {_smoothedDelta:F2}° | Active: {isActive}");
+#endif
 
         return new MotionData
         {

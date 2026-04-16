@@ -10,11 +10,15 @@ public class WallInsertExercise : ExerciseController
     }
     protected override void OnExerciseEnd()
     {
+#if UNITY_EDITOR
         Debug.Log("Excersise Ended!!!!");
+#endif
     }
     protected override void OnExerciseStart()
     {
+#if UNITY_EDITOR
         Debug.Log("Excersise Started!!!!");
+#endif
     }
 
     protected override void Tick(float timeLeft)
