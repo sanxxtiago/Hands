@@ -4,7 +4,8 @@ public class BoundingBox : MonoBehaviour
 {
     public bool debugBox = false;
     private BoxCollider col;
-
+    public Vector3 min;
+    public Vector3 max;
     public static BoundingBox Instance = null;
     void Awake()
     {
@@ -17,6 +18,8 @@ public class BoundingBox : MonoBehaviour
         Instance = this;
 
         col = GetComponent<BoxCollider>();
+        min = col.center - col.size * 0.5f;
+        max = col.center + col.size * 0.5f;
     }
 
     void Update()
@@ -65,10 +68,6 @@ public class BoundingBox : MonoBehaviour
     public Vector3 ClampInsideBox(Vector3 worldPosition)
     {
         Vector3 localPos = transform.InverseTransformPoint(worldPosition);
-
-        Vector3 min = col.center - col.size * 0.5f;
-        Vector3 max = col.center + col.size * 0.5f;
-
         localPos.x = Mathf.Clamp(localPos.x, min.x, max.x);
         localPos.y = Mathf.Clamp(localPos.y, min.y, max.y);
         localPos.z = Mathf.Clamp(localPos.z, min.z, max.z);

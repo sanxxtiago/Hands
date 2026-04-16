@@ -77,4 +77,10 @@ public enum GAMESTATE
     RESULTS        // mostrar métricas
 }
 
+public enum Exercise
+{
+    Insert,
+    Osu
+}
+
 

@@ -3,12 +3,16 @@ using System;
 
 public class GameManager : MonoBehaviour
 {
+    public MetricsTrackingSystem trackingSystem;
     public GAMESTATE currentState;
     public CountdownUI countdown;
+    public ResultsUI resultsUI;
+
+
+    public Exercise currentExercise;
     public event Action OnCountdownStart;
-    public event Action OnGameStart;
+    public event Action<Exercise> OnGameStart;
     public event Action OnGameEnd;
-    public event Action OnResults;
 
     private void OnEnable()
     {
@@ -25,7 +29,7 @@ public class GameManager : MonoBehaviour
         SetState(GAMESTATE.PLAYING);
     }
 
-    public void StartExercise()
+    public void StartCountdown()
     {
         SetState(GAMESTATE.COUNTDOWN);
     }
@@ -41,11 +45,16 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GAMESTATE.PLAYING:
-                OnGameStart?.Invoke();
+                trackingSystem.RunTracking();
+                OnGameStart?.Invoke(currentExercise);
                 break;
 
             case GAMESTATE.RESULTS:
-                OnResults?.Invoke();
+                Debug.Log("RESULTSSSSS");
+                //OnResults?.Invoke();
+                trackingSystem.StopTracking();
+                ShowResults();
+                OnGameEnd?.Invoke();
                 break;
         }
     }
@@ -53,6 +62,10 @@ public class GameManager : MonoBehaviour
     public void EndExercise()
     {
         SetState(GAMESTATE.RESULTS);
-        OnGameEnd?.Invoke();
+    }
+
+    protected void ShowResults()
+    {
+        resultsUI.Display(trackingSystem.GetLeftSummary(5f), trackingSystem.GetRightSummary(5f));
     }
 }

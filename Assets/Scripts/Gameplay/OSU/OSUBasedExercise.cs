@@ -2,15 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WallInsertExercise : ExerciseController
+public class OSUBasedExercise : ExerciseController
 {
+    public DotSpawner dotSpawner;
     protected override bool IsCompleted()
     {
         return false;
     }
+
     protected override void OnExerciseStart()
     {
-        Debug.Log("Excersise Started!!!!");
+        dotSpawner.Spawn();
     }
 
     protected override void Tick(float timeLeft)

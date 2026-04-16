@@ -7,7 +7,7 @@ public class SceneLoader : MonoBehaviour
     public GameManager gameManager;
     void Start()
     {
-        gameManager.StartExercise();
+        gameManager.StartCountdown();
     }
     void Update()
     {

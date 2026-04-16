@@ -3,12 +3,9 @@ using UnityEngine;
 
 public abstract class ExerciseController : MonoBehaviour
 {
+    public Exercise type;
     public GameManager gameManager;
-    public ResultsUI resultsUI;
-    protected ExerciseMetricsTracker leftTracker;
-    protected ExerciseMetricsTracker rightTracker;
 
-    protected bool isRunning;
     [SerializeField] protected float duration = 30f;
 
     protected virtual void OnEnable()
@@ -21,23 +18,16 @@ public abstract class ExerciseController : MonoBehaviour
         gameManager.OnGameStart -= StartExercise;
     }
 
-    public void StartExercise()
+    public void StartExercise(Exercise exercise)
     {
-        leftTracker = new ExerciseMetricsTracker(HandType.LEFT);
-        rightTracker = new ExerciseMetricsTracker(HandType.RIGHT);
-
-
+        if (exercise != type) return;
+        Debug.Log("empezo " + type.ToString());
         StartCoroutine(ExerciseRoutine());
     }
 
     IEnumerator ExerciseRoutine()
     {
-        isRunning = true;
-        leftTracker.Reset();
-        rightTracker.Reset();
-
         OnExerciseStart();
-        MotionEventBus.OnFrame += OnFrameReceived;
 
         float timer = duration;
 
@@ -48,68 +38,45 @@ public abstract class ExerciseController : MonoBehaviour
 
             yield return null;
         }
+        Debug.Log("Terminóoo");
 
-        MotionEventBus.OnFrame -= OnFrameReceived;
         OnExerciseEnd();
-
-        ShowResults();
-
-
-        isRunning = false;
-
-        gameManager.EndExercise();
     }
 
-    protected void ShowResults()
-    {
-        var leftSummary = MetricsSummaryBuilder.Build(leftTracker, duration);
-        var rightSummary = MetricsSummaryBuilder.Build(rightTracker, duration);
-
-        //DebugPrintSummary("LEFT HAND", leftSummary);
-        //DebugPrintSummary("RIGHT HAND", rightSummary);
-
-
-        resultsUI.Display(leftSummary, rightSummary);
-    }
-
-    private void DebugPrintSummary(string label, ExerciseSummary summary)
-    {
-        var sb = new System.Text.StringBuilder();
-        sb.AppendLine($"===== {label} | {summary.handType} =====");
-
-        sb.AppendLine($"Duración total : {summary.totalDurationSeconds:F2}s");
-        sb.AppendLine($"Tiempo activo  : {summary.totalActiveSeconds:F2}s");
-        sb.AppendLine($"Ratio actividad: {summary.activityRatio:P1}");
-        sb.AppendLine();
-
-        sb.AppendLine($"{"Zona",-12} {"Absoluto",10} {"Relativo",10} {"Intensidad",12}");
-        sb.AppendLine(new string('-', 48));
-
-        for (int i = 0; i < summary.zones.Length; i++)
-        {
-            sb.AppendLine(
-                $"{summary.zones[i],-12} " +
-                $"{summary.absoluteUsage[i] * 100f,9:F1}% " +
-                $"{summary.relativeUsage[i] * 100f,9:F1}% " +
-                $"{summary.intensity[i],12:F3}"
-            );
-        }
-
-        Debug.Log(sb.ToString());
-    }
-    private void OnFrameReceived(FrameMotionData frame)
-    {
-        if (!isRunning) return;
-
-        if (frame.handType == HandType.LEFT)
-            leftTracker.OnFrameReceived(frame);
-
-        if (frame.handType == HandType.RIGHT)
-            rightTracker.OnFrameReceived(frame);
-    }
 
     protected abstract void OnExerciseStart();
     protected abstract void Tick(float timeLeft);
-    protected abstract void OnExerciseEnd();
+    protected void OnExerciseEnd()
+    {
+        gameManager.EndExercise();
+    }
     protected abstract bool IsCompleted();
+
 }
+// private void DebugPrintSummary(string label, ExerciseSummary summary)
+// {
+//     var sb = new System.Text.StringBuilder();
+//     sb.AppendLine($"===== {label} | {summary.handType} =====");
+
+//     sb.AppendLine($"Duración total : {summary.totalDurationSeconds:F2}s");
+//     sb.AppendLine($"Tiempo activo  : {summary.totalActiveSeconds:F2}s");
+//     sb.AppendLine($"Ratio actividad: {summary.activityRatio:P1}");
+//     sb.AppendLine();
+
+//     sb.AppendLine($"{"Zona",-12} {"Absoluto",10} {"Relativo",10} {"Intensidad",12}");
+//     sb.AppendLine(new string('-', 48));
+
+//     for (int i = 0; i < summary.zones.Length; i++)
+//     {
+//         sb.AppendLine(
+//             $"{summary.zones[i],-12} " +
+//             $"{summary.absoluteUsage[i] * 100f,9:F1}% " +
+//             $"{summary.relativeUsage[i] * 100f,9:F1}% " +
+//             $"{summary.intensity[i],12:F3}"
+//         );
+//     }
+
+//     Debug.Log(sb.ToString());
+// }
+
+//}
