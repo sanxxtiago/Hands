@@ -14,7 +14,7 @@ public class TargetDetector : MonoBehaviour
             {
                 Vector3 leftPos = input.LeftHandData.Value.position;
 
-                if (Vector3.Distance(leftPos, dot.transform.position) <= dot.radius)
+                if (Vector3.Distance(leftPos, dot.transform.position) <= dot.hitRadius)
                 {
                     dot.Hit();
                 }
@@ -24,7 +24,7 @@ public class TargetDetector : MonoBehaviour
             {
                 Vector3 rightPos = input.RightHandData.Value.position;
 
-                if (Vector3.Distance(rightPos, dot.transform.position) <= dot.radius)
+                if (Vector3.Distance(rightPos, dot.transform.position) <= dot.hitRadius)
                 {
                     dot.Hit();
                 }

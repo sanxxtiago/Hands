@@ -1,10 +1,13 @@
 using System.Collections;
+using System.IO;
 using UnityEngine;
 
 public class DotSpawner : MonoBehaviour
 {
     public GameObject dotPrefab;
     public TargetDetector detector;
+
+    public PathData[] paths;
     // Start is called before the first frame update
     void Start()
     {
@@ -32,8 +35,14 @@ public class DotSpawner : MonoBehaviour
             Vector3 randomPos = new Vector3(randomX, randomY, dotPrefab.transform.position.z);
             GameObject instance = Instantiate(dotPrefab, randomPos, Quaternion.identity);
             DotBehaviour dot = instance.GetComponent<DotBehaviour>();
+            
+            PathData selectedPath = paths[Random.Range(0, paths.Length)];
             detector.AddDot(dot);
-            yield return new WaitForSeconds(dot.lifeTime);
+            dot.Path = selectedPath;
+            dot.IsTrackable = true;
+
+            //sumar tiempo que se demora en tocar
+            yield return new WaitForSeconds(selectedPath.duration);
         }
     }
 }
