@@ -47,12 +47,15 @@ public class ResultsUI : MonoBehaviour
     {
         group.alpha = 0f;
     }
-    public void Display(ExerciseSummary left, ExerciseSummary right)
+    public void Display()
     {
         group.DOKill();
         group.alpha = 0;
         group.DOFade(1, 0.3f);
+    }
 
+    public void SetResults(ExerciseSummary left, ExerciseSummary right)
+    {
         //pintar brazos
         leftArmAbsoluteResult.Paint(left, left.absoluteUsage);
         rightArmAbsoluteResult.Paint(right, right.absoluteUsage);
@@ -84,7 +87,6 @@ public class ResultsUI : MonoBehaviour
         rightActivityText.text = $"Actividad: {right.activityRatio * 100f:F1}%";
         rightDurationText.text = $"Tiempo activo: {right.totalActiveSeconds:F1}s";
     }
-
     void SetZoneTexts(ExerciseSummary summary, float[] values,
                   TMP_Text handText,
                   TMP_Text wristText,

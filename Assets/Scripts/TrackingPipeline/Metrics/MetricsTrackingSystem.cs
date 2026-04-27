@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class MetricsTrackingSystem : MonoBehaviour
@@ -7,13 +8,19 @@ public class MetricsTrackingSystem : MonoBehaviour
     public ExerciseMetricsTracker leftTracker;
     public ExerciseMetricsTracker rightTracker;
 
+    public static event Action<ExerciseSummary, ExerciseSummary> OnTrackingStop;
+    public static event Action<RuntimeMetrics, RuntimeMetrics> OnSnapshot;
     void OnEnable()
     {
         MotionEventBus.OnFrame += OnFrameReceived;
+        GameManager.OnGameStart += RunTracking;
+        GameManager.OnGameEnd += StopTracking;
     }
     void OnDisable()
     {
         MotionEventBus.OnFrame -= OnFrameReceived;
+        GameManager.OnGameStart -= RunTracking;
+        GameManager.OnGameEnd -= StopTracking;
     }
     public void RunTracking()
     {
@@ -22,12 +29,12 @@ public class MetricsTrackingSystem : MonoBehaviour
         leftTracker.Reset();
         rightTracker.Reset();
         isTracking = true;
-
     }
 
-    public void StopTracking()
+    public void StopTracking(float duration)
     {
         isTracking = false;
+        OnTrackingStop?.Invoke(GetLeftSummary(duration), GetRightSummary(duration));
     }
 
     private void OnFrameReceived(FrameMotionData frame)
@@ -44,10 +51,10 @@ public class MetricsTrackingSystem : MonoBehaviour
 
     public ExerciseSummary GetLeftSummary(float duration)
     {
-        return MetricsSummaryBuilder.Build(leftTracker, duration);//duration);
+        return MetricsSummaryBuilder.Build(leftTracker, duration);
     }
     public ExerciseSummary GetRightSummary(float duration)
     {
-        return MetricsSummaryBuilder.Build(rightTracker, duration);//duration);
+        return MetricsSummaryBuilder.Build(rightTracker, duration);
     }
 }

@@ -6,23 +6,29 @@ public class GameManager : MonoBehaviour
     public MetricsTrackingSystem trackingSystem;
     public GAMESTATE currentState;
     public CountdownUI countdown;
-    public ResultsUI resultsUI;
     public ArmRuntimeUI left;
     public ArmRuntimeUI right;
 
     public Exercise currentExercise;
-    public event Action OnCountdownStart;
-    public event Action<Exercise> OnGameStart;
-    public event Action OnGameEnd;
-
+    public static event Action<Exercise> OnSetExercise;
+    public static event Action OnCountdownStart;
+    public static event Action OnGameStart;
+    public static event Action OnShowResults;
+    public static event Action<float> OnGameEnd;
+    //private float exerciseDuration = 0;
     private void OnEnable()
     {
-        countdown.OnCountdownFinished += HandleCountdownFinished;
+        CountdownUI.OnCountdownFinished += HandleCountdownFinished;
     }
 
     private void OnDisable()
     {
-        countdown.OnCountdownFinished -= HandleCountdownFinished;
+        CountdownUI.OnCountdownFinished -= HandleCountdownFinished;
+    }
+
+    void Start()
+    {
+        OnSetExercise?.Invoke(currentExercise);
     }
 
     void Update()
@@ -54,27 +60,26 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GAMESTATE.PLAYING:
-                trackingSystem.RunTracking();
-                OnGameStart?.Invoke(currentExercise);
+                OnGameStart?.Invoke();
                 break;
 
             case GAMESTATE.RESULTS:
-                Debug.Log("RESULTSSSSS");
-                //OnResults?.Invoke();
-                trackingSystem.StopTracking();
-                ShowResults();
-                OnGameEnd?.Invoke();
+                OnShowResults?.Invoke();
                 break;
         }
     }
 
-    public void EndExercise()
+    public void EndExercise(float duration)
     {
+        OnGameEnd?.Invoke(duration);
         SetState(GAMESTATE.RESULTS);
     }
 
-    protected void ShowResults()
+    public void NextExercise()
     {
-        resultsUI.Display(trackingSystem.GetLeftSummary(5f), trackingSystem.GetRightSummary(5f));
+        Exercise next = Exercise.Osu;
+        OnSetExercise?.Invoke(next);
+        SetState(GAMESTATE.COUNTDOWN);
     }
+
 }

@@ -4,23 +4,32 @@ using UnityEngine;
 public abstract class ExerciseController : MonoBehaviour
 {
     public Exercise type;
+    private Exercise current;
     public GameManager gameManager;
 
-    [SerializeField] protected float duration = 30f;
+    [SerializeField] protected float exerciseDuration = 30f;
 
     protected virtual void OnEnable()
     {
-        gameManager.OnGameStart += StartExercise;
+        GameManager.OnSetExercise += HandleSetExercise;
+        GameManager.OnGameStart += HandleStartExercise;
     }
 
     protected virtual void OnDisable()
     {
-        gameManager.OnGameStart -= StartExercise;
+        GameManager.OnGameStart -= HandleStartExercise;
+        GameManager.OnSetExercise -= HandleSetExercise;
     }
 
-    public void StartExercise(Exercise exercise)
+    private void HandleSetExercise(Exercise current)
     {
-        if (exercise != type) return;
+        this.current = current;
+    }
+
+    public void HandleStartExercise()
+    {
+        if (current != type) return;
+
         Debug.Log("empezo " + type.ToString());
         StartCoroutine(ExerciseRoutine());
     }
@@ -29,54 +38,33 @@ public abstract class ExerciseController : MonoBehaviour
     {
         OnExerciseStart();
 
-        float timer = duration;
+        float elapsedTime = 0;
 
-        while (timer > 0f && !IsCompleted())
+        while (elapsedTime <= exerciseDuration && !IsCompleted())
         {
-            timer -= Time.deltaTime;
-            Tick(timer);
+            elapsedTime += Time.deltaTime;
+            if (elapsedTime > exerciseDuration)
+            {
+                elapsedTime = exerciseDuration;
+                break;
+            }
+
+            Tick(elapsedTime);
 
             yield return null;
         }
-        Debug.Log("Terminóoo");
-
-        OnExerciseEnd();
+        
+        Debug.Log("Terminóoo - Time: " + (elapsedTime));
+        OnExerciseEnd(elapsedTime);
     }
 
 
     protected abstract void OnExerciseStart();
     protected abstract void Tick(float timeLeft);
-    protected void OnExerciseEnd()
+    protected void OnExerciseEnd(float duration)
     {
-        gameManager.EndExercise();
+        gameManager.EndExercise(duration);
     }
     protected abstract bool IsCompleted();
 
 }
-// private void DebugPrintSummary(string label, ExerciseSummary summary)
-// {
-//     var sb = new System.Text.StringBuilder();
-//     sb.AppendLine($"===== {label} | {summary.handType} =====");
-
-//     sb.AppendLine($"Duración total : {summary.totalDurationSeconds:F2}s");
-//     sb.AppendLine($"Tiempo activo  : {summary.totalActiveSeconds:F2}s");
-//     sb.AppendLine($"Ratio actividad: {summary.activityRatio:P1}");
-//     sb.AppendLine();
-
-//     sb.AppendLine($"{"Zona",-12} {"Absoluto",10} {"Relativo",10} {"Intensidad",12}");
-//     sb.AppendLine(new string('-', 48));
-
-//     for (int i = 0; i < summary.zones.Length; i++)
-//     {
-//         sb.AppendLine(
-//             $"{summary.zones[i],-12} " +
-//             $"{summary.absoluteUsage[i] * 100f,9:F1}% " +
-//             $"{summary.relativeUsage[i] * 100f,9:F1}% " +
-//             $"{summary.intensity[i],12:F3}"
-//         );
-//     }
-
-//     Debug.Log(sb.ToString());
-// }
-
-//}

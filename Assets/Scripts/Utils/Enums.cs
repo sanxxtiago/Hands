@@ -66,7 +66,12 @@ public enum INSERTTYPE
     SQUARE = 0,
     CIRCLE = 1,
     STAR = 2,
-    DONUT = 3
+    DONUT = 3,
+    Line,
+    S,
+    Z,
+    L,
+    Three
 }
 
 public enum GAMESTATE
