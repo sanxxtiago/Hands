@@ -7,7 +7,8 @@ public class GameManager : MonoBehaviour
     public GAMESTATE currentState;
     public CountdownUI countdown;
     public ResultsUI resultsUI;
-
+    public ArmRuntimeUI left;
+    public ArmRuntimeUI right;
 
     public Exercise currentExercise;
     public event Action OnCountdownStart;
@@ -22,6 +23,14 @@ public class GameManager : MonoBehaviour
     private void OnDisable()
     {
         countdown.OnCountdownFinished -= HandleCountdownFinished;
+    }
+
+    void Update()
+    {
+        if (!trackingSystem.isTracking) return;
+
+        left.SetData(trackingSystem.leftTracker.GetRuntimeSnapshot());
+        right.SetData(trackingSystem.rightTracker.GetRuntimeSnapshot());
     }
 
     void HandleCountdownFinished()

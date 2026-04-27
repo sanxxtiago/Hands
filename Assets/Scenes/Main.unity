@@ -275,7 +275,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &14109556
 Transform:
   m_ObjectHideFlags: 0
@@ -309,7 +309,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   gameManager: {fileID: 1956825092}
-  duration: 5
+  duration: 20
 --- !u!1 &29063725
 GameObject:
   m_ObjectHideFlags: 0
@@ -668,7 +668,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   input: {fileID: 43925658}
-  dots: []
+  target: {fileID: 0}
 --- !u!114 &43925658
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -850,7 +850,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!54 &53881204
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7010,7 +7010,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1777639724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7759,6 +7759,8 @@ MonoBehaviour:
   currentState: 0
   countdown: {fileID: 1722297175}
   resultsUI: {fileID: 164932822}
+  left: {fileID: 774383149}
+  right: {fileID: 1968670758}
   currentExercise: 1
 --- !u!4 &1956825093
 Transform:
@@ -7838,7 +7840,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!65 &1963215302
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8502,7 +8504,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!65 &2082639135
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8896,7 +8898,6 @@ GameObject:
   - component: {fileID: 2683451079960320945}
   - component: {fileID: 5270838611174572071}
   - component: {fileID: 5270838611174572072}
-  - component: {fileID: 5270838611174572073}
   - component: {fileID: 5270838611174572076}
   - component: {fileID: 5270838611174572075}
   - component: {fileID: 5270838611174572074}
@@ -8960,24 +8961,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5270838611174572064}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 56a0fcb1cc3e26540ab042a844e31875, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   leapControllerInitialization: {fileID: 5270838611174572071}
---- !u!114 &5270838611174572073
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5270838611174572064}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ebe6b4eff9f1144dac80169c9ed03bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &5270838611174572074
 MonoBehaviour:
   m_ObjectHideFlags: 0

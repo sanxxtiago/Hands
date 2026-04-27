@@ -1,5 +1,7 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DotBehaviour : MonoBehaviour
 {
@@ -10,7 +12,15 @@ public class DotBehaviour : MonoBehaviour
     public bool IsHitted { get; set; }
     public bool IsTrackable { get; set; }
     public PathData Path { get; set; }
-
+    public bool IsFollowing { get; set; }
+    public float followRadius = 0.5f;
+    public float timeOutside = 0f;
+    [SerializeField]
+    private SpriteRenderer bg;
+    void Awake()
+    {
+        
+    }
     public void Hit()
     {
         if (IsHitted) return;
@@ -61,7 +71,7 @@ public class DotBehaviour : MonoBehaviour
             }
             if (IsPathComplete(lastPoint))
             {
-                Destroy(gameObject,2f);
+                Destroy(gameObject, 2f);
             }
         }
     }
@@ -73,5 +83,17 @@ public class DotBehaviour : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    public void SetTrackingState(bool isFollowing)
+    {
+        bg.color = isFollowing ? Color.black : Color.white;   
+    }
+
+    public void Fail()
+    {
+        Debug.Log("Fail");
+        //Destroy(gameObject);
+        SetTrackingState(false);
     }
 }

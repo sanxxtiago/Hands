@@ -5,9 +5,7 @@ public abstract class ArmUI : MonoBehaviour
 {
     public HandType hand;
 
-    public Color defaultColor;
-    public Color paintColor;
-
+    public Gradient usageGradient;
     public Image handImage;
     public Image wristImage;
     public Image foreArmImage;
@@ -16,10 +14,10 @@ public abstract class ArmUI : MonoBehaviour
 
     protected void ApplyColor(Image img, float value)
     {
-        Color target = Color.Lerp(defaultColor, paintColor, value);
+        // value debe estar entre 0 y 1
+        Color target = usageGradient.Evaluate(value);
         img.color = Color.Lerp(img.color, target, Time.deltaTime * colorLerpSpeed);
     }
-
     protected void ApplyAll(float hand, float wrist, float forearm)
     {
         ApplyColor(handImage, hand);

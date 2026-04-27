@@ -130,4 +130,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifeTime: 3
-  radius: 0.1
+  hitRadius: 0.1
+  trackingRadius: 0.4
+  followRadius: 0.11
+  timeOutside: 0
+  bg: {fileID: 8864962406679063790}

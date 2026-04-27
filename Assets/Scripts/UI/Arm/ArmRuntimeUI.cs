@@ -2,31 +2,14 @@ using UnityEngine;
 
 public class ArmRuntimeUI : ArmUI
 {
-   // public GestureDetector gestureDetector;
+   public void SetData(RuntimeMetrics metrics)
+   {
+      if (hand != metrics.handType) return;
 
-    private Quaternion lastRotation;
-    private bool hasRotation;
+      float handUsage = metrics.usageByZone.ContainsKey(MotionZone.Hand) ? metrics.usageByZone[MotionZone.Hand] : 0;
+      float wristUsage = metrics.usageByZone.ContainsKey(MotionZone.Wrist) ? metrics.usageByZone[MotionZone.Wrist] : 0;
+      float forearmUsage = metrics.usageByZone.ContainsKey(MotionZone.Forearm) ? metrics.usageByZone[MotionZone.Forearm] : 0;
 
-    private void OnEnable()
-    {
-        //gestureDetector.OnHandUpdate += HandleUpdate;
-    }
-
-    private void OnDisable()
-    {
-       // gestureDetector.OnHandUpdate -= HandleUpdate;
-    }
-
-    //void HandleUpdate(GestureInputEventArgs e)
-   // {
-        // if (e.hand != hand) return;
-
-        // var (h, w, f) = ErgonomicsCalculatorUI.Calculate(
-        //     e,
-        //     ref lastRotation,
-        //     ref hasRotation
-        // );
-
-        // ApplyAll(h, w, f);
-   // }
+      ApplyAll(handUsage, wristUsage, forearmUsage);
+   }
 }

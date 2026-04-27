@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using TMPro;
 using UnityEngine;
 
 public class ArmResultUI : ArmUI
@@ -42,6 +40,15 @@ public class ArmResultUI : ArmUI
             }
         }
 
+        //Asegurar rango válido 0-1
+        h = Mathf.Clamp01(h);
+        w = Mathf.Clamp01(w);
+        f = Mathf.Clamp01(f);
+        //Darle más fuerza a los colores
+        h = Mathf.Pow(h, 1.3f);
+        w = Mathf.Pow(w, 1.3f);
+        f = Mathf.Pow(f, 1.3f);
+
         float t = 0f;
         float duration = 0.5f;
 
@@ -49,15 +56,15 @@ public class ArmResultUI : ArmUI
         Color startWrist = wristImage.color;
         Color startForearm = foreArmImage.color;
 
-        Color targetHand = Color.Lerp(defaultColor, paintColor, h);
-        Color targetWrist = Color.Lerp(defaultColor, paintColor, w);
-        Color targetForearm = Color.Lerp(defaultColor, paintColor, f);
+        Color targetHand = usageGradient.Evaluate(h);
+        Color targetWrist = usageGradient.Evaluate(w);
+        Color targetForearm = usageGradient.Evaluate(f);
 
         while (t < duration)
         {
             t += Time.deltaTime;
-            float lerp = t / duration;
-
+            //float lerp = t / duration;
+            float lerp = Mathf.SmoothStep(0f, 1f, t / duration);
             handImage.color = Color.Lerp(startHand, targetHand, lerp);
             wristImage.color = Color.Lerp(startWrist, targetWrist, lerp);
             foreArmImage.color = Color.Lerp(startForearm, targetForearm, lerp);
