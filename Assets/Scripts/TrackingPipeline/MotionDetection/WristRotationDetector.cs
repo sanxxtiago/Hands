@@ -23,6 +23,8 @@ public class WristRotationDetector : IMotionDetector
 
             delta = Quaternion.Angle(Quaternion.identity, deltaRotation);
         }
+
+        //Eliminar ruído
         if (delta < 0.5f)
             delta = 0f;
 
@@ -43,7 +45,6 @@ public class WristRotationDetector : IMotionDetector
             value = normalized,
             rawAngle = _smoothedDelta,
             isActive = isActive,
-            frameId = current.frameId
         };
     }
 }

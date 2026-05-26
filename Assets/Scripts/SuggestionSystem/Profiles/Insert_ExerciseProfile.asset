@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 878ef702b26a82c4c8a33fb7ecc5bcc4, type: 3}
+  m_Name: Insert_ExerciseProfile
+  m_EditorClassIdentifier: 
+  leftHand:
+    isActive: 1
+    hand:
+      editorValue: 40
+      normalized: 0.4
+      tolerance: 0.05
+    wrist:
+      editorValue: 20
+      normalized: 0.2
+      tolerance: 0.05
+    forearm:
+      editorValue: 40
+      normalized: 0.4
+      tolerance: 0.05
+    minActivity: 0.4
+  rightHand:
+    isActive: 0
+    hand:
+      editorValue: 40
+      normalized: 0.4
+      tolerance: 0.05
+    wrist:
+      editorValue: 20
+      normalized: 0.2
+      tolerance: 0.05
+    forearm:
+      editorValue: 40
+      normalized: 0.4
+      tolerance: 0.05
+    minActivity: 0.4

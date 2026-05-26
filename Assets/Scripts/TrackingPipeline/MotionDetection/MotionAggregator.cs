@@ -41,15 +41,15 @@ public class MotionAggregator
         }
 
         var motions = new List<MotionData>(_motionDetectors.Count);
-        var gestures = new List<GestureState>(_gestureDetectors.Count);
+        var gestures = new List<GestureStateData>(_gestureDetectors.Count);
 
-        // 4. Motion detectors (usan previous)
+        // 4. Motion detectors (continuo)
         foreach (var detector in _motionDetectors)
         {
             motions.Add(detector.Evaluate(current, _previousSnapshot));
         }
 
-        // 5. Gesture detectors (estado continuo)
+        // 5. Gesture detectors (discreto)
         foreach (var detector in _gestureDetectors)
         {
             gestures.Add(detector.Evaluate(current));

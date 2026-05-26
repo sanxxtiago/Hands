@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class GrabGestureDetector : IGestureDetector
 {
     public float enterThreshold = 0.75f;
@@ -7,7 +5,7 @@ public class GrabGestureDetector : IGestureDetector
 
     private bool _isActive = false;
 
-    public GestureState Evaluate(HandDataSnapshot snap)
+    public GestureStateData Evaluate(HandDataSnapshot snap)
     {
         float raw = snap.grabStrength;
 
@@ -34,13 +32,12 @@ public class GrabGestureDetector : IGestureDetector
             //Debug.Log("Grab HOLD");
         }
 
-        return new GestureState
+        return new GestureStateData
         {
             type = GestureType.GRAB,
             handType = snap.handType,
             strength = raw,
-            isActive = _isActive && previousState,
-            frameId = snap.frameId
+            isActive = _isActive && previousState
         };
     }
 }

@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class PinchGestureDetector : IGestureDetector
 {
     public float enterThreshold = 0.65f;
@@ -7,21 +5,19 @@ public class PinchGestureDetector : IGestureDetector
 
     private bool _isActive = false;
 
-    public GestureState Evaluate(HandDataSnapshot snap)
+    public GestureStateData Evaluate(HandDataSnapshot snap)
     {
         float grab = snap.grabStrength;
         float pinchRaw = snap.pinchStrength;
 
-        //señal efectiva
+        //señal efectiva para no modificar la raw
         float effectivePinch = pinchRaw;
 
-        //inhibición contextual (correcta)
+        //inhibición contextual de pinch cuando hay grab
         if (grab > 0.7f)
         {
             effectivePinch *= 0.3f;
         }
-
-        bool previousState = _isActive;
 
         //ENTRADA
         if (!_isActive && effectivePinch > enterThreshold)
@@ -37,13 +33,12 @@ public class PinchGestureDetector : IGestureDetector
             //Debug.Log($"{snap.handType} PINCH END");
         }
 
-        return new GestureState
+        return new GestureStateData
         {
             type = GestureType.PINCH,
             handType = snap.handType,
             strength = pinchRaw,
-            isActive = _isActive,
-            frameId = snap.frameId
+            isActive = _isActive
         };
     }
 }

@@ -7,5 +7,5 @@ public struct FrameMotionData
     public float timestamp;
 
     public List<MotionData> motions;
-    public List<GestureState> gestures;
+    public List<GestureStateData> gestures;
 }

@@ -1,4 +1,4 @@
 public interface IGestureDetector
 {
-    GestureState Evaluate(HandDataSnapshot snap);
+    GestureStateData Evaluate(HandDataSnapshot snap);
 }

@@ -16,7 +16,7 @@ public class ResultsManager : MonoBehaviour
 
     private void HandleShowResults()
     {
-        Debug.Log("RESULTSSSSS");
+        //Debug.Log("RESULTSSSSS");
         resultsUI.Display();
     }
 

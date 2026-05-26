@@ -5,11 +5,12 @@ public class MetricsTrackingSystem : MonoBehaviour
 {
     public bool isTracking;
 
-    public ExerciseMetricsTracker leftTracker;
-    public ExerciseMetricsTracker rightTracker;
+    public ExerciseMetricsTracker leftTracker = new ExerciseMetricsTracker(HandType.LEFT);
+    public ExerciseMetricsTracker rightTracker = new ExerciseMetricsTracker(HandType.RIGHT);
 
     public static event Action<ExerciseSummary, ExerciseSummary> OnTrackingStop;
     public static event Action<RuntimeMetrics, RuntimeMetrics> OnSnapshot;
+   
     void OnEnable()
     {
         MotionEventBus.OnFrame += OnFrameReceived;
@@ -24,8 +25,7 @@ public class MetricsTrackingSystem : MonoBehaviour
     }
     public void RunTracking()
     {
-        leftTracker = new ExerciseMetricsTracker(HandType.LEFT);
-        rightTracker = new ExerciseMetricsTracker(HandType.RIGHT);
+        
         leftTracker.Reset();
         rightTracker.Reset();
         isTracking = true;

@@ -33,15 +33,14 @@ public class HandPositionDetector : IMotionDetector
 
         return new MotionData
         {
-            zone = MotionZone.Hand, // 👈 vuelve a Hand (clave)
+            zone = MotionZone.Hand, 
             handType = current.handType,
 
             value = normalized,
-            rawAngle = _smoothedDelta, // ahora es distancia, no ángulo
+            rawAngle = _smoothedDelta,
             velocity = _smoothedDelta / Mathf.Max(Time.deltaTime, 0.0001f),
 
-            isActive = isActive,
-            frameId = current.frameId
+            isActive = isActive
         };
     }
 }

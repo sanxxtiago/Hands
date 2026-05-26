@@ -8,6 +8,4 @@ public struct MotionData
     public float velocity;     // opcional
 
     public bool isActive;
-
-    public long frameId;
 }

@@ -18,14 +18,14 @@ public class MotionPipelineRunner : MonoBehaviour
             HandType.LEFT,
             new List<IMotionDetector>
             {
-            new WristRotationDetector(),
-            new ForearmRotationDetector(),
-            new HandPositionDetector()
+                new WristRotationDetector(),
+                new ForearmRotationDetector(),
+                new HandPositionDetector()
             },
             new List<IGestureDetector>
             {
-            new GrabGestureDetector(),
-            new PinchGestureDetector()
+                new GrabGestureDetector(),
+                new PinchGestureDetector()
             }
         );
 
@@ -33,14 +33,14 @@ public class MotionPipelineRunner : MonoBehaviour
             HandType.RIGHT,
             new List<IMotionDetector>
             {
-            new WristRotationDetector(),
-            new ForearmRotationDetector(),
-            new HandPositionDetector()
+                new WristRotationDetector(),
+                new ForearmRotationDetector(),
+                new HandPositionDetector()
             },
             new List<IGestureDetector>
             {
-            new GrabGestureDetector(),
-            new PinchGestureDetector()
+                new GrabGestureDetector(),
+                new PinchGestureDetector()
             }
         );
 

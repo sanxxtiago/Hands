@@ -6,6 +6,7 @@ public abstract class ExerciseController : MonoBehaviour
     public Exercise type;
     private Exercise current;
     public GameManager gameManager;
+    public ExerciseFeedbackSystem feedbackSystem;
 
     [SerializeField] protected float exerciseDuration = 30f;
 
@@ -50,7 +51,7 @@ public abstract class ExerciseController : MonoBehaviour
             }
 
             Tick(elapsedTime);
-
+            feedbackSystem.Evaluate(elapsedTime, Time.deltaTime);
             yield return null;
         }
         

@@ -137,11 +137,12 @@ public class ExerciseMetricsTracker
         return _activeTime;
     }
 
-    public float GetActivityRatio(float exerciseDuration)
+    public float GetActivityRatio(float elapsedTime)
     {
         if (_elapsedTime <= 0f) return 0f;
-        Debug.Log($"Elapsed: {Mathf.Max(exerciseDuration,_elapsedTime)} | Active: {_activeTime}");
-        return _activeTime / Mathf.Max(exerciseDuration,_elapsedTime);
+        //Debug.Log($"Elapsed: {Mathf.Max(exerciseDuration,_elapsedTime)} | Active: {_activeTime}");
+        return _activeTime / elapsedTime;
+        //return _activeTime / Mathf.Max(exerciseDuration,_elapsedTime);
 
     }
 

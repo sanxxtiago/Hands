@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ForearmRotationDetector : IMotionDetector
 {
-    public float threshold = 3f;
+    public float threshold = 3f; //3 grados de cambio mínimo entre frames
     public float smoothing = 0.2f;
 
     private float _smoothedDelta;
@@ -12,13 +12,17 @@ public class ForearmRotationDetector : IMotionDetector
     {
         float delta = 0f;
 
+        //Detecta el cambio de rotación
         if (previous.frameId != 0)
         {
             Quaternion deltaRotation =
                 Quaternion.Inverse(previous.forearmRotation) * current.forearmRotation;
 
+            //Cálula el cambio en el ángulo
             delta = Quaternion.Angle(Quaternion.identity, deltaRotation);
         }
+
+        //Elimina ruído
         if (delta < 0.5f)
             delta = 0f;
 
@@ -36,8 +40,7 @@ public class ForearmRotationDetector : IMotionDetector
             handType = current.handType,
             value = normalized,
             rawAngle = _smoothedDelta,
-            isActive = isActive,
-            frameId = current.frameId
+            isActive = isActive
         };
     }
 }
