@@ -31,7 +31,6 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        transition.FadeOut();
         OnSetExercise?.Invoke(currentExercise);
     }
 

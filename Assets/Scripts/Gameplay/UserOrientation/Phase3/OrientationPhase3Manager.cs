@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -68,6 +69,7 @@ public class OrientationPhase3Manager : OrientationManager
         {
             targetBehaviour.OnPieceEntered += UpdateMessage;
             targetBehaviour.OnPieceFitted += CompletePhase;
+            targetBehaviour.OnPieceExited += UpdateMessage1;
         }
     }
 
@@ -96,5 +98,10 @@ public class OrientationPhase3Manager : OrientationManager
     private void UpdateMessage()
     {
         message.text = "Suelta la pieza dentro de la zona...";
+    }
+
+    private void UpdateMessage1()
+    {
+        message.text = "Mueve la pieza hacia la zona indicada...";
     }
 }

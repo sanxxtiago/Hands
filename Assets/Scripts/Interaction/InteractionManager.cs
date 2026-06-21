@@ -54,7 +54,7 @@ public class InteractionManager : MonoBehaviour
     Interactable FindTarget(InteractionEvent e)
     {
         Vector3 handPos = e.position;
-
+        Debug.Log($"Posición de mano {e.position}");
         Collider[] hits = Physics.OverlapSphere(handPos, grabRadius, interactableLayer);
 
         float minDist = float.MaxValue;
@@ -62,8 +62,7 @@ public class InteractionManager : MonoBehaviour
 
         foreach (var hit in hits)
         {
-            var interactable = hit.GetComponent<Interactable>();
-            if (interactable == null) continue;
+            if (!hit.TryGetComponent<Interactable>(out var interactable)) continue;
 
             float dist = Vector3.Distance(handPos, hit.transform.position);
 
@@ -106,7 +105,7 @@ public class InteractionManager : MonoBehaviour
 
             grabbed = r.target;
             activeTarget = grabbed;
-
+            Debug.Log("Grabbed: " + grabbed.name);
             grabbed.OnGrabStart(data);
         }
 

@@ -1,34 +1,44 @@
 using System;
 using UnityEngine;
 
+using System;
+using UnityEngine;
+
 public class OrientationSlotBehaviour : MonoBehaviour
 {
     public event Action OnPieceEntered;
+    public event Action OnPieceExited;
     public event Action OnPieceFitted;
-    // Start is called before the first frame update
-    void Start()
+
+    private void OnTriggerEnter(Collider other)
     {
+        if (!other.TryGetComponent<OrientationPieceBehaviour>(out _))
+            return;
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    void OnTriggerStay(Collider other)
-    {
         OnPieceEntered?.Invoke();
-        if (!other.TryGetComponent<OrientationPieceBehaviour>(out var piece)) return;
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (!other.TryGetComponent<OrientationPieceBehaviour>(out _))
+            return;
+
+        OnPieceExited?.Invoke();
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (!other.TryGetComponent<OrientationPieceBehaviour>(out var piece))
+            return;
+
         if (!piece.isFitted && !piece.IsGrabbed)
         {
             piece.isFitted = true;
+
+            if (piece.TryGetComponent<Rigidbody>(out var rb))
+                rb.isKinematic = false;
+
             OnPieceFitted?.Invoke();
         }
-
-        Rigidbody rb = piece.GetComponent<Rigidbody>();
-
-        rb.isKinematic = false;
     }
 }
