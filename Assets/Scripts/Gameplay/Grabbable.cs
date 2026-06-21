@@ -14,11 +14,11 @@ public class Grabbable : Interactable
 
     public override void OnGrabStart(InteractableData data)
     {
+        IsGrabbed = true;
         Vector3 handPos = data.position;
         Quaternion handRot = data.rotation;
-
         positionOffset = _transform.position - handPos;
-        rotationOffset = Quaternion.Inverse(handRot) * _transform.rotation;
+        //rotationOffset = Quaternion.Inverse(handRot) * _transform.rotation;
     }
 
     public override void OnGrabUpdate(InteractableData data)
@@ -32,11 +32,15 @@ public class Grabbable : Interactable
             Time.deltaTime * 20f
         );
 
-        _transform.rotation = Quaternion.Slerp(
-            _transform.rotation,
-            targetRot,
-            Time.deltaTime * 15f
-        );
+        // _transform.rotation = Quaternion.Slerp(
+        //     _transform.rotation,
+        //     targetRot,
+        //     Time.deltaTime * 15f
+        // );
 
+    }
+    public override void OnGrabEnd(InteractableData data)
+    {
+        IsGrabbed = false;
     }
 }

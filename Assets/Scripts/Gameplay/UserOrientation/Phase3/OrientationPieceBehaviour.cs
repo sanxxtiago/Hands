@@ -1,10 +1,9 @@
 using UnityEngine;
 
-public class PieceBehaviour : Grabbable
+[RequireComponent(typeof(Rigidbody))]
+public class OrientationPieceBehaviour : Grabbable
 {
-    public INSERTTYPE pieceType;
-    public bool isSnapped;
-    public bool requireRotation = false;
+    public bool isFitted;
     private Rigidbody rb;
     void Awake()
     {
@@ -17,21 +16,25 @@ public class PieceBehaviour : Grabbable
     }
     public override bool CanInteract(InteractionType interactionType)
     {
-        return !isSnapped;
+        return !isFitted;
     }
 
-    public void Snap()
+    public void FitIn()
     {
-        isSnapped = true;
+        isFitted = true;
         rb.isKinematic = true;
     }
 
     public override void OnGrabStart(InteractableData data)
     {
         base.OnGrabStart(data);
-        Debug.Log("GRABBING FROM INS");
-
+        rb.useGravity = false;
+        Debug.Log("GRABBING FROM ORI");
     }
 
-
+    public override void OnGrabEnd(InteractableData data)
+    {
+        base.OnGrabEnd(data);
+        rb.useGravity = true;
+    }
 }

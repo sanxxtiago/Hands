@@ -11,6 +11,8 @@ public class InteractionManager : MonoBehaviour
     public float grabRadius = 0.1f;
     public LayerMask interactableLayer;
     private Interactable grabbed;
+    private Interactable activeTarget;
+
     void OnEnable()
     {
         leftTracker.OnInteraction += HandleInteraction;
@@ -39,6 +41,7 @@ public class InteractionManager : MonoBehaviour
 
     void HandleInteraction(InteractionEvent e)
     {
+        //Debug.Log("Interaction received");
         var target = FindTarget(e);
 
         bool isGrabbing = grabbed != null;
@@ -70,7 +73,7 @@ public class InteractionManager : MonoBehaviour
                 best = interactable;
             }
         }
-
+        //Debug.Log($"HITS: {hits.Length}");
         return best;
     }
     void ApplyInteraction(ResolvedInteraction r)
@@ -102,25 +105,40 @@ public class InteractionManager : MonoBehaviour
             if (grabbed != null) return;
 
             grabbed = r.target;
+            activeTarget = grabbed;
+
             grabbed.OnGrabStart(data);
-            grabbed.OnForcedRelease += HandleForcedRelease;
-        }
-
-        if (e.phase == GesturePhase.UPDATE)
-        {
-            if (grabbed == null) return;
-
-            grabbed.OnGrabUpdate(data);
         }
 
         if (e.phase == GesturePhase.END)
         {
-            if (grabbed == null) return;
+            var target = r.target;
 
-            grabbed.OnForcedRelease -= HandleForcedRelease;
-            grabbed.OnGrabEnd(data);
+            if (target != null)
+            {
+                target.OnForcedRelease -= HandleForcedRelease;
+                target.OnGrabEnd(data);
+            }
+
             grabbed = null;
         }
+
+        if (e.phase == GesturePhase.END)
+        {
+            var target = activeTarget ?? r.target;
+
+            if (target != null)
+            {
+                target.OnGrabEnd(data);
+                target.OnForcedRelease -= HandleForcedRelease;
+            }
+
+            if (grabbed == target)
+                grabbed = null;
+
+            activeTarget = null;
+        }
+        //Debug.Log($"PHASE: {e.phase}, target: {r.target}");
     }
 
     void HandleRotate(ResolvedInteraction r)
@@ -149,6 +167,9 @@ public class InteractionManager : MonoBehaviour
     void HandleForcedRelease(Interactable target)
     {
         if (grabbed == target)
+        {
+            activeTarget = target;
             grabbed = null;
+        }
     }
 }

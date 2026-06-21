@@ -9,17 +9,23 @@ EditorBuildSettings:
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
-    path: Assets/Scenes/Excersice_Insert.unity
-    guid: a4aa3ffaf00c2644483d3c4ac3e51fe3
-  - enabled: 1
     path: Assets/Scenes/UserPreparation.unity
     guid: 46d92357769ce3d47afc79e21aeb0353
   - enabled: 1
-    path: Assets/Scenes/UserOrientation.unity
+    path: Assets/Scenes/UserOrientationPhase1.unity
+    guid: 92b5633a9ee0d2e43a1b1e70e178c061
+  - enabled: 1
+    path: Assets/Scenes/UserOrientationPhase2.unity
     guid: 5bd59086375ef8d47abfbb1cd92f95b4
+  - enabled: 1
+    path: Assets/Scenes/UserOrientationPhase3.unity
+    guid: 7a07687bfc1d4f240b30f0bd409e7f72
   - enabled: 1
     path: Assets/Scenes/Main.unity
     guid: 000bac3fce0e5c74f8375caf4b4f357f
+  - enabled: 1
+    path: Assets/Scenes/Excersice_Insert.unity
+    guid: a4aa3ffaf00c2644483d3c4ac3e51fe3
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: e2edec08cf8a48846bfd7a3b011575f5,
       type: 2}

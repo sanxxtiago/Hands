@@ -29,7 +29,7 @@ public class HandsDetection : MonoBehaviour
 
 
     [SerializeField] private TMP_Text messageText;
-
+    [SerializeField] private Transition transition;
     private Coroutine countdownRoutine;
 
     private bool _leftDetected;
@@ -54,7 +54,11 @@ public class HandsDetection : MonoBehaviour
         SetMaterialColor(_leftMaterial, undetectedColor);
         SetMaterialColor(_rightMaterial, undetectedColor);
     }
-
+    void Start()
+    {
+        transition.FadeOut();
+    }
+    
     private void Update()
     {
         bool leftDetected = false;
@@ -146,7 +150,7 @@ public class HandsDetection : MonoBehaviour
 
         OnPreparationCompleted?.Invoke();
 
-        countdownRoutine = null;
+        //countdownRoutine = null;
     }
 
     private void AnimateHand(

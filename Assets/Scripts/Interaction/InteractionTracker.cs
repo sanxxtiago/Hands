@@ -82,7 +82,7 @@ public class InteractionTracker : IDisposable
     // =========================
     void HandleRotation(InteractionHandData hand)
     {
-        //se puede combinar gesto + motion 
+        //se puede combinar gesture + motion 
         bool rotateGesture = hand.IsGestureActive(GestureType.ROTATE);
         float strength = hand.GetGestureStrength(GestureType.ROTATE);
 

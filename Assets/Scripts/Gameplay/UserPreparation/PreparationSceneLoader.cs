@@ -1,10 +1,8 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class PreparationSceneLoader : MonoBehaviour
+public class PreparationSceneLoader : SceneLoader
 {
     [SerializeField] private HandsDetection handsDetection;
-    [SerializeField] private string nextSceneName;
 
     private void OnEnable()
     {
@@ -16,8 +14,5 @@ public class PreparationSceneLoader : MonoBehaviour
         handsDetection.OnPreparationCompleted -= LoadNextScene;
     }
 
-    private void LoadNextScene()
-    {
-        SceneManager.LoadScene(nextSceneName);
-    }
+   
 }

@@ -3,6 +3,7 @@ using System;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] private Transition transition;
     public MetricsTrackingSystem trackingSystem;
     public GAMESTATE currentState;
     public CountdownUI countdown;
@@ -18,16 +19,19 @@ public class GameManager : MonoBehaviour
     //private float exerciseDuration = 0;
     private void OnEnable()
     {
+        transition.OnFadeOutCompleted += StartCountdown;
         CountdownUI.OnCountdownFinished += HandleCountdownFinished;
     }
 
     private void OnDisable()
     {
+        transition.OnFadeOutCompleted -= StartCountdown;
         CountdownUI.OnCountdownFinished -= HandleCountdownFinished;
     }
 
     void Start()
     {
+        transition.FadeOut();
         OnSetExercise?.Invoke(currentExercise);
     }
 

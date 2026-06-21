@@ -12,11 +12,11 @@ public class SuggestionEngine
 
     public Suggestion Evaluate(AnalysisContext ctx, float dt)
     {
-        Debug.Log(
-            $"Hand: {ctx.deviation.hand:F2} | " +
-            $"Wrist: {ctx.deviation.wrist:F2} | " +
-            $"Forearm: {ctx.deviation.forearm:F2}"
-        );
+        // Debug.Log(
+        //     $"Hand: {ctx.deviation.hand:F2} | " +
+        //     $"Wrist: {ctx.deviation.wrist:F2} | " +
+        //     $"Forearm: {ctx.deviation.forearm:F2}"
+        // );
         Suggestion best = null;
 
         foreach (var rule in rules)
