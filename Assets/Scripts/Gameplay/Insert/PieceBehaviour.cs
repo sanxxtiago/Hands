@@ -33,5 +33,11 @@ public class PieceBehaviour : Grabbable
 
     }
 
+    public override void OnGrabEnd(InteractableData data)
+    {
+        base.OnGrabEnd(data);
+        rb.useGravity = true;
+    }
+
 
 }

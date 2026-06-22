@@ -22,7 +22,16 @@ public class SlotBehaviour : MonoBehaviour
         if (currentPiece != null) return;
 
         if (!CanSnap(piece)) return;
+        Collider col = piece.GetComponent<Collider>();
+        Rigidbody rb = piece.GetComponent<Rigidbody>();
 
+        col.isTrigger = true;
+
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        rb.isKinematic = true;
+        rb.useGravity = false;
+        
         isSnapping = true;
         currentPiece = piece;
 
@@ -46,14 +55,7 @@ public class SlotBehaviour : MonoBehaviour
         if (piece.IsGrabbed)
             piece.ForceRelease();
 
-        Collider col = piece.GetComponent<Collider>();
-        Rigidbody rb = piece.GetComponent<Rigidbody>();
 
-        col.isTrigger = true;
-
-        rb.velocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
-        rb.isKinematic = true;
 
         Vector3 startPos = piece.transform.position;
         Quaternion startRot = piece.transform.rotation;
