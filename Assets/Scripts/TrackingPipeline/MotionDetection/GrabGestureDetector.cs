@@ -35,7 +35,7 @@ public class GrabGestureDetector : IGestureDetector
         return new GestureStateData
         {
             type = GestureType.GRAB,
-            handType = snap.handType,
+            //handType = snap.handType,
             strength = raw,
             isActive = _isActive && previousState
         };

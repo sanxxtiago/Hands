@@ -1,3 +1,6 @@
+
+using UnityEngine;
+
 public struct InteractionHandData
 {
     private readonly FrameMotionData frame;
@@ -5,7 +8,7 @@ public struct InteractionHandData
     public HandType HandType => frame.handType;
     public long FrameId => frame.frameId;
     public float Timestamp => frame.timestamp;
-
+    public Vector3 HandPos => frame.handPos;
     public InteractionHandData(FrameMotionData frame)
     {
         this.frame = frame;

@@ -41,7 +41,7 @@ public class WristRotationDetector : IMotionDetector
         return new MotionData
         {
             zone = MotionZone.Wrist,
-            handType = current.handType,
+            //handType = current.handType,
             value = normalized,
             rawAngle = _smoothedDelta,
             isActive = isActive,

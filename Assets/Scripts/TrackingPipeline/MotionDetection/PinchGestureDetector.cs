@@ -36,7 +36,7 @@ public class PinchGestureDetector : IGestureDetector
         return new GestureStateData
         {
             type = GestureType.PINCH,
-            handType = snap.handType,
+            //handType = snap.handType,
             strength = pinchRaw,
             isActive = _isActive
         };

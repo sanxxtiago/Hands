@@ -37,7 +37,7 @@ public class ForearmRotationDetector : IMotionDetector
         return new MotionData
         {
             zone = MotionZone.Forearm,
-            handType = current.handType,
+            //handType = current.handType,
             value = normalized,
             rawAngle = _smoothedDelta,
             isActive = isActive

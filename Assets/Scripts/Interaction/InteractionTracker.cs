@@ -110,6 +110,7 @@ public class InteractionTracker : IDisposable
             type = type,
             phase = phase,
             handType = hand.HandType,
+            position = hand.HandPos,
             strength = strength,
             frameId = hand.FrameId
 

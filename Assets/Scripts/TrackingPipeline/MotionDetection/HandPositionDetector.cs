@@ -34,7 +34,7 @@ public class HandPositionDetector : IMotionDetector
         return new MotionData
         {
             zone = MotionZone.Hand, 
-            handType = current.handType,
+            //handType = current.handType,
 
             value = normalized,
             rawAngle = _smoothedDelta,

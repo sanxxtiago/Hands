@@ -2732,7 +2732,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3723bb218496db747955385bd17a5cea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grabRadius: 0.2
+  grabRadius: 0.5
   interactableLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -10043,7 +10043,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &7312515185313040079
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10441,7 +10441,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!54 &8922919819400015857
 Rigidbody:
   m_ObjectHideFlags: 0

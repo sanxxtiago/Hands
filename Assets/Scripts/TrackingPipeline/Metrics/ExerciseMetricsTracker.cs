@@ -40,7 +40,7 @@ public class ExerciseMetricsTracker
         // 1. Recoger intensidad máxima por zona desde motions
         foreach (var motion in frame.motions)
         {
-            if (motion.handType != _handType) continue;
+            if(frame.handType != _handType) continue;
 
             if (!intensityThisFrame.ContainsKey(motion.zone))
                 intensityThisFrame[motion.zone] = 0f;
@@ -55,7 +55,7 @@ public class ExerciseMetricsTracker
         // 2. Recoger intensidad máxima de Hand desde gestures
         foreach (var gesture in frame.gestures)
         {
-            if (gesture.handType != _handType) continue;
+            if (frame.handType != _handType) continue;
 
             if (!intensityThisFrame.ContainsKey(MotionZone.Hand))
                 intensityThisFrame[MotionZone.Hand] = 0f;
