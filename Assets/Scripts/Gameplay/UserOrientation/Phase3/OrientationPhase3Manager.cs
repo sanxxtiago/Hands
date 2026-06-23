@@ -14,12 +14,15 @@ public class OrientationPhase3Manager : OrientationManager
     [SerializeField] private float minDistance = 0.3f;
     [SerializeField] private int maxAttempts = 50;
     [SerializeField] private TMP_Text message;
+    [SerializeField] private Transition transition;
+
     private OrientationSlotBehaviour targetBehaviour;
 
     public event Action OnOrientationFinished;
     void Start()
     {
         SpawnObjects();
+        transition.FadeOut();
     }
 
     private void SpawnObjects()
