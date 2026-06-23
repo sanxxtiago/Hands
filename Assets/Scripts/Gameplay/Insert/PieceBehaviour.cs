@@ -5,14 +5,16 @@ public class PieceBehaviour : Grabbable
     public INSERTTYPE pieceType;
     public bool isSnapped;
     public bool requireRotation = false;
-    private Rigidbody rb;
+    [HideInInspector] public Rigidbody rb;
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
     }
     void Update()
     {
-        //Clase base
+        if (isSnapped)
+            return;
+
         transform.position = ClampPosition(transform.position);
     }
     public override bool CanInteract(InteractionType interactionType)
@@ -20,24 +22,25 @@ public class PieceBehaviour : Grabbable
         return !isSnapped;
     }
 
-    public void Snap()
+    public override void OnGrabStart()
     {
-        isSnapped = true;
+        base.OnGrabStart();
+    }
+
+    public override void OnGrabEnd()
+    {
+        base.OnGrabEnd();
+        //rb.useGravity = true;
+    }
+
+    public void LockPhysics()
+    {
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
         rb.isKinematic = true;
+        rb.useGravity = false;
+        rb.detectCollisions = false;
+        rb.constraints = RigidbodyConstraints.FreezeAll;
     }
-
-    public override void OnGrabStart(InteractableData data)
-    {
-        base.OnGrabStart(data);
-        Debug.Log("GRABBING FROM INS");
-
-    }
-
-    public override void OnGrabEnd(InteractableData data)
-    {
-        base.OnGrabEnd(data);
-        rb.useGravity = true;
-    }
-
 
 }

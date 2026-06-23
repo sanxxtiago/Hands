@@ -27,29 +27,29 @@ public class InteractionTracker : IDisposable
         if (frame.handType != handType)
             return;
 
-        var hand = new InteractionHandData(frame);
+        var interactionHandData = new InteractionHandData(frame);
 
-        HandleGrab(hand);
-        HandlePinch(hand); 
-        HandleRotation(hand);
+        HandleGrab(interactionHandData);
+        HandlePinch(interactionHandData);
+        HandleRotation(interactionHandData);
     }
 
     // =========================
     // GRAB
     // =========================
-    void HandleGrab(InteractionHandData hand)
+    void HandleGrab(InteractionHandData interactionHandData)
     {
-        bool currentGrab = hand.IsGestureActive(GestureType.GRAB);
-        float strength = hand.GetGestureStrength(GestureType.GRAB);
+        bool currentGrab = interactionHandData.IsGestureActive(GestureType.GRAB);
+        float strength = interactionHandData.GetGestureStrength(GestureType.GRAB);
 
         if (!isGrabbing && currentGrab)
-            Emit(hand, GestureType.GRAB, GesturePhase.START, strength);
+            Emit(interactionHandData, GestureType.GRAB, GesturePhase.START, strength);
 
         if (isGrabbing && currentGrab)
-            Emit(hand, GestureType.GRAB, GesturePhase.UPDATE, strength);
+            Emit(interactionHandData, GestureType.GRAB, GesturePhase.UPDATE, strength);
 
         if (isGrabbing && !currentGrab)
-            Emit(hand, GestureType.GRAB, GesturePhase.END, strength);
+            Emit(interactionHandData, GestureType.GRAB, GesturePhase.END, strength);
 
         isGrabbing = currentGrab;
     }
@@ -80,22 +80,29 @@ public class InteractionTracker : IDisposable
     // =========================
     // ROTATION
     // =========================
-    void HandleRotation(InteractionHandData hand)
+    void HandleRotation(InteractionHandData interactionHandData)
     {
-        //se puede combinar gesture + motion 
-        bool rotateGesture = hand.IsGestureActive(GestureType.ROTATE);
-        float strength = hand.GetGestureStrength(GestureType.ROTATE);
 
-        bool currentRotate = isGrabbing && rotateGesture;
+        //bool rotateGesture = interactionHandData.IsGestureActive(GestureType.ROTATE);
+        bool rotateGesture = interactionHandData.IsMotionActive(MotionZone.Wrist);
+        //float strength = interactionHandData.GetGestureStrength(GestureType.ROTATE);
+
+        float strength = interactionHandData.GetMotionValue(MotionZone.Wrist);
+        //se puede hacer detección de rotación solo al agarrar
+        //bool currentRotate = isGrabbing && rotateGesture;
+
+        //se puede superponer rotación con agarre y pinch  
+        bool currentRotate = rotateGesture;
+
 
         if (!isRotating && currentRotate)
-            Emit(hand, GestureType.ROTATE, GesturePhase.START, strength);
+            Emit(interactionHandData, GestureType.ROTATE, GesturePhase.START, strength);
 
         if (isRotating && currentRotate)
-            Emit(hand, GestureType.ROTATE, GesturePhase.UPDATE, strength);
+            Emit(interactionHandData, GestureType.ROTATE, GesturePhase.UPDATE, strength);
 
         if (isRotating && !currentRotate)
-            Emit(hand, GestureType.ROTATE, GesturePhase.END, strength);
+            Emit(interactionHandData, GestureType.ROTATE, GesturePhase.END, strength);
 
         isRotating = currentRotate;
     }
@@ -110,12 +117,14 @@ public class InteractionTracker : IDisposable
             type = type,
             phase = phase,
             handType = hand.HandType,
-            position = hand.HandPos,
+            palmPosition = hand.PalmPos,
+            palmRotation = hand.PalmRotation,
             strength = strength,
             frameId = hand.FrameId
 
             //Se puede inyectar poseDetector
         };
+        //Debug.Log($"TYPE: {e.type} - PHASE: {e.phase}");
 
         OnInteraction?.Invoke(e);
     }

@@ -25,16 +25,16 @@ public class OrientationPieceBehaviour : Grabbable
         rb.isKinematic = true;
     }
 
-    public override void OnGrabStart(InteractableData data)
+    public override void OnGrabStart()//InteractableData data)
     {
-        base.OnGrabStart(data);
+        base.OnGrabStart();
         rb.useGravity = false;
         Debug.Log("GRABBING FROM ORI");
     }
 
-    public override void OnGrabEnd(InteractableData data)
+    public override void OnGrabEnd()//InteractableData data)
     {
-        base.OnGrabEnd(data);
+        base.OnGrabEnd();
         rb.useGravity = true;
     }
 }

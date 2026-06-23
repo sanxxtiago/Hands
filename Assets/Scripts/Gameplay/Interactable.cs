@@ -12,17 +12,13 @@ public abstract class Interactable : MonoBehaviour
     // =========================
     // GRAB
     // =========================
-    public virtual void OnGrabStart(InteractableData data) { }
-
-    public virtual void OnGrabUpdate(InteractableData data) { }
-
-    public virtual void OnGrabEnd(InteractableData data) { }
+    public virtual void OnGrabStart() { }
+    public virtual void OnGrabEnd() { }
 
     // =========================
     // ROTATE
     // =========================
-    public virtual void OnRotate(InteractableData data)
-    { }
+    public virtual void OnRotate(InteractableData data){ }
 
     // =========================
     // PINCH / SELECT

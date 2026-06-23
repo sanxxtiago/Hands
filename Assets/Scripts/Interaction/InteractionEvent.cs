@@ -7,7 +7,7 @@ public struct InteractionEvent
     public HandType handType;
     public float strength;
     public long frameId;
-    public Vector3 position;
-    public Quaternion rotation;
+    public Vector3 palmPosition;
+    public Quaternion palmRotation;
     public Vector3 velocity;
 }

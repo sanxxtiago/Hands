@@ -1,6 +1,6 @@
 public class GrabGestureDetector : IGestureDetector
 {
-    public float enterThreshold = 0.75f;
+    public float enterThreshold = 0.65f;
     public float exitThreshold = 0.60f;
 
     private bool _isActive = false;

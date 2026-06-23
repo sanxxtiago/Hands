@@ -64,6 +64,7 @@ public class MotionAggregator
             frameId = current.frameId,
             handType = current.handType,
             handPos = current.palmPosition,
+            handRotation = current.palmRotation,
             timestamp = Time.time,
             motions = motions,
             gestures = gestures

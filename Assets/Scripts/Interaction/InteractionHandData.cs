@@ -3,12 +3,14 @@ using UnityEngine;
 
 public struct InteractionHandData
 {
+    //Sale del movtioneventbus
     private readonly FrameMotionData frame;
 
     public HandType HandType => frame.handType;
     public long FrameId => frame.frameId;
     public float Timestamp => frame.timestamp;
-    public Vector3 HandPos => frame.handPos;
+    public Vector3 PalmPos => frame.handPos;
+    public Quaternion PalmRotation => frame.handRotation;
     public InteractionHandData(FrameMotionData frame)
     {
         this.frame = frame;
@@ -49,23 +51,23 @@ public struct InteractionHandData
         return 0f;
     }
 
-    public float GetMotionVelocity(MotionZone zone)
-    {
-        foreach (var m in frame.motions)
-            if (m.zone == zone)
-                return m.velocity;
+    // public float GetMotionVelocity(MotionZone zone)
+    // {
+    //     foreach (var m in frame.motions)
+    //         if (m.zone == zone)
+    //             return m.velocity;
 
-        return 0f;
-    }
+    //     return 0f;
+    // }
 
-    public float GetMotionAngle(MotionZone zone)
-    {
-        foreach (var m in frame.motions)
-            if (m.zone == zone)
-                return m.rawAngle;
+    // public float GetMotionAngle(MotionZone zone)
+    // {
+    //     foreach (var m in frame.motions)
+    //         if (m.zone == zone)
+    //             return m.rawAngle;
 
-        return 0f;
-    }
+    //     return 0f;
+    // }
 
     public bool IsMotionActive(MotionZone zone)
     {

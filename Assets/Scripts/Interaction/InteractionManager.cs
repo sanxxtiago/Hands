@@ -1,47 +1,63 @@
 using System.Collections.Generic;
+using Leap;
+using Leap.PhysicalHands;
 using UnityEngine;
 
 public class InteractionManager : MonoBehaviour
 {
-    public InteractionTracker leftTracker;
-    public InteractionTracker rightTracker;
+    public InteractionTracker tracker;
+    //public InteractionTracker rightTracker;
 
     public InteractionResolver resolver;
+    public HandType handType;
 
-    public float grabRadius = 0.1f;
-    public LayerMask interactableLayer;
+    [SerializeField] private float grabRadius = 0.1f;
+    [SerializeField] private Vector3 grabOffset = new(0f, 0f, 0.05f);
+    [SerializeField] private LayerMask interactableLayer;
+
     private Interactable grabbed;
-    private Interactable activeTarget;
+
+    // Debug
+    [SerializeField] private bool debug = true;
+    [SerializeField] private Transform sphereDebug;
+
+    private Vector3 debugHandPos;
+    private bool hasDebugPos;
 
     void OnEnable()
     {
-        leftTracker.OnInteraction += HandleInteraction;
-        rightTracker.OnInteraction += HandleInteraction;
+        tracker.OnInteraction += HandleInteraction;
     }
 
     void OnDisable()
     {
-        leftTracker.OnInteraction -= HandleInteraction;
-        rightTracker.OnInteraction -= HandleInteraction;
+        tracker.OnInteraction -= HandleInteraction;
     }
 
     void Awake()
     {
-        leftTracker = new InteractionTracker(HandType.LEFT);
-        rightTracker = new InteractionTracker(HandType.RIGHT);
+        tracker = new InteractionTracker(handType);
         resolver = new InteractionResolver();
     }
 
     void OnDestroy()
     {
-        leftTracker?.Dispose();
-        rightTracker?.Dispose();
+        tracker?.Dispose();
+       // rightTracker?.Dispose();
     }
 
+    void Update()
+    {
+        sphereDebug.gameObject.SetActive(debug);
+
+        //CheckGrabConsistency();
+    }
 
     void HandleInteraction(InteractionEvent e)
     {
-        //Debug.Log("Interaction received");
+        if (e.handType != handType)
+            return;
+
         var target = FindTarget(e);
 
         bool isGrabbing = grabbed != null;
@@ -53,18 +69,34 @@ public class InteractionManager : MonoBehaviour
 
     Interactable FindTarget(InteractionEvent e)
     {
-        Vector3 handPos = e.position;
-        Debug.Log($"Posición de mano {e.position}");
-        Collider[] hits = Physics.OverlapSphere(handPos, grabRadius, interactableLayer);
+        Vector3 sphereCenter =
+            e.palmPosition +
+            e.palmRotation * grabOffset;
+
+        debugHandPos = sphereCenter;
+        hasDebugPos = true;
+
+        if (sphereDebug != null)
+            sphereDebug.position = sphereCenter;
+
+        Collider[] hits = Physics.OverlapSphere(
+            sphereCenter,
+            grabRadius,
+            interactableLayer
+        );
 
         float minDist = float.MaxValue;
         Interactable best = null;
 
         foreach (var hit in hits)
         {
-            if (!hit.TryGetComponent<Interactable>(out var interactable)) continue;
+            if (!hit.TryGetComponent<Interactable>(out var interactable))
+                continue;
 
-            float dist = Vector3.Distance(handPos, hit.transform.position);
+            float dist = Vector3.Distance(
+                sphereCenter,
+                hit.ClosestPoint(sphereCenter)
+            );
 
             if (dist < minDist)
             {
@@ -72,9 +104,43 @@ public class InteractionManager : MonoBehaviour
                 best = interactable;
             }
         }
-        //Debug.Log($"HITS: {hits.Length}");
+
         return best;
     }
+
+    void CheckGrabConsistency()
+    {
+        if (grabbed == null)
+            return;
+
+        Collider[] hits = Physics.OverlapSphere(
+            debugHandPos,
+            grabRadius,
+            interactableLayer
+        );
+
+        bool stillInside = false;
+
+        foreach (var hit in hits)
+        {
+            if (!hit.TryGetComponent<Interactable>(out var interactable))
+                continue;
+
+            if (interactable == grabbed)
+            {
+                stillInside = true;
+                return;
+            }
+        }
+
+        if (!stillInside)
+        {
+            Debug.Log($"Force Release: {grabbed.name}");
+
+            grabbed.ForceRelease();
+        }
+    }
+
     void ApplyInteraction(ResolvedInteraction r)
     {
         if (r.target == null) return;
@@ -94,50 +160,32 @@ public class InteractionManager : MonoBehaviour
                 break;
         }
     }
+
     void HandleGrab(ResolvedInteraction r)
     {
         var e = r.source;
-        var data = new InteractableData(e.position, e.rotation);
 
         if (e.phase == GesturePhase.START)
         {
-            if (grabbed != null) return;
+            if (grabbed != null)
+                return;
 
             grabbed = r.target;
-            activeTarget = grabbed;
+            grabbed.OnForcedRelease += HandleForcedRelease;
+
             Debug.Log("Grabbed: " + grabbed.name);
-            grabbed.OnGrabStart(data);
+            grabbed.OnGrabStart();
         }
 
         if (e.phase == GesturePhase.END)
         {
-            var target = r.target;
-
-            if (target != null)
+            if (grabbed != null)
             {
-                target.OnForcedRelease -= HandleForcedRelease;
-                target.OnGrabEnd(data);
+                grabbed.OnForcedRelease -= HandleForcedRelease;
+                grabbed.OnGrabEnd();
             }
-
             grabbed = null;
         }
-
-        if (e.phase == GesturePhase.END)
-        {
-            var target = activeTarget ?? r.target;
-
-            if (target != null)
-            {
-                target.OnGrabEnd(data);
-                target.OnForcedRelease -= HandleForcedRelease;
-            }
-
-            if (grabbed == target)
-                grabbed = null;
-
-            activeTarget = null;
-        }
-        //Debug.Log($"PHASE: {e.phase}, target: {r.target}");
     }
 
     void HandleRotate(ResolvedInteraction r)
@@ -147,7 +195,10 @@ public class InteractionManager : MonoBehaviour
         if (grabbed == null) return;
         if (e.phase != GesturePhase.UPDATE) return;
 
-        var data = new InteractableData(e.position, e.rotation);
+        var data = new InteractableData(
+            e.palmPosition,
+            e.palmRotation
+        );
 
         grabbed.OnRotate(data);
     }
@@ -156,19 +207,33 @@ public class InteractionManager : MonoBehaviour
     {
         var e = r.source;
 
-        if (e.phase != GesturePhase.START) return;
+        if (e.phase != GesturePhase.START)
+            return;
 
-        var data = new InteractableData(e.position, e.rotation);
+        var data = new InteractableData(
+            e.palmPosition,
+            e.palmRotation
+        );
 
         r.target.OnSelect(data);
     }
 
     void HandleForcedRelease(Interactable target)
     {
-        if (grabbed == target)
-        {
-            activeTarget = target;
-            grabbed = null;
-        }
+        if (grabbed != target)
+            return;
+
+        grabbed.OnGrabEnd();
+        grabbed.OnForcedRelease -= HandleForcedRelease;
+        grabbed = null;
+    }
+
+    void OnDrawGizmos()
+    {
+        if (!hasDebugPos)
+            return;
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(debugHandPos, grabRadius);
     }
 }
