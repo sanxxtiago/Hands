@@ -2699,6 +2699,7 @@ GameObject:
   m_Component:
   - component: {fileID: 540416930}
   - component: {fileID: 540416932}
+  - component: {fileID: 540416933}
   m_Layer: 0
   m_Name: InteractionManager
   m_TagString: Untagged
@@ -2733,12 +2734,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3723bb218496db747955385bd17a5cea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  handType: 0
   grabRadius: 0.06
   grabOffset: {x: 0, y: -0.05, z: 0.04}
   interactableLayer:
     serializedVersion: 2
     m_Bits: 64
-  debug: 1
+  debug: 0
+  sphereDebug: {fileID: 482837269}
+--- !u!114 &540416933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 540416928}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3723bb218496db747955385bd17a5cea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handType: 1
+  grabRadius: 0.06
+  grabOffset: {x: 0, y: -0.05, z: 0.04}
+  interactableLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  debug: 0
   sphereDebug: {fileID: 482837269}
 --- !u!1 &540689707
 GameObject:
