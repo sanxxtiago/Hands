@@ -47,8 +47,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc36d94e82557754bb3de06e5a0fc3ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsGrabbed: 0
   isFitted: 0
+  IsGrabbed: 0
 --- !u!54 &7673751624158980090
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -50,6 +50,18 @@ public class PieceBehaviour : Interactable
         rb.constraints = RigidbodyConstraints.FreezeAll;
     }
 
+    public void UpdateLayer()
+    {
+        LayerMask newLayer = LayerMask.GetMask("Default");
+        gameObject.layer = newLayer;
+
+        foreach(Transform child in gameObject.GetComponentInChildren<Transform>())
+        {
+            child.gameObject.layer = newLayer;
+        }
+
+    }
+
     public bool CanSnap(SlotType slotType, Vector3 slotPos, float snapDistance)
     {
 

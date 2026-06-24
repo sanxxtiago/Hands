@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Shader Graphs_DotedShape
+  m_Name: PiecesProjection
   m_Shader: {fileID: -6465566751694194690, guid: e187a722e6b42ba42ba32048ed56feb8,
     type: 3}
   m_ValidKeywords: []
@@ -34,24 +34,32 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _Projection:
+        m_Texture: {fileID: 8400000, guid: d474f0297fa92fe43a4f777a99cc810e, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_16408f0351144b71a324d15472e08125_Texture_1:
-        m_Texture: {fileID: 8400000, guid: 847630e21e8772d4fb3e35eaf86bce0b, type: 2}
+        m_Texture: {fileID: 8400000, guid: d474f0297fa92fe43a4f777a99cc810e, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_2181a95ec34a4d4bb678d34a7add6cfa_Texture_1:
-        m_Texture: {fileID: 8400000, guid: 847630e21e8772d4fb3e35eaf86bce0b, type: 2}
+        m_Texture: {fileID: 8400000, guid: d474f0297fa92fe43a4f777a99cc810e, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_4ff03be7b6624f739e12a8d40752c5f2_Texture_1:
-        m_Texture: {fileID: 8400000, guid: 847630e21e8772d4fb3e35eaf86bce0b, type: 2}
+        m_Texture: {fileID: 8400000, guid: d474f0297fa92fe43a4f777a99cc810e, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_6eeef7f037ba47d5910495f263b2fcc5_Texture_1:
-        m_Texture: {fileID: 8400000, guid: 847630e21e8772d4fb3e35eaf86bce0b, type: 2}
+        m_Texture: {fileID: 8400000, guid: d474f0297fa92fe43a4f777a99cc810e, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_d93aaf2f35004de79f505fad02cd4979_Texture_1:
-        m_Texture: {fileID: 8400000, guid: 847630e21e8772d4fb3e35eaf86bce0b, type: 2}
+        m_Texture: {fileID: 8400000, guid: d474f0297fa92fe43a4f777a99cc810e, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_dba2744939ec495e94dfd2eeff1b9d49_Texture_1:
+        m_Texture: {fileID: 8400000, guid: d474f0297fa92fe43a4f777a99cc810e, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TexelSize_daca22f86588426da82d11e567ebe617_Texture_1:
@@ -73,13 +81,13 @@ Material:
     m_Ints: []
     m_Floats:
     - _BaseColor: 2.42
-    - _DashCount: 10
+    - _DashCount: 50
     - _DiagonalSlope: 0.8
     - _Edge: 0.05
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Speed: 0.6
-    - _Thickness: 25
+    - _Speed: 0.4
+    - _Thickness: 23.1
     m_Colors:
     - _BaseColor: {r: 0.7830189, g: 0.7830189, b: 0.7830189, a: 1}
     - _DotedColor: {r: 0.07075471, g: 1, b: 0.5250558, a: 1}
