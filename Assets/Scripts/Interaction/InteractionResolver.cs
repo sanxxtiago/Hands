@@ -39,8 +39,8 @@ public class InteractionResolver
             };
         }
 
-        // ROTATE (solo si hay grab)
-        if (e.type == GestureType.ROTATE && isGrabbing)
+        // ROTATE continuo
+        if (e.type == GestureType.ROTATE)// && isGrabbing)
         {
             return new ResolvedInteraction
             {

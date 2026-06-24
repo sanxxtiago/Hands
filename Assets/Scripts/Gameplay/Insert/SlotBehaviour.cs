@@ -5,7 +5,7 @@ using UnityEngine;
 public class SlotBehaviour : MonoBehaviour
 {
     public Transform snapPoint;
-    public INSERTTYPE slotType;
+    public SlotType slotType;
     public float snapAngle = 20;
     public float snapDistance = 10;
     public float snapZOffset = -.02f;
@@ -21,7 +21,7 @@ public class SlotBehaviour : MonoBehaviour
 
         if (currentPiece != null) return;
 
-        if (!CanSnap(piece)) return;
+        if (!piece.CanSnap(slotType, transform.position, snapDistance)) return;
 
 
         isSnapping = true;
@@ -29,24 +29,9 @@ public class SlotBehaviour : MonoBehaviour
 
         StartCoroutine(AlignAndSnap(piece));
     }
-    bool CanSnap(PieceBehaviour piece)
-    {
-
-        if (piece.IsGrabbed || piece.isSnapped)
-            return false;
-        if (piece.pieceType != slotType)
-            return false;
-
-        float dist = Vector3.Distance(piece.transform.position, transform.position);
-
-        return dist < snapDistance;
-    }
 
     IEnumerator AlignAndSnap(PieceBehaviour piece)
     {
-        //if (piece.IsGrabbed)
-            //piece.ForceRelease();
-
         Vector3 startPos = piece.transform.position;
         Quaternion startRot = piece.transform.rotation;
 
@@ -86,7 +71,7 @@ public class SlotBehaviour : MonoBehaviour
         {
             piece.transform.rotation = Quaternion.identity;
         }
-        piece.isSnapped = true;
+        piece.state = PieceState.Snapped;
 
         isSnapping = false;
         currentPiece = null;
@@ -94,28 +79,10 @@ public class SlotBehaviour : MonoBehaviour
         isFilled = true;
         piece.LockPhysics();
 
-        
-
         Debug.Log(
          $"SNAPPED | isKinematic={piece.rb.isKinematic} | useGravity={piece.rb.useGravity}"
         );
 
-        // opcional: dejarlo fijo pero con collider normal
-        //col.isTrigger = false;
     }
-    // void Snap(PieceBehaviour piece)
-    // {
-    //     if (piece.IsGrabbed)
-    //     {
-    //         piece.ForceRelease();
-    //     }
-    //     Vector3 offset = Vector3.forward * snapZOffset;
-    //     piece.transform.SetPositionAndRotation(transform.position + offset, transform.rotation);
-    //     piece.GetComponent<Rigidbody>().isKinematic = true;
-    //     //Temporal
-    //     piece.GetComponent<BoxCollider>().isTrigger = true;
-    //     //----------
-    //     piece.isSnapped = true;
-    //     isFilled = true;
-    // }
+
 }

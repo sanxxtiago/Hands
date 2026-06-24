@@ -1,9 +1,15 @@
 using UnityEngine;
-
-public class PieceBehaviour : Grabbable
+public enum PieceState
 {
-    public INSERTTYPE pieceType;
-    public bool isSnapped;
+    Idle,
+    Snapped,
+    Grabbed
+}
+public class PieceBehaviour : Interactable
+{
+    public SlotType pieceType;
+    public PieceState state = PieceState.Idle;
+
     public bool requireRotation = false;
     [HideInInspector] public Rigidbody rb;
     void Awake()
@@ -12,25 +18,26 @@ public class PieceBehaviour : Grabbable
     }
     void Update()
     {
-        if (isSnapped)
+        if (state == PieceState.Snapped)
             return;
 
         transform.position = ClampPosition(transform.position);
     }
     public override bool CanInteract(InteractionType interactionType)
     {
-        return !isSnapped;
+        return state != PieceState.Snapped;
     }
 
     public override void OnGrabStart()
     {
         base.OnGrabStart();
+        state = PieceState.Grabbed;
     }
 
     public override void OnGrabEnd()
     {
         base.OnGrabEnd();
-        //rb.useGravity = true;
+        state = PieceState.Idle;
     }
 
     public void LockPhysics()
@@ -41,6 +48,19 @@ public class PieceBehaviour : Grabbable
         rb.useGravity = false;
         rb.detectCollisions = false;
         rb.constraints = RigidbodyConstraints.FreezeAll;
+    }
+
+    public bool CanSnap(SlotType slotType, Vector3 slotPos, float snapDistance)
+    {
+
+        if (state == PieceState.Grabbed || state == PieceState.Snapped)
+            return false;
+        if (pieceType != slotType)
+            return false;
+
+        float dist = Vector3.Distance(transform.position, slotPos);
+
+        return dist < snapDistance;
     }
 
 }

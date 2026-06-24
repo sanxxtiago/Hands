@@ -1,9 +1,10 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class OrientationPieceBehaviour : Grabbable
+public class OrientationPieceBehaviour : Interactable
 {
     public bool isFitted;
+    public bool IsGrabbed = false;
     private Rigidbody rb;
     void Awake()
     {
@@ -22,19 +23,18 @@ public class OrientationPieceBehaviour : Grabbable
     public void FitIn()
     {
         isFitted = true;
-        rb.isKinematic = true;
     }
 
-    public override void OnGrabStart()//InteractableData data)
+    public override void OnGrabStart()
     {
         base.OnGrabStart();
-        rb.useGravity = false;
         Debug.Log("GRABBING FROM ORI");
+        IsGrabbed = true;
     }
 
-    public override void OnGrabEnd()//InteractableData data)
+    public override void OnGrabEnd()
     {
         base.OnGrabEnd();
-        rb.useGravity = true;
+        IsGrabbed = false;
     }
 }

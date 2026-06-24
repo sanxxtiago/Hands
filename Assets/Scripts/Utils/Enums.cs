@@ -61,7 +61,7 @@ public enum SNACKBARTYPE
     SUCCESS
 }
 
-public enum INSERTTYPE
+public enum SlotType
 {
     SQUARE = 0,
     CIRCLE = 1,

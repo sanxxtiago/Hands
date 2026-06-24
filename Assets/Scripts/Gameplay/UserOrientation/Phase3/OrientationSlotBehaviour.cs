@@ -1,9 +1,6 @@
 using System;
 using UnityEngine;
 
-using System;
-using UnityEngine;
-
 public class OrientationSlotBehaviour : MonoBehaviour
 {
     public event Action OnPieceEntered;
@@ -33,11 +30,7 @@ public class OrientationSlotBehaviour : MonoBehaviour
 
         if (!piece.isFitted && !piece.IsGrabbed)
         {
-            piece.isFitted = true;
-
-            if (piece.TryGetComponent<Rigidbody>(out var rb))
-                rb.isKinematic = false;
-
+            piece.FitIn();
             OnPieceFitted?.Invoke();
         }
     }
