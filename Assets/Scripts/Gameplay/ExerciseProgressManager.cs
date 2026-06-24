@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class ExerciseProgressManager : MonoBehaviour
@@ -7,6 +6,7 @@ public class ExerciseProgressManager : MonoBehaviour
     public int currentSteps;
     public int targetSteps;
     public bool simulateEndExercise = false;
+    public static event Action<int, int> OnProgressChanged;
     void Update()
     {
         if (simulateEndExercise)
@@ -36,5 +36,6 @@ public class ExerciseProgressManager : MonoBehaviour
     public void AddStep(int amount = 1)
     {
         currentSteps += amount;
+        OnProgressChanged?.Invoke(currentSteps, targetSteps);
     }
 }
