@@ -59,6 +59,12 @@ public class MotionAggregator
         _previousSnapshot = current;
 
         // 7. Construir frame
+        // Debug.Log(
+        //     $"CURRENT -> " +
+        //     $"HAND:{current.handType} " +
+        //     $"POS:{current.palmPosition}"
+        // );
+
         frame = new FrameMotionData
         {
             frameId = current.frameId,
@@ -69,6 +75,12 @@ public class MotionAggregator
             motions = motions,
             gestures = gestures
         };
+
+        // Debug.Log(
+        //     $"FRAME -> " +
+        //     $"HAND:{frame.handType} " +
+        //     $"POS:{frame.handPos}"
+        // );
 
         return true;
     }

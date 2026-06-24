@@ -2,8 +2,9 @@
 
 public enum HandType
 {
+    NONE = 0,
     LEFT = 1,
-    RIGHT = 0
+    RIGHT = 2
 }
 public enum GestureType
 {
@@ -71,7 +72,8 @@ public enum SlotType
     S,
     Z,
     L,
-    Three
+    Three,
+    U
 }
 
 public enum GAMESTATE

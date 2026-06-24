@@ -26,6 +26,7 @@ public class InteractionTracker : IDisposable
     {
         if (frame.handType != handType)
             return;
+        //Debug.Log($"FROM PF: FRAME:{frame.handType} & THIS.HT:{handType}");
 
         var interactionHandData = new InteractionHandData(frame);
 

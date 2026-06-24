@@ -10,7 +10,7 @@ public class WallInsertExercise : ExerciseController
     }
     protected override void OnExerciseStart()
     {
-        Debug.Log("Excersise Started!!!!");
+        //Debug.Log("Excersise Started!!!!");
     }
 
     protected override void Tick(float timeLeft)

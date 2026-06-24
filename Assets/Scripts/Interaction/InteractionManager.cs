@@ -22,28 +22,35 @@ public class InteractionManager : MonoBehaviour
     [SerializeField] private Transform sphereDebug;
 
     private Vector3 debugHandPos;
-    private bool hasDebugPos;
+    //private Vector3 rightDebugPos;
+
+    private bool hasDebug;
+    //private bool hasRightDebug;
 
     void OnEnable()
     {
         tracker.OnInteraction += HandleInteraction;
+        //rightTracker.OnInteraction += HandleInteraction;
     }
 
     void OnDisable()
     {
         tracker.OnInteraction -= HandleInteraction;
+        //7rightTracker.OnInteraction -= HandleInteraction;
     }
 
     void Awake()
     {
         tracker = new InteractionTracker(handType);
+        //rightTracker = new InteractionTracker(HandType.RIGHT);
+
         resolver = new InteractionResolver();
     }
 
     void OnDestroy()
     {
         tracker?.Dispose();
-       // rightTracker?.Dispose();
+        //rightTracker?.Dispose();
     }
 
     void Update()
@@ -55,10 +62,17 @@ public class InteractionManager : MonoBehaviour
 
     void HandleInteraction(InteractionEvent e)
     {
-        if (e.handType != handType)
-            return;
+
+        //         Debug.Log(
+        //      $"EVENT -> Hand:{e.handType} " +
+        //      $"Type:{e.type} " +
+        //      $"Phase:{e.phase} " +
+        //      $"Palm:{e.palmPosition}"
+        //  );
 
         var target = FindTarget(e);
+
+        //Debug.Log($"TARGET FOUND: {(target ? target.name : "NULL")}");
 
         bool isGrabbing = grabbed != null;
 
@@ -74,7 +88,7 @@ public class InteractionManager : MonoBehaviour
             e.palmRotation * grabOffset;
 
         debugHandPos = sphereCenter;
-        hasDebugPos = true;
+        hasDebug = true;
 
         if (sphereDebug != null)
             sphereDebug.position = sphereCenter;
@@ -135,7 +149,7 @@ public class InteractionManager : MonoBehaviour
 
         if (!stillInside)
         {
-            Debug.Log($"Force Release: {grabbed.name}");
+            //Debug.Log($"Force Release: {grabbed.name}");
 
             grabbed.ForceRelease();
         }
@@ -143,8 +157,16 @@ public class InteractionManager : MonoBehaviour
 
     void ApplyInteraction(ResolvedInteraction r)
     {
-        if (r.target == null) return;
+        //($"HAND: {r.source.handType}");
 
+        if (r.target == null)
+        {
+            //Debug.Log($"TARGET: NULL");
+
+            return;
+
+        }
+        //Debug.Log($"TARGET: {r.target.name}");
         switch (r.type)
         {
             case InteractionType.Grab:
@@ -173,7 +195,7 @@ public class InteractionManager : MonoBehaviour
             grabbed = r.target;
             grabbed.OnForcedRelease += HandleForcedRelease;
 
-            Debug.Log("Grabbed: " + grabbed.name);
+            //Debug.Log("Grabbed: " + grabbed.name);
             grabbed.OnGrabStart();
         }
 
@@ -230,7 +252,7 @@ public class InteractionManager : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        if (!hasDebugPos)
+        if (!hasDebug)
             return;
 
         Gizmos.color = Color.green;

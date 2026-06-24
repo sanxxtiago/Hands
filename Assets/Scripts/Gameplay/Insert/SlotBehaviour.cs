@@ -79,9 +79,9 @@ public class SlotBehaviour : MonoBehaviour
         isFilled = true;
         piece.LockPhysics();
         piece.UpdateLayer();
-        Debug.Log(
-         $"SNAPPED | isKinematic={piece.rb.isKinematic} | useGravity={piece.rb.useGravity}"
-        );
+        // Debug.Log(
+        //  $"SNAPPED | isKinematic={piece.rb.isKinematic} | useGravity={piece.rb.useGravity}"
+        // );
 
     }
 

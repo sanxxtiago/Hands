@@ -28,7 +28,7 @@ public class OrientationPieceBehaviour : Interactable
     public override void OnGrabStart()
     {
         base.OnGrabStart();
-        Debug.Log("GRABBING FROM ORI");
+        //Debug.Log("GRABBING FROM ORI");
         IsGrabbed = true;
     }
 

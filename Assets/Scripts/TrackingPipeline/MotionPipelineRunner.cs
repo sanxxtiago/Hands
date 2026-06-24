@@ -58,6 +58,13 @@ public class MotionPipelineRunner : MonoBehaviour
         {
             if (snapNullable == null) continue;
 
+            //         Debug.Log(
+            //   $"SNAPSHOT -> " +
+            //   $"HAND:{snapNullable.Value.handType} " +
+            //   $"FRAME:{snapNullable.Value.frameId} " +
+            //   $"POS:{snapNullable.Value.palmPosition}"
+            // );
+
             HandDataSnapshot snap = snapNullable.Value;
 
             MotionAggregator aggregator = snap.handType == HandType.LEFT

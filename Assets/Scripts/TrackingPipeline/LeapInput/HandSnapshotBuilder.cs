@@ -5,8 +5,8 @@ public class HandSnapshotBuilder
 {
     public HandDataSnapshot?[] Build(Frame frame)
     {
-        HandDataSnapshot left = default;
-        HandDataSnapshot right = default;
+        HandDataSnapshot? left = null;
+        HandDataSnapshot? right = null;
 
         foreach (Hand hand in frame.Hands)
         {
@@ -36,8 +36,13 @@ public class HandSnapshotBuilder
                 left = snapshot;
             else
                 right = snapshot;
+
+            //Debug.Log($"LEFT BUILD: {left.handType} {left.palmPosition}");
+            //Debug.Log($"RIGHT BUILD: {right.handType} {right.palmPosition}");
+
         }
 
-        return new HandDataSnapshot?[] { left, right };
+
+        return new[] { left, right };
     }
 }

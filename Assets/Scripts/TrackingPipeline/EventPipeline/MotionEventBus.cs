@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 public static class MotionEventBus
 {
@@ -6,6 +7,7 @@ public static class MotionEventBus
 
     public static void Publish(FrameMotionData frame)
     {
+        //Debug.Log($"FROM MEB: {frame.handType}");
         OnFrame?.Invoke(frame);
     }
 }
