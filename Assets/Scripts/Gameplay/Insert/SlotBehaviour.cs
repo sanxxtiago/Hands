@@ -71,17 +71,12 @@ public class SlotBehaviour : MonoBehaviour
         {
             piece.transform.rotation = Quaternion.identity;
         }
-        piece.state = PieceState.Snapped;
 
         isSnapping = false;
         currentPiece = null;
+        piece.Snap();
 
         isFilled = true;
-        piece.LockPhysics();
-        piece.UpdateLayer();
-        // Debug.Log(
-        //  $"SNAPPED | isKinematic={piece.rb.isKinematic} | useGravity={piece.rb.useGravity}"
-        // );
 
     }
 

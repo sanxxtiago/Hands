@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using DG.Tweening;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class ResultsUI : MonoBehaviour
@@ -12,7 +10,7 @@ public class ResultsUI : MonoBehaviour
 
     public ArmResultUI leftArmAbsoluteResult;
     public ArmResultUI leftArmRelativeResult;
-
+    public TMP_Text timeElapsedText;
     [Header("LEFT - ABS")]
     public TMP_Text leftAbsHand;
     public TMP_Text leftAbsWrist;
@@ -43,6 +41,16 @@ public class ResultsUI : MonoBehaviour
 
     public CanvasGroup group;
 
+    void OnEnable()
+    {
+        GameManager.OnExerciseEnd += SetTimeText;
+    }
+
+    void OnDisable()
+    {
+        GameManager.OnExerciseEnd -= SetTimeText;
+    }
+
     void Start()
     {
         group.alpha = 0f;
@@ -52,6 +60,10 @@ public class ResultsUI : MonoBehaviour
         group.DOKill();
         group.alpha = 0;
         group.DOFade(1, 0.3f);
+    }
+    public void SetTimeText(float duration)
+    {
+        timeElapsedText.text = $"Tiempo total: {Math.Round(duration,2)} S";
     }
 
     public void SetResults(ExerciseSummary left, ExerciseSummary right)

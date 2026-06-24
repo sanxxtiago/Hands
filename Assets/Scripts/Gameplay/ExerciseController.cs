@@ -3,35 +3,22 @@ using UnityEngine;
 
 public abstract class ExerciseController : MonoBehaviour
 {
-    public Exercise type;
-    private Exercise current;
     public GameManager gameManager;
+    public ExerciseProgressManager progressManager;
     public ExerciseFeedbackSystem feedbackSystem;
-
-    [SerializeField] protected float exerciseDuration = 30f;
 
     protected virtual void OnEnable()
     {
-        GameManager.OnSetExercise += HandleSetExercise;
-        GameManager.OnGameStart += HandleStartExercise;
+        GameManager.OnExcerciseStart += HandleStartExercise;
     }
 
     protected virtual void OnDisable()
     {
-        GameManager.OnGameStart -= HandleStartExercise;
-        GameManager.OnSetExercise -= HandleSetExercise;
-    }
-
-    private void HandleSetExercise(Exercise current)
-    {
-        this.current = current;
+        GameManager.OnExcerciseStart -= HandleStartExercise;
     }
 
     public void HandleStartExercise()
     {
-        if (current != type) return;
-
-        Debug.Log("empezo " + type.ToString());
         StartCoroutine(ExerciseRoutine());
     }
 
@@ -41,31 +28,22 @@ public abstract class ExerciseController : MonoBehaviour
 
         float elapsedTime = 0;
 
-        while (elapsedTime <= exerciseDuration && !IsCompleted())
+
+        while (!progressManager.IsCompleted())
         {
             elapsedTime += Time.deltaTime;
-            if (elapsedTime > exerciseDuration)
-            {
-                elapsedTime = exerciseDuration;
-                break;
-            }
-
-            Tick(elapsedTime);
-            feedbackSystem.Evaluate(elapsedTime, Time.deltaTime);
+            //El sistema de feedback evalúa durante la duración del ejercicio
+            //feedbackSystem.Evaluate(elapsedTime, Time.deltaTime);
             yield return null;
         }
-        
-        Debug.Log("Terminóoo - Time: " + (elapsedTime));
+
         OnExerciseEnd(elapsedTime);
     }
 
-
     protected abstract void OnExerciseStart();
-    protected abstract void Tick(float timeLeft);
     protected void OnExerciseEnd(float duration)
     {
         gameManager.EndExercise(duration);
     }
-    protected abstract bool IsCompleted();
 
 }

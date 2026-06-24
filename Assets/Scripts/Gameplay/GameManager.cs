@@ -10,28 +10,21 @@ public class GameManager : MonoBehaviour
     public ArmRuntimeUI left;
     public ArmRuntimeUI right;
 
-    public Exercise currentExercise;
-    public static event Action<Exercise> OnSetExercise;
     public static event Action OnCountdownStart;
-    public static event Action OnGameStart;
+    public static event Action OnExcerciseStart;
+    //Pasa la duración del ejercicio al finalizarlo
+    public static event Action<float> OnExerciseEnd;
     public static event Action OnShowResults;
-    public static event Action<float> OnGameEnd;
-    //private float exerciseDuration = 0;
     private void OnEnable()
     {
         transition.OnFadeOutCompleted += StartCountdown;
-        CountdownUI.OnCountdownFinished += HandleCountdownFinished;
+        CountdownUI.OnCountdownFinished += OnCountdownFinished;
     }
 
     private void OnDisable()
     {
         transition.OnFadeOutCompleted -= StartCountdown;
-        CountdownUI.OnCountdownFinished -= HandleCountdownFinished;
-    }
-
-    void Start()
-    {
-        OnSetExercise?.Invoke(currentExercise);
+        CountdownUI.OnCountdownFinished -= OnCountdownFinished;
     }
 
     void Update()
@@ -42,16 +35,16 @@ public class GameManager : MonoBehaviour
         right.SetData(trackingSystem.rightTracker.GetRuntimeSnapshot());
     }
 
-    void HandleCountdownFinished()
-    {
-        SetState(GAMESTATE.PLAYING);
-    }
 
-    public void StartCountdown()
+
+    private void StartCountdown()
     {
         SetState(GAMESTATE.COUNTDOWN);
     }
-
+    void OnCountdownFinished()
+    {
+        SetState(GAMESTATE.PLAYING);
+    }
     public void SetState(GAMESTATE newState)
     {
         currentState = newState;
@@ -63,7 +56,7 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GAMESTATE.PLAYING:
-                OnGameStart?.Invoke();
+                OnExcerciseStart?.Invoke();
                 break;
 
             case GAMESTATE.RESULTS:
@@ -74,15 +67,8 @@ public class GameManager : MonoBehaviour
 
     public void EndExercise(float duration)
     {
-        OnGameEnd?.Invoke(duration);
+        OnExerciseEnd?.Invoke(duration);
         SetState(GAMESTATE.RESULTS);
-    }
-
-    public void NextExercise()
-    {
-        Exercise next = Exercise.Osu;
-        OnSetExercise?.Invoke(next);
-        SetState(GAMESTATE.COUNTDOWN);
     }
 
 }

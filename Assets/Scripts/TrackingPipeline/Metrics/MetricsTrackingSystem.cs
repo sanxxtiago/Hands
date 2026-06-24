@@ -14,14 +14,14 @@ public class MetricsTrackingSystem : MonoBehaviour
     void OnEnable()
     {
         MotionEventBus.OnFrame += OnFrameReceived;
-        GameManager.OnGameStart += RunTracking;
-        GameManager.OnGameEnd += StopTracking;
+        GameManager.OnExcerciseStart += RunTracking;
+        GameManager.OnExerciseEnd += StopTracking;
     }
     void OnDisable()
     {
         MotionEventBus.OnFrame -= OnFrameReceived;
-        GameManager.OnGameStart -= RunTracking;
-        GameManager.OnGameEnd -= StopTracking;
+        GameManager.OnExcerciseStart -= RunTracking;
+        GameManager.OnExerciseEnd -= StopTracking;
     }
     public void RunTracking()
     {

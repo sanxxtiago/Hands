@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 public enum PieceState
 {
@@ -7,6 +8,7 @@ public enum PieceState
 }
 public class PieceBehaviour : Interactable
 {
+    public static event Action OnPieceSnapped;
     public SlotType pieceType;
     public PieceState state = PieceState.Idle;
 
@@ -73,6 +75,14 @@ public class PieceBehaviour : Interactable
         float dist = Vector3.Distance(transform.position, slotPos);
 
         return dist < snapDistance;
+    }
+
+    public void Snap()
+    {
+        state = PieceState.Snapped;
+        LockPhysics();
+        UpdateLayer();
+        OnPieceSnapped?.Invoke();
     }
 
 }

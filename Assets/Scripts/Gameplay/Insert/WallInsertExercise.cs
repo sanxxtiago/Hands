@@ -1,31 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class WallInsertExercise : ExerciseController
 {
-    protected override bool IsCompleted()
+    protected override void OnEnable()
     {
-        return false;
+        base.OnEnable();
+        PieceBehaviour.OnPieceSnapped += OnPieceSnapped;
     }
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        PieceBehaviour.OnPieceSnapped -= OnPieceSnapped;
+    }
+    
     protected override void OnExerciseStart()
     {
-        //Debug.Log("Excersise Started!!!!");
+        progressManager.Initialize(progressManager.targetSteps);
     }
 
-    protected override void Tick(float timeLeft)
+    public void OnPieceSnapped()
     {
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        progressManager.AddStep();
     }
 }
