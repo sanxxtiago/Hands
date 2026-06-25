@@ -1,10 +1,10 @@
 public class OSUBasedExercise : ExerciseController
 {
-    public DotSpawner dotSpawner;
+    public OSUSequenceRunner sequenceRunner;
 
     protected override void OnExerciseStart()
     {
-        dotSpawner.Spawn();
+        sequenceRunner.StartSequence();
     
     }
     void Start()

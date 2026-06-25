@@ -1,98 +1,30 @@
-using System.Collections;
+using System;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class DotBehaviour : MonoBehaviour
+public abstract class DotBehaviour : MonoBehaviour
 {
     public float lifeTime = 3;
     public float hitRadius = .1f;
-    public float trackingRadius = .4f;
 
-    public bool IsHitted { get; set; }
-    public bool IsTrackable { get; set; }
-    public PathData Path { get; set; }
-    public bool IsFollowing { get; set; }
-    public float followRadius = 0.5f;
-    public float timeOutside = 0f;
+    public bool IsHitted { get; protected set; }
+
     [SerializeField]
-    private SpriteRenderer bg;
-    void Awake()
-    {
-        
-    }
-    public void Hit()
-    {
-        if (IsHitted) return;
+    protected SpriteRenderer bg;
 
-        Debug.Log("Hitted!");
-        IsHitted = true;
+    public event Action<DotBehaviour> OnCompleted;
+    public event Action<DotBehaviour> OnFailed;
 
-        if (IsTrackable)
-        {
-            FollowPath();
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+    public abstract void Hit();
+
+    protected void Complete()
+    {
+        Debug.Log($"{name} Complete");
+        OnCompleted?.Invoke(this);
     }
 
-    void Update()
+    protected void Fail()
     {
-
-    }
-
-    public void SetPath(PathData path)
-    {
-        Path = path;
-    }
-
-    public void FollowPath()
-    {
-        StartCoroutine(StartPathFollowing());
-    }
-
-    IEnumerator StartPathFollowing()
-    {
-        if (Path.curves == null || Path.curves.Count == 0)
-            yield break;
-
-        Vector3 lastPoint = Vector3.zero;
-        for (int i = 0; i < Path.curves.Count; i++)
-        {
-            float t = 0;
-            while (t < 1)
-            {
-                t += Time.deltaTime / Path.duration;
-                lastPoint = BezierCurve.BezierCurvePosition(Path.curves[i], t);
-                transform.position = lastPoint;
-                yield return null;
-            }
-            if (IsPathComplete(lastPoint))
-            {
-                Destroy(gameObject, 2f);
-            }
-        }
-    }
-
-    public bool IsPathComplete(Vector3 lastPoint)
-    {
-        if (transform.position == lastPoint)
-        {
-            return true;
-        }
-        return false;
-    }
-
-    public void SetTrackingState(bool isFollowing)
-    {
-        bg.color = isFollowing ? Color.black : Color.white;   
-    }
-
-    public void Fail()
-    {
-        Debug.Log("Fail");
-        //Destroy(gameObject);
-        SetTrackingState(false);
+        Debug.Log($"{name} Failed");
+        OnFailed?.Invoke(this);
     }
 }

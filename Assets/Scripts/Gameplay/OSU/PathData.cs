@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Game/Path")]
+[CreateAssetMenu(menuName = "OSU/Path")]
 public class PathData : ScriptableObject
 {
     [SerializeField]
     public List<BezierCurveData> curves;
-    public float duration;
-
+    public float speed = 0.25f;
 }
+

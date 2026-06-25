@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curves:
   - controlPoints:
-    - {x: -0.157, y: 0.094, z: 0.48}
-    - {x: 0.055, y: 0.557, z: 0.48}
-    - {x: 0.151, y: 0.289, z: 0.48}
-    - {x: 0.242, y: 0.179, z: 0.48}
-  duration: 10
+    - {x: -0.157, y: 0.094, z: 0.6}
+    - {x: 0.055, y: 0.557, z: 0.6}
+    - {x: 0.151, y: 0.289, z: 0.6}
+    - {x: 0.242, y: 0.179, z: 0.6}
+  speed: 1

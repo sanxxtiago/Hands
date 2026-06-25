@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8864962406679063760}
   - component: {fileID: 8864962406679063763}
   m_Layer: 0
-  m_Name: Dot
+  m_Name: HitDot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -126,12 +126,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 8864962406679063765}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87afac6cbdb563c4f8c547d4a7c39231, type: 3}
+  m_Script: {fileID: 11500000, guid: 6295c4652c17e954dbd5eab77bf11009, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   lifeTime: 3
   hitRadius: 0.1
-  trackingRadius: 0.4
-  followRadius: 0.11
-  timeOutside: 0
   bg: {fileID: 8864962406679063790}

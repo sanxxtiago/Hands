@@ -6,18 +6,26 @@ public class TargetDetector : MonoBehaviour
     public DotBehaviour target;
     void Update()
     {
-        if (target == null) return;
+        if (target == null)
+            return;
 
         if (!target.IsHitted)
         {
             TryHit(target);
+            return;
         }
-        else if (target.IsTrackable && target.IsHitted)
+
+        if (target is TrackingDotBehaviour trackingDot)
         {
-            TrackDot(target);
+            Vector3? handPos =
+                GetActiveHandPosition(trackingDot.transform.position);
+
+            if (handPos != null)
+            {
+                trackingDot.Track(handPos.Value);
+            }
         }
     }
-
     private void TryHit(DotBehaviour dot)
     {
 
@@ -43,30 +51,7 @@ public class TargetDetector : MonoBehaviour
 
     }
 
-    void TrackDot(DotBehaviour dot)
-    {
-        Vector3? handPos = GetActiveHandPosition(dot.transform.position);
 
-        if (handPos == null) return;
-
-        float dist = Vector3.Distance(handPos.Value, dot.transform.position);
-
-        if (dist <= dot.followRadius)
-        {
-            dot.timeOutside = 0f;
-            dot.SetTrackingState(true);
-        }
-        else
-        {
-            dot.timeOutside += Time.deltaTime;
-            dot.SetTrackingState(false);
-
-            if (dot.timeOutside > 0.3f)
-            {
-                dot.Fail();
-            }
-        }
-    }
 
     Vector3? GetActiveHandPosition(Vector3 target)
     {
