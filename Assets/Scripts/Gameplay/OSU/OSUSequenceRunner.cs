@@ -46,7 +46,7 @@ public class OSUSequenceRunner : MonoBehaviour
                 $"Prefab {step.prefab.name} does not contain DotBehaviour");
             return;
         }
-
+        currentDot.SetColor(step.requiredHand);
         if (currentDot is TrackingDotBehaviour trackingDot)
         {
             trackingDot.SetPath(step.path, pathPrefab);

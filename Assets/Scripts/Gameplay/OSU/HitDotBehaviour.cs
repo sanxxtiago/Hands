@@ -10,6 +10,6 @@ public class HitDotBehaviour : DotBehaviour
 
         Complete();
 
-        Destroy(gameObject);
+        Destroy(gameObject, .3f);
     }
 }

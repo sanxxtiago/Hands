@@ -30,6 +30,7 @@ public class TrackingDotBehaviour : DotBehaviour
         pathInstance.transform.position += Vector3.forward * 0.01f;
         DrawPath();
     }
+
     public override void Hit()
     {
         if (IsHitted) return;
@@ -81,7 +82,7 @@ public class TrackingDotBehaviour : DotBehaviour
                     1f);
         }
 
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(.75f);
         Destroy(pathInstance.gameObject);
         Complete();
 
@@ -94,9 +95,11 @@ public class TrackingDotBehaviour : DotBehaviour
 
         if (bg != null)
         {
-            bg.color = isFollowing
-                ? Color.black
+            Color bgColor = isFollowing
+                ? Color.green
                 : Color.white;
+            bgColor.a = 0.6f;
+            bg.color = bgColor;
         }
     }
 

@@ -27,4 +27,18 @@ public abstract class DotBehaviour : MonoBehaviour
         Debug.Log($"{name} Failed");
         OnFailed?.Invoke(this);
     }
+
+    public void SetColor(HandType hand)
+    {
+        Color color = hand switch
+        {
+            HandType.LEFT => HandsColor.Left,
+            HandType.RIGHT => HandsColor.Right,
+            _ => HandsColor.Default
+        };
+
+        color.a = 0.6f;
+
+        bg.color = color;
+    }
 }

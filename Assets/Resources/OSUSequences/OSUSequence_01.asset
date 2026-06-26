@@ -20,13 +20,13 @@ MonoBehaviour:
     spawnPosition: {x: -0.18, y: 0.326, z: 0.6}
     path: {fileID: 0}
   - stepId: 2
-    requiredHand: 0
+    requiredHand: 2
     prefab: {fileID: 1279631127275772528, guid: 2efb5a2874d5eba46985508973b2a291,
       type: 3}
     spawnPosition: {x: 0, y: 0, z: 0}
     path: {fileID: 11400000, guid: cb372dc47eebc0941a10ca91aa30ff89, type: 2}
   - stepId: 3
-    requiredHand: 0
+    requiredHand: 1
     prefab: {fileID: 8864962406679063765, guid: 8c01e15ef2e63444ea8bdfe129b000cd,
       type: 3}
     spawnPosition: {x: 0.223, y: 0.36, z: 0.6}

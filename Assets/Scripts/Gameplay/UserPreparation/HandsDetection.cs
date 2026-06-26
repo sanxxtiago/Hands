@@ -51,14 +51,17 @@ public class HandsDetection : MonoBehaviour
         right1.material = _rightMaterial;
         right2.material = _rightMaterial;
 
-        SetMaterialColor(_leftMaterial, undetectedColor);
-        SetMaterialColor(_rightMaterial, undetectedColor);
+        //SetMaterialColor(_leftMaterial, undetectedColor);
+        //SetMaterialColor(_rightMaterial, undetectedColor);
+        SetMaterialColor(_rightMaterial, HandsColor.Right);
+        SetMaterialColor(_leftMaterial, HandsColor.Left);
+
     }
     void Start()
     {
         transition.FadeOut();
     }
-    
+
     private void Update()
     {
         bool leftDetected = false;
@@ -82,7 +85,7 @@ public class HandsDetection : MonoBehaviour
             AnimateHand(
                 _leftMaterial,
                 ref _leftTween,
-                leftDetected ? detectedColor : undetectedColor
+                leftDetected ? detectedColor : HandsColor.Left
             );
 
             if (!wasDetected && leftDetected)
@@ -99,7 +102,7 @@ public class HandsDetection : MonoBehaviour
             AnimateHand(
                 _rightMaterial,
                 ref _rightTween,
-                rightDetected ? detectedColor : undetectedColor
+                rightDetected ? detectedColor : HandsColor.Right
             );
 
             if (!wasDetected && rightDetected)

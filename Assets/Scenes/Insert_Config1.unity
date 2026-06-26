@@ -621,7 +621,7 @@ MonoBehaviour:
   gameManager: {fileID: 1956825092}
   progressManager: {fileID: 0}
   feedbackSystem: {fileID: 0}
-  dotSpawner: {fileID: 43925656}
+  sequenceRunner: {fileID: 0}
 --- !u!4 &43925655
 Transform:
   m_ObjectHideFlags: 0
@@ -652,12 +652,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b3e5c9b054a22e43a9e2fa70a664b02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dotPrefab: {fileID: 8864962406679063765, guid: 8c01e15ef2e63444ea8bdfe129b000cd,
-    type: 3}
+  sequence: {fileID: 0}
   detector: {fileID: 43925657}
-  paths:
-  - {fileID: 11400000, guid: cb372dc47eebc0941a10ca91aa30ff89, type: 2}
-  - {fileID: 11400000, guid: 48a73ed5456ebe746a4d933bd45a2b27, type: 2}
+  pathPrefab: {fileID: 0}
 --- !u!114 &43925657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6151,6 +6148,36 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1438185473626510036, guid: 01099db6b5106c14eba4aa9fd3736bbb,
+        type: 3}
+      propertyPath: _leapProvider
+      value: 
+      objectReference: {fileID: 5270838611174572065}
+    - target: {fileID: 1438185473626510036, guid: 01099db6b5106c14eba4aa9fd3736bbb,
+        type: 3}
+      propertyPath: _sphereColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1438185473626510036, guid: 01099db6b5106c14eba4aa9fd3736bbb,
+        type: 3}
+      propertyPath: _sphereColor.g
+      value: 0.6293888
+      objectReference: {fileID: 0}
+    - target: {fileID: 1438185473626510036, guid: 01099db6b5106c14eba4aa9fd3736bbb,
+        type: 3}
+      propertyPath: _cylinderColor.g
+      value: 0.9543793
+      objectReference: {fileID: 0}
+    - target: {fileID: 1438185473626510036, guid: 01099db6b5106c14eba4aa9fd3736bbb,
+        type: 3}
+      propertyPath: _cylinderColor.r
+      value: 0.7028302
+      objectReference: {fileID: 0}
+    - target: {fileID: 1438185473626510036, guid: 01099db6b5106c14eba4aa9fd3736bbb,
+        type: 3}
+      propertyPath: _useCustomColors
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2652770533903320806, guid: 01099db6b5106c14eba4aa9fd3736bbb,
         type: 3}
       propertyPath: m_Name
@@ -6159,6 +6186,36 @@ PrefabInstance:
     - target: {fileID: 2652770533903320806, guid: 01099db6b5106c14eba4aa9fd3736bbb,
         type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3361768566985514305, guid: 01099db6b5106c14eba4aa9fd3736bbb,
+        type: 3}
+      propertyPath: _leapProvider
+      value: 
+      objectReference: {fileID: 5270838611174572065}
+    - target: {fileID: 3361768566985514305, guid: 01099db6b5106c14eba4aa9fd3736bbb,
+        type: 3}
+      propertyPath: _sphereColor.g
+      value: 0.5851399
+      objectReference: {fileID: 0}
+    - target: {fileID: 3361768566985514305, guid: 01099db6b5106c14eba4aa9fd3736bbb,
+        type: 3}
+      propertyPath: _sphereColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3361768566985514305, guid: 01099db6b5106c14eba4aa9fd3736bbb,
+        type: 3}
+      propertyPath: _cylinderColor.b
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 3361768566985514305, guid: 01099db6b5106c14eba4aa9fd3736bbb,
+        type: 3}
+      propertyPath: _cylinderColor.g
+      value: 0.91394794
+      objectReference: {fileID: 0}
+    - target: {fileID: 3361768566985514305, guid: 01099db6b5106c14eba4aa9fd3736bbb,
+        type: 3}
+      propertyPath: _useCustomColors
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
