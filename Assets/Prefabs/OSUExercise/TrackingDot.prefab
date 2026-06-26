@@ -152,7 +152,7 @@ GameObject:
   - component: {fileID: 2823090746652596492}
   - component: {fileID: 1587545474700197272}
   - component: {fileID: 1806522103240662742}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SegmentedRing
   m_TagString: Untagged
   m_Icon: {fileID: 0}

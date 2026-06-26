@@ -31,6 +31,9 @@ public class TargetDetector : MonoBehaviour
 
         if (!dot.IsHitted && input.LeftHandData != null)
         {
+            if (dot.requiredHand == HandType.RIGHT)
+                return;
+
             Vector3 leftPos = input.LeftHandData.Value.position;
 
             if (Vector3.Distance(leftPos, dot.transform.position) <= dot.hitRadius)
@@ -41,6 +44,9 @@ public class TargetDetector : MonoBehaviour
 
         if (!dot.IsHitted && input.RightHandData != null)
         {
+            if (dot.requiredHand == HandType.LEFT)
+                return;
+
             Vector3 rightPos = input.RightHandData.Value.position;
 
             if (Vector3.Distance(rightPos, dot.transform.position) <= dot.hitRadius)

@@ -13,27 +13,29 @@ public class TrackingDotBehaviour : DotBehaviour
 
     public float timeOutside = 0f;
 
-    [SerializeField] private Vector3 startMarker;
-    [SerializeField] private Vector3 endMarker;
     [SerializeField] private float pathZOffset = 0.005f;
+    [SerializeField] private float trailDistance = 0.03f;
+    [SerializeField] private int samplesPerCurve = 30;
+
     private LineRenderer pathInstance;
-    void Start()
-    {
-        DrawPath();
-    }
+
+    private readonly List<Vector3> pathPoints = new();
+    private readonly List<float> pointDistances = new();
+
     public void SetPath(PathData path, LineRenderer pathPrefab)
     {
         this.path = path;
+
         pathInstance = Instantiate(pathPrefab);
-        startMarker = path.curves[0].controlPoints[0];
-        endMarker = path.curves[^1].controlPoints[3];
         pathInstance.transform.position += Vector3.forward * 0.01f;
+
         DrawPath();
     }
 
     public override void Hit()
     {
-        if (IsHitted) return;
+        if (IsHitted)
+            return;
 
         IsHitted = true;
 
@@ -48,42 +50,47 @@ public class TrackingDotBehaviour : DotBehaviour
             yield break;
         }
 
+        float travelledDistance = 0;
+
         foreach (var curve in path.curves)
         {
             float curveLength =
                 BezierCurve.GetCurveLength(curve);
 
-            var arcTable =
+            List<CurveSample> arcTable =
                 BezierCurve.BuildArcLengthTable(curve);
-
-            float travelledDistance = 0;
 
             while (travelledDistance < curveLength)
             {
                 travelledDistance +=
                     path.speed * Time.deltaTime;
 
+                float localDistance =
+                    Mathf.Min(travelledDistance, curveLength);
+
                 float t =
                     BezierCurve.GetTAtDistance(
                         arcTable,
-                        travelledDistance);
+                        localDistance);
 
                 transform.position =
-                    BezierCurve.BezierCurvePosition(
-                        curve,
-                        t);
+                    BezierCurve.BezierCurvePosition(curve, t);
+
+                UpdateVisiblePath(localDistance);
 
                 yield return null;
             }
 
+            travelledDistance = 0;
+
             transform.position =
-                BezierCurve.BezierCurvePosition(
-                    curve,
-                    1f);
+                BezierCurve.BezierCurvePosition(curve, 1f);
         }
 
         yield return new WaitForSeconds(.75f);
+
         Destroy(pathInstance.gameObject);
+
         Complete();
 
         Destroy(gameObject, .25f);
@@ -95,11 +102,12 @@ public class TrackingDotBehaviour : DotBehaviour
 
         if (bg != null)
         {
-            Color bgColor = isFollowing
-                ? Color.green
-                : Color.white;
-            bgColor.a = 0.6f;
-            bg.color = bgColor;
+            Color color =
+                isFollowing ? Color.green : Color.white;
+
+            color.a = 0.6f;
+
+            bg.color = color;
         }
     }
 
@@ -110,12 +118,13 @@ public class TrackingDotBehaviour : DotBehaviour
 
         if (dist <= followRadius)
         {
-            timeOutside = 0f;
+            timeOutside = 0;
             SetTrackingState(true);
         }
         else
         {
             timeOutside += Time.deltaTime;
+
             SetTrackingState(false);
 
             if (timeOutside > 0.3f)
@@ -127,25 +136,71 @@ public class TrackingDotBehaviour : DotBehaviour
 
     private void DrawPath()
     {
-        List<Vector3> points = new();
+        pathPoints.Clear();
+        pointDistances.Clear();
 
         Vector3 offset = new(0, 0, pathZOffset);
 
+        float accumulatedDistance = 0;
+        Vector3? previous = null;
+
         foreach (var curve in path.curves)
         {
-            for (int i = 0; i <= 30; i++)
+            for (int i = 0; i <= samplesPerCurve; i++)
             {
-                float t = i / 30f;
+                float t = i / (float)samplesPerCurve;
 
-                points.Add(
-                    BezierCurve.BezierCurvePosition(
-                        curve,
-                        t)
-                    + offset);
+                Vector3 point =
+                    BezierCurve.BezierCurvePosition(curve, t)
+                    + offset;
+
+                pathPoints.Add(point);
+
+                if (previous.HasValue)
+                {
+                    accumulatedDistance +=
+                        Vector3.Distance(previous.Value, point);
+                }
+
+                pointDistances.Add(accumulatedDistance);
+
+                previous = point;
             }
         }
 
-        pathInstance.positionCount = points.Count;
-        pathInstance.SetPositions(points.ToArray());
+        pathInstance.positionCount = pathPoints.Count;
+        pathInstance.SetPositions(pathPoints.ToArray());
+    }
+
+    private void UpdateVisiblePath(float travelledDistance)
+    {
+        float visibleStart =
+            Mathf.Max(0, travelledDistance - trailDistance);
+
+        int firstVisible = 0;
+
+        while (firstVisible < pointDistances.Count &&
+               pointDistances[firstVisible] < visibleStart)
+        {
+            firstVisible++;
+        }
+
+        int visibleCount =
+            pathPoints.Count - firstVisible;
+
+        if (visibleCount <= 0)
+        {
+            pathInstance.positionCount = 0;
+            return;
+        }
+
+        pathInstance.positionCount = visibleCount;
+
+        for (int i = 0; i < visibleCount; i++)
+        {
+            pathInstance.SetPosition(
+                i,
+                pathPoints[firstVisible + i]);
+        }
     }
 }

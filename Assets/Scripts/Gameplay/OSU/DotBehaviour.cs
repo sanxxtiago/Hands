@@ -8,8 +8,8 @@ public abstract class DotBehaviour : MonoBehaviour
 
     public bool IsHitted { get; protected set; }
 
-    [SerializeField]
-    protected SpriteRenderer bg;
+    [SerializeField] protected SpriteRenderer bg;
+    public HandType requiredHand = HandType.NONE;
 
     public event Action<DotBehaviour> OnCompleted;
     public event Action<DotBehaviour> OnFailed;
@@ -30,6 +30,7 @@ public abstract class DotBehaviour : MonoBehaviour
 
     public void SetColor(HandType hand)
     {
+        requiredHand = hand;
         Color color = hand switch
         {
             HandType.LEFT => HandsColor.Left,
@@ -41,4 +42,6 @@ public abstract class DotBehaviour : MonoBehaviour
 
         bg.color = color;
     }
+
+
 }

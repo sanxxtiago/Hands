@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6622571300231654800}
   - component: {fileID: 2346353660274738901}
   - component: {fileID: 7863906850423236612}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SegmentedRing
   m_TagString: Untagged
   m_Icon: {fileID: 0}
