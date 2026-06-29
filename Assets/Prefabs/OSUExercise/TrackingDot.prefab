@@ -131,15 +131,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifeTime: 3
-  hitRadius: 0.1
+  hitRadius: 0.05
+  fadeDuration: 0.2
   bg: {fileID: 1279631127275772491}
-  trackingRadius: 0.4
-  followRadius: 0.5
-  path: {fileID: 0}
+  ring: {fileID: 1587545474700197272}
+  requiredHand: 0
   timeOutside: 0
-  startMarker: {x: 0, y: 0, z: 0}
-  endMarker: {x: 0, y: 0, z: 0}
   pathZOffset: 0.005
+  trailDistance: 0.03
+  samplesPerCurve: 30
 --- !u!1 &8164078558471762813
 GameObject:
   m_ObjectHideFlags: 0

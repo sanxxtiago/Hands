@@ -228,5 +228,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifeTime: 3
-  hitRadius: 0.1
+  hitRadius: 0.05
+  fadeDuration: 0.2
   bg: {fileID: 8864962406679063790}
+  ring: {fileID: 2346353660274738901}
+  requiredHand: 0

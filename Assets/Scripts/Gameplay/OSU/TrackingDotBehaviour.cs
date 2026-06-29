@@ -4,19 +4,15 @@ using UnityEngine;
 
 public class TrackingDotBehaviour : DotBehaviour
 {
-    public float trackingRadius = .4f;
-    public float followRadius = 0.5f;
-
-    public PathData path;
-
+    //public float followRadius = 0.05f;
     public bool IsFollowing { get; private set; }
-
     public float timeOutside = 0f;
 
     [SerializeField] private float pathZOffset = 0.005f;
     [SerializeField] private float trailDistance = 0.03f;
     [SerializeField] private int samplesPerCurve = 30;
 
+    private PathData path;
     private LineRenderer pathInstance;
 
     private readonly List<Vector3> pathPoints = new();
@@ -103,7 +99,7 @@ public class TrackingDotBehaviour : DotBehaviour
         if (bg != null)
         {
             Color color =
-                isFollowing ? Color.green : Color.white;
+                isFollowing ? Color.green : Color.red;
 
             color.a = 0.6f;
 
@@ -111,12 +107,12 @@ public class TrackingDotBehaviour : DotBehaviour
         }
     }
 
-    public void Track(Vector3 handPosition)
+    public void Track(GameplayHandData handData)
     {
         float dist =
-            Vector3.Distance(handPosition, transform.position);
+            Vector3.Distance(handData.position, transform.position);
 
-        if (dist <= followRadius)
+        if (dist <= hitRadius)
         {
             timeOutside = 0;
             SetTrackingState(true);
@@ -202,5 +198,16 @@ public class TrackingDotBehaviour : DotBehaviour
                 i,
                 pathPoints[firstVisible + i]);
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        // Radio de impacto
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, hitRadius);
+
+        // Radio permitido durante el seguimiento
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, hitRadius);
     }
 }

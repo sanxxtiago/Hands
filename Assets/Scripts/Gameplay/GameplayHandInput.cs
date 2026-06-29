@@ -27,4 +27,46 @@ public class GameplayHandInput : MonoBehaviour
             }
         }
     }
+
+    public GameplayHandData? GetHand(HandType handType, Vector3? targetPosition = null)
+    {
+        switch (handType)
+        {
+            case HandType.LEFT:
+                return LeftHandData;
+
+            case HandType.RIGHT:
+                return RightHandData;
+
+            case HandType.NONE:
+                return GetClosestHand(targetPosition);
+
+            default:
+                return null;
+        }
+    }
+
+    private GameplayHandData? GetClosestHand(Vector3? targetPosition)
+    {
+        if (targetPosition == null)
+            return LeftHandData ?? RightHandData;
+
+        if (LeftHandData == null)
+            return RightHandData;
+
+        if (RightHandData == null)
+            return LeftHandData;
+
+        float leftDistance = Vector3.Distance(
+            LeftHandData.Value.position,
+            targetPosition.Value);
+
+        float rightDistance = Vector3.Distance(
+            RightHandData.Value.position,
+            targetPosition.Value);
+
+        return leftDistance <= rightDistance
+            ? LeftHandData
+            : RightHandData;
+    }
 }

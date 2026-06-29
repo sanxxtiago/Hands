@@ -80,6 +80,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _Alpha: 0.445
     - _BaseColor: 2.42
     - _DashCount: 50
     - _DiagonalSlope: 0.8
@@ -90,5 +91,5 @@ Material:
     - _Thickness: 23.1
     m_Colors:
     - _BaseColor: {r: 0.7830189, g: 0.7830189, b: 0.7830189, a: 1}
-    - _DotedColor: {r: 0.07075471, g: 1, b: 0.5250558, a: 1}
+    - _DotedColor: {r: 0.2469027, g: 1, b: 0, a: 1}
   m_BuildTextureStacks: []

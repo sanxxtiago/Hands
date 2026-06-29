@@ -21,7 +21,6 @@ public class OSUSequenceRunner : MonoBehaviour
     {
         if (currentStepIndex >= sequence.steps.Count)
         {
-            Debug.Log("OSU Sequence Completed!");
             return;
         }
 
