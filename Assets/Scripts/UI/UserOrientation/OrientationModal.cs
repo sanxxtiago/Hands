@@ -12,7 +12,7 @@ public class OrientationModal : MonoBehaviour
 
     [Header("Animation")]
     [SerializeField] private float fadeDuration = 0.3f;
-
+    [SerializeField] private string sceneName;
     private CanvasGroup group;
     private bool isClosing;
 
@@ -68,7 +68,7 @@ public class OrientationModal : MonoBehaviour
         {
             transition.FadeIn(() =>
             {
-                SceneManager.LoadScene("Main");
+                SceneManager.LoadScene(sceneName);
             });
         });
     }
