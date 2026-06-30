@@ -17,13 +17,15 @@ public class GameManager : MonoBehaviour
     public static event Action OnShowResults;
     private void OnEnable()
     {
-        transition.OnFadeOutCompleted += StartCountdown;
+        //transition.OnFadeOutCompleted += StartCountdown;
+        DemoManager.OnDemoClosed += StartCountdown;
         CountdownUI.OnCountdownFinished += OnCountdownFinished;
     }
 
     private void OnDisable()
     {
-        transition.OnFadeOutCompleted -= StartCountdown;
+        //transition.OnFadeOutCompleted -= StartCountdown;
+        DemoManager.OnDemoClosed -= StartCountdown;
         CountdownUI.OnCountdownFinished -= OnCountdownFinished;
     }
 

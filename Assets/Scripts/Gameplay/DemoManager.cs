@@ -1,18 +1,19 @@
 using System;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Video;
 
 public class DemoManager : MonoBehaviour
 {
     [Header("Video Player")]
     [SerializeField] VideoPlayer demoPlayer;
-
+    [SerializeField] Slider progressBar;
     [Header("Animation")]
     [SerializeField] private CanvasGroup group;
     [SerializeField] private float fadeDuration = 0.3f;
     private bool isClosing = false;
-    public event Action OnDemoClosed;
+    public static event Action OnDemoClosed;
     void Start()
     {
         group.alpha = 1;
@@ -20,6 +21,10 @@ public class DemoManager : MonoBehaviour
         group.blocksRaycasts = true;
     }
 
+    void Update()
+    {
+        UpdateProgressBar();
+    }
     //Referencia al botón
     public void CloseDemo()
     {
@@ -41,6 +46,12 @@ public class DemoManager : MonoBehaviour
                 OnDemoClosed?.Invoke();
                 isClosing = false;
             });
+    }
+
+    private void UpdateProgressBar()
+    {
+        float progress = (float)demoPlayer.time / (float)demoPlayer.length;
+        progressBar.value = progress;
     }
 
 }
