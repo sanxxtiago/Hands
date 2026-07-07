@@ -7226,9 +7226,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1438185473626510036, guid: 01099db6b5106c14eba4aa9fd3736bbb,
         type: 3}
+      propertyPath: _castShadows
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1438185473626510036, guid: 01099db6b5106c14eba4aa9fd3736bbb,
+        type: 3}
       propertyPath: _leapProvider
       value: 
       objectReference: {fileID: 5270838611174572065}
+    - target: {fileID: 1438185473626510036, guid: 01099db6b5106c14eba4aa9fd3736bbb,
+        type: 3}
+      propertyPath: _showUpperArm
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1438185473626510036, guid: 01099db6b5106c14eba4aa9fd3736bbb,
+        type: 3}
+      propertyPath: _showPalmJoint
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1438185473626510036, guid: 01099db6b5106c14eba4aa9fd3736bbb,
         type: 3}
       propertyPath: _sphereColor.b
@@ -7257,6 +7272,21 @@ PrefabInstance:
     - target: {fileID: 1438185473626510036, guid: 01099db6b5106c14eba4aa9fd3736bbb,
         type: 3}
       propertyPath: _useCustomColors
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1438185473626510036, guid: 01099db6b5106c14eba4aa9fd3736bbb,
+        type: 3}
+      propertyPath: _joinThumbProximal
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1438185473626510036, guid: 01099db6b5106c14eba4aa9fd3736bbb,
+        type: 3}
+      propertyPath: _joinFingerProximals
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1438185473626510036, guid: 01099db6b5106c14eba4aa9fd3736bbb,
+        type: 3}
+      propertyPath: _showPinkyMetacarpal
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1438185473626580298, guid: 01099db6b5106c14eba4aa9fd3736bbb,
@@ -7317,11 +7347,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1438185473616798310, guid: 01099db6b5106c14eba4aa9fd3736bbb,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1787225427}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 01099db6b5106c14eba4aa9fd3736bbb, type: 3}
 --- !u!1 &1257440222
 GameObject:
@@ -9575,34 +9601,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1779588035}
   m_CullTransparentMesh: 1
---- !u!1 &1787225422 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1438185473616798310, guid: 01099db6b5106c14eba4aa9fd3736bbb,
-    type: 3}
-  m_PrefabInstance: {fileID: 1257066610}
-  m_PrefabAsset: {fileID: 0}
---- !u!64 &1787225427
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1787225422}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 0}
 --- !u!1 &1828049158
 GameObject:
   m_ObjectHideFlags: 0
@@ -12313,10 +12311,10 @@ SceneRoots:
   m_Roots:
   - {fileID: 5270838611174572070}
   - {fileID: 674523826}
-  - {fileID: 5571620627936939128}
-  - {fileID: 1602851556}
   - {fileID: 1257066610}
   - {fileID: 1763604296}
+  - {fileID: 5571620627936939128}
+  - {fileID: 1602851556}
   - {fileID: 540416930}
   - {fileID: 1903367412}
   - {fileID: 244446963}

@@ -862,6 +862,7 @@ GameObject:
   - component: {fileID: 53881204}
   - component: {fileID: 53881208}
   - component: {fileID: 53881209}
+  - component: {fileID: 53881212}
   m_Layer: 6
   m_Name: Square
   m_TagString: Untagged
@@ -994,10 +995,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdc38b104739e194480aa74ef36bc944, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  requiredHand: 1
   pieceType: 0
   state: 0
   requireRotation: 1
   rb: {fileID: 0}
+  pieceRenderer: {fileID: 53881208}
+--- !u!114 &53881212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 53881203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b3763add1152ac4aab69357a419a664, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HandToIgnoreGrabs: 0
+  _disableAllGrabbing: 1
+  HandToIgnoreCollisions: 0
+  _disableAllHandCollisions: 1
+  _disableCollisionOnChildren: 1
 --- !u!1 &81175949
 GameObject:
   m_ObjectHideFlags: 0
@@ -3109,7 +3129,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 437063719}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -7802,6 +7822,37 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 715.8712, y: 217.877}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1273304088
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1273304089}
+  m_Layer: 0
+  m_Name: <==========================>
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1273304089
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1273304088}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1324313935
 GameObject:
   m_ObjectHideFlags: 0
@@ -12387,6 +12438,7 @@ GameObject:
   - component: {fileID: 977803021943366955}
   - component: {fileID: 977803021943366954}
   - component: {fileID: 977803021943366956}
+  - component: {fileID: 977803021943366957}
   m_Layer: 6
   m_Name: U
   m_TagString: Untagged
@@ -12433,10 +12485,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdc38b104739e194480aa74ef36bc944, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pieceType: 9
+  requiredHand: 2
+  pieceType: 0
   state: 0
   requireRotation: 1
   rb: {fileID: 0}
+  pieceRenderer: {fileID: 1682282793368851221}
 --- !u!65 &977803021943366956
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -12458,6 +12512,23 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.2, y: 0.1, z: 0.3}
   m_Center: {x: 0, y: 0.05, z: 0.05}
+--- !u!114 &977803021943366957
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 977803021943366953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b3763add1152ac4aab69357a419a664, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HandToIgnoreGrabs: 2
+  _disableAllGrabbing: 1
+  HandToIgnoreCollisions: 2
+  _disableAllHandCollisions: 1
+  _disableCollisionOnChildren: 1
 --- !u!4 &1056725459305336523
 Transform:
   m_ObjectHideFlags: 0
@@ -12888,6 +12959,7 @@ GameObject:
   - component: {fileID: 3285920511346691144}
   - component: {fileID: 3285920511346691143}
   - component: {fileID: 3285920511346691145}
+  - component: {fileID: 3285920511346691146}
   m_Layer: 6
   m_Name: 3
   m_TagString: Untagged
@@ -12934,10 +13006,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdc38b104739e194480aa74ef36bc944, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pieceType: 8
+  requiredHand: 2
+  pieceType: 0
   state: 0
   requireRotation: 1
   rb: {fileID: 0}
+  pieceRenderer: {fileID: 3985860117957524090}
 --- !u!65 &3285920511346691145
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -12959,6 +13033,23 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.2, y: 0.1, z: 0.2}
   m_Center: {x: 0, y: 0.05, z: 0}
+--- !u!114 &3285920511346691146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3285920511346691142}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b3763add1152ac4aab69357a419a664, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HandToIgnoreGrabs: 2
+  _disableAllGrabbing: 1
+  HandToIgnoreCollisions: 2
+  _disableAllHandCollisions: 1
+  _disableCollisionOnChildren: 1
 --- !u!4 &3360261283755599780
 Transform:
   m_ObjectHideFlags: 0
@@ -13191,6 +13282,7 @@ GameObject:
   - component: {fileID: 5531091716499695685}
   - component: {fileID: 5531091716499695684}
   - component: {fileID: 5531091716499695686}
+  - component: {fileID: 5531091716499695687}
   m_Layer: 6
   m_Name: L
   m_TagString: Untagged
@@ -13237,10 +13329,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdc38b104739e194480aa74ef36bc944, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pieceType: 7
+  requiredHand: 2
+  pieceType: 0
   state: 0
   requireRotation: 1
   rb: {fileID: 0}
+  pieceRenderer: {fileID: 6200070748584648319}
 --- !u!65 &5531091716499695686
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13262,6 +13356,23 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.3, y: 0.1, z: 0.2}
   m_Center: {x: -0.05, y: 0.05, z: 0}
+--- !u!114 &5531091716499695687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5531091716499695683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b3763add1152ac4aab69357a419a664, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HandToIgnoreGrabs: 2
+  _disableAllGrabbing: 1
+  HandToIgnoreCollisions: 2
+  _disableAllHandCollisions: 1
+  _disableCollisionOnChildren: 1
 --- !u!4 &5762784542858183585
 Transform:
   m_ObjectHideFlags: 0
@@ -13429,6 +13540,7 @@ GameObject:
   - component: {fileID: 7577261462269261109}
   - component: {fileID: 7577261462269261108}
   - component: {fileID: 7577261462269261110}
+  - component: {fileID: 7577261462269261111}
   m_Layer: 6
   m_Name: S
   m_TagString: Untagged
@@ -13517,10 +13629,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdc38b104739e194480aa74ef36bc944, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pieceType: 5
+  requiredHand: 1
+  pieceType: 0
   state: 0
   requireRotation: 1
   rb: {fileID: 0}
+  pieceRenderer: {fileID: 8693484847439337909}
 --- !u!65 &7577261462269261110
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13542,6 +13656,23 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.2, y: 0.1, z: 0.3}
   m_Center: {x: 0, y: 0.05, z: -0.05}
+--- !u!114 &7577261462269261111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7092051811051286409}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b3763add1152ac4aab69357a419a664, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HandToIgnoreGrabs: 2
+  _disableAllGrabbing: 1
+  HandToIgnoreCollisions: 2
+  _disableAllHandCollisions: 1
+  _disableCollisionOnChildren: 1
 --- !u!1 &8078350844323405296
 GameObject:
   m_ObjectHideFlags: 0
@@ -13793,6 +13924,7 @@ GameObject:
   - component: {fileID: 8922919819400015858}
   - component: {fileID: 8922919819400015857}
   - component: {fileID: 8922919819400015859}
+  - component: {fileID: 8922919819400015860}
   m_Layer: 6
   m_Name: linea
   m_TagString: Untagged
@@ -13839,10 +13971,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdc38b104739e194480aa74ef36bc944, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pieceType: 4
+  requiredHand: 1
+  pieceType: 0
   state: 0
   requireRotation: 1
   rb: {fileID: 0}
+  pieceRenderer: {fileID: 6998001938790685132}
 --- !u!65 &8922919819400015859
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13864,6 +13998,23 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.3, y: 0.1, z: 0.1}
   m_Center: {x: -0.05, y: 0.05, z: -0.05}
+--- !u!114 &8922919819400015860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8922919819400015856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b3763add1152ac4aab69357a419a664, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HandToIgnoreGrabs: 2
+  _disableAllGrabbing: 1
+  HandToIgnoreCollisions: 2
+  _disableAllHandCollisions: 1
+  _disableCollisionOnChildren: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -13893,6 +14044,7 @@ SceneRoots:
   - {fileID: 8115280783617373514}
   - {fileID: 7577261462269261107}
   - {fileID: 493718131874512787}
+  - {fileID: 1273304089}
   - {fileID: 540689710}
   - {fileID: 2131207338}
   - {fileID: 330796144}

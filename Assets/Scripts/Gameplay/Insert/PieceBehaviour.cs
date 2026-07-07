@@ -1,4 +1,6 @@
 using System;
+using Leap;
+using Leap.PhysicalHands;
 using UnityEngine;
 public enum PieceState
 {
@@ -6,17 +8,47 @@ public enum PieceState
     Snapped,
     Grabbed
 }
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(IgnorePhysicalHands))]
+
+[RequireComponent(typeof(Renderer))]
 public class PieceBehaviour : Interactable
 {
     public static event Action OnPieceSnapped;
+    public HandType requiredHand = HandType.NONE;
     public SlotType pieceType;
     public PieceState state = PieceState.Idle;
 
     public bool requireRotation = false;
     [HideInInspector] public Rigidbody rb;
+    private IgnorePhysicalHands ignoreHands;
+    [SerializeField] private Renderer pieceRenderer;
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        ignoreHands = GetComponent<IgnorePhysicalHands>();
+        if (pieceRenderer == null)
+            pieceRenderer = GetComponent<Renderer>();
+
+        switch (requiredHand)
+        {
+            case HandType.NONE:
+                ignoreHands.DisableAllGrabbing = false;
+                ignoreHands.DisableAllHandCollisions = false;
+                SetPieceColor(HandsColor.Default);
+                break;
+            case HandType.LEFT:
+                ignoreHands.DisableAllGrabbing = true;
+                ignoreHands.HandToIgnoreGrabs = ChiralitySelection.RIGHT;
+                SetPieceColor(HandsColor.Left);
+                break;
+            case HandType.RIGHT:
+                ignoreHands.DisableAllGrabbing = true;
+                ignoreHands.HandToIgnoreGrabs = ChiralitySelection.LEFT;
+                SetPieceColor(HandsColor.Right);
+                break;
+        }
+
     }
     void Update()
     {
@@ -57,7 +89,7 @@ public class PieceBehaviour : Interactable
         LayerMask newLayer = LayerMask.GetMask("Default");
         gameObject.layer = newLayer;
 
-        foreach(Transform child in gameObject.GetComponentInChildren<Transform>())
+        foreach (Transform child in gameObject.GetComponentInChildren<Transform>())
         {
             child.gameObject.layer = newLayer;
         }
@@ -85,4 +117,8 @@ public class PieceBehaviour : Interactable
         OnPieceSnapped?.Invoke();
     }
 
+    private void SetPieceColor(Color color)
+    {
+        pieceRenderer.material.color = color;
+    }
 }
