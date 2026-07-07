@@ -15,6 +15,9 @@ public class HandLaserPointer : MonoBehaviour
 
     private LineRenderer lineRenderer;
 
+    // Variable para recordar a qué pato le estamos apuntando en el frame actual
+    private DuckBehaviour currentTarget;
+
     private void Awake()
     {
         lineRenderer = GetComponent<LineRenderer>();
@@ -22,18 +25,23 @@ public class HandLaserPointer : MonoBehaviour
         lineRenderer.enabled = false;
     }
 
-    //TESTEAR EL RAYO SIN LA DETECCIÓN DEL GESTO
-    // private void OnEnable()
-    // {
-    //     poseListener.AimStarted += EnableLaser;
-    //     poseListener.AimEnded += DisableLaser;
-    // }
+    private void OnEnable()
+    {
+        poseListener.AimStarted += EnableLaser;
+        poseListener.AimEnded += DisableLaser;
 
-    // private void OnDisable()
-    // {
-    //     poseListener.AimStarted -= EnableLaser;
-    //     poseListener.AimEnded -= DisableLaser;
-    // }
+        // NUEVO: Nos suscribimos al evento de disparo
+        poseListener.ShootStarted += HandleShoot;
+    }
+
+    private void OnDisable()
+    {
+        poseListener.AimStarted -= EnableLaser;
+        poseListener.AimEnded -= DisableLaser;
+
+        // NUEVO: Nos desuscribimos para evitar memory leaks
+        poseListener.ShootStarted -= HandleShoot;
+    }
 
     private void Update()
     {
@@ -50,14 +58,19 @@ public class HandLaserPointer : MonoBehaviour
 
         Vector3 endPoint = Vector3.zero;
 
+        // Resetear el objetivo en cada frame antes de volver a comprobar
+        currentTarget = null;
+
         if (Physics.Raycast(origin, direction, out RaycastHit hit, laserLength, hitMask))
         {
-            Debug.Log($"Hit: {hit.collider.name}");
+            endPoint = hit.point;
+
+            // SOLO se identifica el objetivo
             if (hit.collider.TryGetComponent(out DuckBehaviour duck))
             {
-                duck.Hit();
-                endPoint = hit.point;
-
+                currentTarget = duck;
+                // Tip UX: Aquí podrías cambiar el color del LineRenderer a verde
+                // para darle feedback al paciente de que ya lo tiene en la mira.
             }
         }
         else
@@ -65,11 +78,23 @@ public class HandLaserPointer : MonoBehaviour
             endPoint = origin + direction * laserLength;
         }
 
-
         lineRenderer.SetPosition(0, origin);
         lineRenderer.SetPosition(1, endPoint);
 
         Debug.DrawRay(origin, direction * laserLength, Color.red);
+    }
+
+    // Este método solo se ejecuta cuando el paciente hace la pose del gatillo (Pinch)
+    private void HandleShoot()
+    {
+        // Validamos que estemos en modo apuntar y que tengamos un pato en la mira
+        if (lineRenderer.enabled && currentTarget != null)
+        {
+            Debug.Log($"¡PUM! Le diste al pato: {currentTarget.name}");
+            currentTarget.Hit();
+
+            // Opcional: Podrías añadir un efecto visual (partículas) o de sonido aquí
+        }
     }
 
     private void EnableLaser()
@@ -80,5 +105,6 @@ public class HandLaserPointer : MonoBehaviour
     private void DisableLaser()
     {
         lineRenderer.enabled = false;
+        currentTarget = null; // Limpiamos la mira al bajar la mano
     }
 }

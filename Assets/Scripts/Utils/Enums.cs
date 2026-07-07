@@ -84,6 +84,11 @@ public enum GAMESTATE
     RESULTS        // mostrar métricas
 }
 
+public enum SpawnSide
+{
+    Left,
+    Right
+}
 
 
 

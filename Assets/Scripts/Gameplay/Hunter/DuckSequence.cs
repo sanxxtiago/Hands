@@ -1,0 +1,16 @@
+using System;
+using UnityEngine;
+
+[Serializable]
+public struct DuckSequenceStep
+{
+    public SpawnSide spawnSide;
+    public float movementDuration;
+    public float delayBeforeSpawn;
+}
+
+[CreateAssetMenu(fileName = "NewDuckSequence", menuName = "DuckHunter/Duck Sequence")]
+public class DuckSequence : ScriptableObject
+{
+    public DuckSequenceStep[] steps;
+}

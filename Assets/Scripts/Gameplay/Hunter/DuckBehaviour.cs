@@ -6,19 +6,31 @@ public class DuckBehaviour : MonoBehaviour
     public event Action<DuckBehaviour> OnReachedDestination;
     public event Action<DuckBehaviour> OnHit;
 
-    [SerializeField] private Vector3 startPoint;
-    [SerializeField] private Vector3 endPoint;
-    [SerializeField] private float duration;
-    private float elapsedTime;
+    // Ya no las exponemos en el inspector, el pato las calcula internamente
+    private Vector3 startPoint;
+    private Vector3 endPoint;
+    private int floor;
+    private float duration;
 
-    [SerializeField] private bool isMoving;
+    private float elapsedTime;
+    private bool isMoving;
     private bool isHit = false;
 
-    public void Initialize(Vector3 startPoint, Vector3 endPoint, float duration)
+    public void Initialize(SpawnSide side, float duration, Vector3 leftWorldBound, Vector3 rightWorldBound)
     {
-        this.startPoint = startPoint;
-        this.endPoint = endPoint;
         this.duration = Mathf.Max(0.01f, duration);
+        //this.floor = floor;
+        // El pato abstrae su origen y destino basado en el enum
+        if (side == SpawnSide.Left)
+        {
+            startPoint = leftWorldBound;
+            endPoint = rightWorldBound;
+        }
+        else // SpawnSide.Right
+        {
+            startPoint = rightWorldBound;
+            endPoint = leftWorldBound;
+        }
 
         transform.position = startPoint;
 
@@ -40,11 +52,8 @@ public class DuckBehaviour : MonoBehaviour
 
         if (t >= 1f)
         {
-            //isMoving = false;
-            t = 0;
-            transform.position = startPoint;
+            isMoving = false;
             OnReachedDestination?.Invoke(this);
-
         }
     }
 
@@ -52,10 +61,11 @@ public class DuckBehaviour : MonoBehaviour
     {
         if (isHit)
             return;
-        //QUITAR COMENTARIO
-        //isHit = true;
+
+        isHit = true;
         isMoving = false;
-        Debug.Log("DUCK HITTED!");
+        Debug.Log("¡PATO CAZADO!");
+
         OnHit?.Invoke(this);
     }
 }

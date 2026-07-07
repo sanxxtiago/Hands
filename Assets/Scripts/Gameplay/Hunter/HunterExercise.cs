@@ -1,49 +1,45 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class HunterExercise : ExerciseController
 {
-    [SerializeField] private HandPoseListener poseListener;
-
-    protected override void OnExerciseStart()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    private bool aiming;
+    [SerializeField] private DuckSequenceRunner sequenceRunner;
+    [SerializeField] private DuckSequence sequence;
 
     protected override void OnEnable()
     {
         base.OnEnable();
-        poseListener.AimStarted += BeginAim;
-        poseListener.AimEnded += EndAim;
-        poseListener.ShootStarted += Shoot;
+
+        sequenceRunner.OnDuckHit += HandleDuckHit;
+        sequenceRunner.OnDuckMissed += HandleDuckMissed;
+        sequenceRunner.OnSequenceCompleted += HandleSequenceCompleted;
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
-        poseListener.AimStarted -= BeginAim;
-        poseListener.AimEnded -= EndAim;
-        poseListener.ShootStarted -= Shoot;
+
+        sequenceRunner.OnDuckHit -= HandleDuckHit;
+        sequenceRunner.OnDuckMissed -= HandleDuckMissed;
+        sequenceRunner.OnSequenceCompleted -= HandleSequenceCompleted;
     }
 
-    private void BeginAim()
+    protected override void OnExerciseStart()
     {
-        aiming = true;
+        sequenceRunner.StartSequence(sequence);
     }
 
-    private void EndAim()
+    private void HandleDuckHit()
     {
-        aiming = false;
+        // métricas
     }
 
-    private void Shoot()
+    private void HandleDuckMissed()
     {
-        if (!aiming)
-            return;
+        // métricas
+    }
 
-        Debug.Log("Bang!");
+    private void HandleSequenceCompleted()
+    {
+        //OnExerciseEnd();
     }
 }

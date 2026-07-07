@@ -2,16 +2,16 @@ using UnityEngine;
 
 public class OSUSequenceRunner : MonoBehaviour
 {
-    [SerializeField] private OSUSequence sequence;
-
+    private OSUSequence sequence;
     [SerializeField] private TargetDetector detector;
     [SerializeField] private LineRenderer pathPrefab;
     private int currentStepIndex;
 
     private DotBehaviour currentDot;
 
-    public void StartSequence()
+    public void StartSequence(OSUSequence sequence)
     {
+        this.sequence = sequence;
         currentStepIndex = 0;
 
         SpawnCurrentStep();

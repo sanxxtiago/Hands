@@ -1,20 +1,21 @@
+using UnityEngine;
+
 public class OSUBasedExercise : ExerciseController
 {
     public OSUSequenceRunner sequenceRunner;
+    [SerializeField] private OSUSequence sequence;
 
     protected override void OnEnable()
     {
         base.OnEnable();
-        PieceBehaviour.OnPieceSnapped += OnDotCompleted;
     }
     protected override void OnDisable()
     {
         base.OnDisable();
-        PieceBehaviour.OnPieceSnapped -= OnDotCompleted;
     }
     protected override void OnExerciseStart()
     {
-        sequenceRunner.StartSequence();
+        sequenceRunner.StartSequence(sequence);
         progressManager.Initialize(progressManager.targetSteps);
 
     }
