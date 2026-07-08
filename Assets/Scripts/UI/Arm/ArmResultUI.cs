@@ -3,11 +3,11 @@ using UnityEngine;
 
 public class ArmResultUI : ArmUI
 {
-    private ExerciseSummary _summary;
+    private HandUsageSummary _summary;
     private float[] _values;
     private bool hasData = false;
 
-    public void Paint(ExerciseSummary summary, float[] values)
+    public void Paint(HandUsageSummary summary, float[] values)
     {
         _summary = summary;
         _values = values;

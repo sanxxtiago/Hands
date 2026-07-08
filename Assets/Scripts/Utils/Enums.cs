@@ -1,4 +1,9 @@
-
+public enum ExerciseType
+{
+    Insert,
+    OSU,
+    Duck
+}
 
 public enum HandType
 {

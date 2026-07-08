@@ -66,7 +66,7 @@ public class ResultsUI : MonoBehaviour
         timeElapsedText.text = $"Tiempo total: {Math.Round(duration,2)} S";
     }
 
-    public void SetResults(ExerciseSummary left, ExerciseSummary right)
+    public void SetResults(HandUsageSummary left, HandUsageSummary right)
     {
         //pintar brazos
         leftArmAbsoluteResult.Paint(left, left.absoluteUsage);
@@ -99,7 +99,7 @@ public class ResultsUI : MonoBehaviour
         rightActivityText.text = $"Actividad: {right.activityRatio * 100f:F1}%";
         rightDurationText.text = $"Tiempo activo: {right.totalActiveSeconds:F1}s";
     }
-    void SetZoneTexts(ExerciseSummary summary, float[] values,
+    void SetZoneTexts(HandUsageSummary summary, float[] values,
                   TMP_Text handText,
                   TMP_Text wristText,
                   TMP_Text forearmText)

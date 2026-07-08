@@ -20,7 +20,7 @@ public class ResultsManager : MonoBehaviour
         resultsUI.Display();
     }
 
-    private void HandleSetResults(ExerciseSummary leftSummary, ExerciseSummary rightSummary)
+    private void HandleSetResults(HandUsageSummary leftSummary, HandUsageSummary rightSummary)
     {
         resultsUI.SetResults(leftSummary, rightSummary);
     }

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 public static class MetricsSummaryBuilder
 {
-    public static ExerciseSummary Build(ExerciseMetricsTracker tracker, float duration)
+    public static HandUsageSummary Build(ExerciseMetricsTracker tracker, float duration)
     {
         var zones = new List<MotionZone>(tracker.GetTrackedZones());
         int count = zones.Count;
@@ -34,7 +34,7 @@ public static class MetricsSummaryBuilder
                 : 0f;
         }
 
-        return new ExerciseSummary
+        return new HandUsageSummary
         {
             handType = tracker.HandType,
             zones = zones.ToArray(),

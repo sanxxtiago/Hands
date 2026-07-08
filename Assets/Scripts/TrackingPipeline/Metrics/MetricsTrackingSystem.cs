@@ -8,7 +8,7 @@ public class MetricsTrackingSystem : MonoBehaviour
     public ExerciseMetricsTracker leftTracker = new ExerciseMetricsTracker(HandType.LEFT);
     public ExerciseMetricsTracker rightTracker = new ExerciseMetricsTracker(HandType.RIGHT);
 
-    public static event Action<ExerciseSummary, ExerciseSummary> OnTrackingStop;
+    public static event Action<HandUsageSummary, HandUsageSummary> OnTrackingStop;
     public static event Action<RuntimeMetrics, RuntimeMetrics> OnSnapshot;
    
     void OnEnable()
@@ -35,6 +35,13 @@ public class MetricsTrackingSystem : MonoBehaviour
     {
         isTracking = false;
         OnTrackingStop?.Invoke(GetLeftSummary(duration), GetRightSummary(duration));
+        //REVISAR
+        ExerciseSummary summary = new ExerciseSummary();
+        summary.exerciseType = ExerciseType.Duck;
+        summary.leftHand = GetLeftSummary(duration);
+        summary.rightHand = GetRightSummary(duration);
+        SessionManager.Instance.AddExerciseSummary(summary);
+
     }
 
     private void OnFrameReceived(FrameMotionData frame)
@@ -49,11 +56,11 @@ public class MetricsTrackingSystem : MonoBehaviour
             rightTracker.OnFrameReceived(frame);
     }
 
-    public ExerciseSummary GetLeftSummary(float duration)
+    public HandUsageSummary GetLeftSummary(float duration)
     {
         return MetricsSummaryBuilder.Build(leftTracker, duration);
     }
-    public ExerciseSummary GetRightSummary(float duration)
+    public HandUsageSummary GetRightSummary(float duration)
     {
         return MetricsSummaryBuilder.Build(rightTracker, duration);
     }

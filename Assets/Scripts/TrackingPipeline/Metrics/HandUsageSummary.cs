@@ -1,4 +1,7 @@
-public struct ExerciseSummary
+using System;
+
+[Serializable]
+public struct HandUsageSummary
 {
     public HandType handType;
 
