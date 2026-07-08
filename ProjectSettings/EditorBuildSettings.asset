@@ -24,10 +24,14 @@ EditorBuildSettings:
     path: Assets/Scenes/Insert_Config1.unity
     guid: 000bac3fce0e5c74f8375caf4b4f357f
   - enabled: 1
-    path: Assets/Scenes/Excersice_Insert.unity
-    guid: a4aa3ffaf00c2644483d3c4ac3e51fe3
+    path: Assets/Scenes/OSU.unity
+    guid: 7429076253fcf28439448f8acdee846d
+  - enabled: 1
+    path: Assets/Scenes/DuckHunter.unity
+    guid: 3a4687e32a5f7064fa942994b96a3968
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: e2edec08cf8a48846bfd7a3b011575f5,
       type: 2}
     com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 09113e5cb2fe4604588a7ed997a5190c,
       type: 2}
+  m_UseUCBPForAssetBundles: 0

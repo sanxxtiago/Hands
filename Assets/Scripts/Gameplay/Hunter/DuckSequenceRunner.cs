@@ -41,7 +41,7 @@ public class DuckSequenceRunner : MonoBehaviour
 
         private IEnumerator SequenceRoutine()
         {
-            while (currentStepIndex < currentSequence.steps.Length)
+            while (currentStepIndex < currentSequence.steps.Count)
             {
                 DuckSequenceStep currentStep = currentSequence.steps[currentStepIndex];
 

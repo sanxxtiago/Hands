@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
@@ -13,5 +14,5 @@ public struct DuckSequenceStep
 [CreateAssetMenu(fileName = "NewDuckSequence", menuName = "DuckHunter/Duck Sequence")]
 public class DuckSequence : ScriptableObject
 {
-    public DuckSequenceStep[] steps;
+    public List<DuckSequenceStep> steps = new();
 }

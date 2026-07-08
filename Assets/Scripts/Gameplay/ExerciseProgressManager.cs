@@ -3,10 +3,12 @@ using UnityEngine;
 
 public class ExerciseProgressManager : MonoBehaviour
 {
-    public int currentSteps;
-    public int targetSteps;
+    [SerializeField] private int currentSteps;
+    [SerializeField] private int targetSteps;
     public bool simulateEndExercise = false;
     public static event Action<int, int> OnProgressChanged;
+    public static event Action<int> OnManagerInitialized;
+
     void Update()
     {
         if (simulateEndExercise)
@@ -31,9 +33,10 @@ public class ExerciseProgressManager : MonoBehaviour
     {
         this.targetSteps = targetSteps;
         currentSteps = 0;
+        OnManagerInitialized?.Invoke(targetSteps);
     }
 
-    public void AddStep(int amount = 1)
+    public void AddStep(int amount)
     {
         currentSteps += amount;
         OnProgressChanged?.Invoke(currentSteps, targetSteps);

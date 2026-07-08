@@ -13,15 +13,18 @@ public class OSUBasedExercise : ExerciseController
     {
         base.OnDisable();
     }
+    void Start()
+    {
+        progressManager.Initialize(sequence.steps.Count);
+    }
     protected override void OnExerciseStart()
     {
-        sequenceRunner.StartSequence(sequence);
-        progressManager.Initialize(progressManager.targetSteps);
+        sequenceRunner.StartSequence(sequence, this);
 
     }
     public void OnDotCompleted()
     {
-        progressManager.AddStep();
+        progressManager.AddStep(1);
     }
 
 }

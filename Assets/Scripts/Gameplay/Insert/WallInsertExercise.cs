@@ -1,5 +1,8 @@
+using UnityEngine;
+
 public class WallInsertExercise : ExerciseController
 {
+    [SerializeField] private int piecesCount;
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -10,14 +13,18 @@ public class WallInsertExercise : ExerciseController
         base.OnDisable();
         PieceBehaviour.OnPieceSnapped -= OnPieceSnapped;
     }
-    
+
+    void Start()
+    {
+        progressManager.Initialize(piecesCount);
+    }
+
     protected override void OnExerciseStart()
     {
-        progressManager.Initialize(progressManager.targetSteps);
     }
 
     public void OnPieceSnapped()
     {
-        progressManager.AddStep();
+        progressManager.AddStep(1);
     }
 }

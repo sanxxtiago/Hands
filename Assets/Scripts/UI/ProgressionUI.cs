@@ -15,11 +15,14 @@ public class ProgressionUI : MonoBehaviour
     private void OnEnable()
     {
         ExerciseProgressManager.OnProgressChanged += UpdateProgressBar;
+        ExerciseProgressManager.OnManagerInitialized += InitializeUI;
     }
 
     private void OnDisable()
     {
         ExerciseProgressManager.OnProgressChanged -= UpdateProgressBar;
+        ExerciseProgressManager.OnManagerInitialized -= InitializeUI;
+
         progressTween?.Kill();
     }
 
@@ -35,5 +38,11 @@ public class ProgressionUI : MonoBehaviour
         progressTween = progressBar
             .DOValue(progress, animationDuration)
             .SetEase(Ease.OutCubic);
+    }
+
+    private void InitializeUI(int targetCount)
+    {
+        progressionText.text = $"0/{targetCount}";
+        progressBar.maxValue = targetCount;
     }
 }

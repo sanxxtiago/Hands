@@ -23,9 +23,15 @@ public class HunterExercise : ExerciseController
         sequenceRunner.OnSequenceCompleted -= HandleSequenceCompleted;
     }
 
+    void Start()
+    {
+        progressManager.Initialize(sequence.steps.Count);
+    }
+    
     protected override void OnExerciseStart()
     {
         sequenceRunner.StartSequence(sequence);
+        //progressManager.Initialize(sequence.steps.Count);
     }
 
     private void HandleDuckHit()

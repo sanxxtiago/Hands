@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class OSUSequenceRunner : MonoBehaviour
@@ -5,12 +6,14 @@ public class OSUSequenceRunner : MonoBehaviour
     private OSUSequence sequence;
     [SerializeField] private TargetDetector detector;
     [SerializeField] private LineRenderer pathPrefab;
+    private OSUBasedExercise exerciseController;
     private int currentStepIndex;
 
     private DotBehaviour currentDot;
 
-    public void StartSequence(OSUSequence sequence)
+    public void StartSequence(OSUSequence sequence, OSUBasedExercise controller)
     {
+        exerciseController = controller;
         this.sequence = sequence;
         currentStepIndex = 0;
 
@@ -61,7 +64,7 @@ public class OSUSequenceRunner : MonoBehaviour
         dot.OnCompleted -= HandleDotCompleted;
 
         currentStepIndex++;
-
+        exerciseController.OnDotCompleted();
         SpawnCurrentStep();
     }
 }
