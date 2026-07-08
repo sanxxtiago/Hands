@@ -25,39 +25,3 @@ MonoBehaviour:
     requiredHand: 1
     movementDuration: 7
     delayBeforeSpawn: 0.3
-  - spawnSide: 0
-    requiredHand: 2
-    movementDuration: 7
-    delayBeforeSpawn: 0.3
-  - spawnSide: 1
-    requiredHand: 0
-    movementDuration: 7
-    delayBeforeSpawn: 0.3
-  - spawnSide: 0
-    requiredHand: 2
-    movementDuration: 7
-    delayBeforeSpawn: 0.3
-  - spawnSide: 1
-    requiredHand: 0
-    movementDuration: 7
-    delayBeforeSpawn: 0.3
-  - spawnSide: 0
-    requiredHand: 0
-    movementDuration: 6
-    delayBeforeSpawn: 0.3
-  - spawnSide: 1
-    requiredHand: 0
-    movementDuration: 6
-    delayBeforeSpawn: 0.3
-  - spawnSide: 0
-    requiredHand: 0
-    movementDuration: 6
-    delayBeforeSpawn: 0.3
-  - spawnSide: 1
-    requiredHand: 0
-    movementDuration: 6
-    delayBeforeSpawn: 0.3
-  - spawnSide: 0
-    requiredHand: 0
-    movementDuration: 6
-    delayBeforeSpawn: 0.3

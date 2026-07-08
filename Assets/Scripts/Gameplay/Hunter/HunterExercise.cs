@@ -4,7 +4,7 @@ public class HunterExercise : ExerciseController
 {
     [SerializeField] private DuckSequenceRunner sequenceRunner;
     [SerializeField] private DuckSequence sequence;
-
+    
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -27,7 +27,7 @@ public class HunterExercise : ExerciseController
     {
         progressManager.Initialize(sequence.steps.Count);
     }
-    
+
     protected override void OnExerciseStart()
     {
         sequenceRunner.StartSequence(sequence);
@@ -37,6 +37,8 @@ public class HunterExercise : ExerciseController
     private void HandleDuckHit()
     {
         // métricas
+
+        progressManager.AddStep(1);
     }
 
     private void HandleDuckMissed()

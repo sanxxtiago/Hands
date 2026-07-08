@@ -29,6 +29,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/DuckHunter.unity
     guid: 3a4687e32a5f7064fa942994b96a3968
+  - enabled: 1
+    path: Assets/Scenes/SessionSummary.unity
+    guid: 9f1d8b29ce2c9d04491edfe3fee188e0
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: e2edec08cf8a48846bfd7a3b011575f5,
       type: 2}

@@ -2607,7 +2607,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &343549258
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3707,7 +3707,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 556073337}
-  - component: {fileID: 556073336}
+  - component: {fileID: 556073338}
   m_Layer: 0
   m_Name: SceneManager
   m_TagString: Untagged
@@ -3715,21 +3715,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &556073336
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 556073335}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31ea1bd0ca5288744978cc9243fcffc4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nextSceneName: 
-  transition: {fileID: 2055526640}
-  transitionMessage: 
 --- !u!4 &556073337
 Transform:
   m_ObjectHideFlags: 0
@@ -3745,6 +3730,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &556073338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 556073335}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ebb9360e91c43a4396d70df11c93ba2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nextSceneName: SessionSummary
+  transition: {fileID: 2055526640}
+  transitionMessage: "Cargando resumen de la sesi\xF3n..."
 --- !u!1 &569803554
 GameObject:
   m_ObjectHideFlags: 0
@@ -6608,7 +6608,7 @@ RectTransform:
   m_Father: {fileID: 292484011}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -7668,6 +7668,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1493214527}
     m_Modifications:
+    - target: {fileID: 1572191477036051780, guid: 2ee60233f43c92a4bbb5ace6a493ca65,
+        type: 3}
+      propertyPath: m_Alpha
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3185806200586947544, guid: 2ee60233f43c92a4bbb5ace6a493ca65,
         type: 3}
       propertyPath: m_Pivot.x
@@ -7768,10 +7773,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6010823963844395500, guid: 2ee60233f43c92a4bbb5ace6a493ca65,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 556073338}
+    - target: {fileID: 6010823963844395500, guid: 2ee60233f43c92a4bbb5ace6a493ca65,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: NextExercise
+      objectReference: {fileID: 0}
     - target: {fileID: 6298104176792784027, guid: 2ee60233f43c92a4bbb5ace6a493ca65,
         type: 3}
       propertyPath: m_Name
-      value: Results
+      value: ResultsP
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7784,6 +7799,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1264271709}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1264271713 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4545347931873383772, guid: 2ee60233f43c92a4bbb5ace6a493ca65,
+    type: 3}
+  m_PrefabInstance: {fileID: 1264271709}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bebb43af51ce16340be9766dfa5fa56e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1309833411
 GameObject:
   m_ObjectHideFlags: 0
@@ -8607,7 +8634,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea8fe9ecea2ab374e99d0b9523080e2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resultsUI: {fileID: 164932822}
+  resultsUI: {fileID: 1264271713}
 --- !u!1 &1573513110
 GameObject:
   m_ObjectHideFlags: 0
@@ -10815,7 +10842,7 @@ RectTransform:
   m_Father: {fileID: 342346262}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -12064,7 +12091,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -45}
-  m_SizeDelta: {x: 51.716, y: 50}
+  m_SizeDelta: {x: 140, y: 50}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &2139351935
 MonoBehaviour:
