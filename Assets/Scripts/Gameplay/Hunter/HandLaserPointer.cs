@@ -91,7 +91,7 @@ public class HandLaserPointer : MonoBehaviour
         if (lineRenderer.enabled && currentTarget != null)
         {
             Debug.Log($"¡PUM! Le diste al pato: {currentTarget.name}");
-            currentTarget.Hit();
+            currentTarget.Hit(handType);
 
             // Opcional: Podrías añadir un efecto visual (partículas) o de sonido aquí
         }

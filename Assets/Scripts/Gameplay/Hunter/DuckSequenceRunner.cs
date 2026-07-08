@@ -73,7 +73,7 @@ public class DuckSequenceRunner : MonoBehaviour
             activeDuck.OnReachedDestination += HandleDuckMissed;
 
             // Le pasamos la info espacial y lógica
-            activeDuck.Initialize(step.spawnSide, step.movementDuration, leftBoundary.position, rightBoundary.position);
+            activeDuck.Initialize(step.spawnSide, step.requiredHand,step.movementDuration, leftBoundary.position, rightBoundary.position);
         }
 
         private void HandleDuckHit(DuckBehaviour duck)

@@ -627,6 +627,7 @@ MonoBehaviour:
   progressManager: {fileID: 1956825095}
   feedbackSystem: {fileID: 1460689778}
   sequenceRunner: {fileID: 43925656}
+  sequence: {fileID: 11400000, guid: 01884891831809043bdf86d3537c6e97, type: 2}
 --- !u!4 &43925655
 Transform:
   m_ObjectHideFlags: 0
@@ -654,7 +655,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b3e5c9b054a22e43a9e2fa70a664b02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sequence: {fileID: 11400000, guid: 01884891831809043bdf86d3537c6e97, type: 2}
   detector: {fileID: 43925657}
   pathPrefab: {fileID: 7906183174604349298}
 --- !u!114 &43925657
@@ -4030,7 +4030,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "INSERCI\xD3N DE PIEZAS"
+  m_text: Toque de objetivos <sprite=9>
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4222,7 +4222,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 652265799}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0

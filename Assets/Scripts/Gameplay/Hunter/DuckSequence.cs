@@ -5,6 +5,7 @@ using UnityEngine;
 public struct DuckSequenceStep
 {
     public SpawnSide spawnSide;
+    public HandType requiredHand;
     public float movementDuration;
     public float delayBeforeSpawn;
 }

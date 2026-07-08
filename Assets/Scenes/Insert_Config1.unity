@@ -2652,7 +2652,7 @@ Transform:
   m_GameObject: {fileID: 330796140}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.001, y: 0.0508, z: 0.222}
+  m_LocalPosition: {x: 0.001, y: 0.0508, z: 0.33600003}
   m_LocalScale: {x: 0.071484484, y: 0.007999999, z: 0.07010203}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -12104,7 +12104,7 @@ Transform:
   m_GameObject: {fileID: 2131207335}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: -0.7071068, w: 0}
-  m_LocalPosition: {x: 0, y: 0.464, z: 0.216}
+  m_LocalPosition: {x: 0, y: 0.464, z: 0.33}
   m_LocalScale: {x: 0.04, y: 0.040000007, z: 0.039999988}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12486,7 +12486,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredHand: 2
-  pieceType: 0
+  pieceType: 9
   state: 0
   requireRotation: 1
   rb: {fileID: 0}
@@ -13007,7 +13007,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredHand: 2
-  pieceType: 0
+  pieceType: 8
   state: 0
   requireRotation: 1
   rb: {fileID: 0}
@@ -13330,7 +13330,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredHand: 2
-  pieceType: 0
+  pieceType: 7
   state: 0
   requireRotation: 1
   rb: {fileID: 0}
@@ -13630,7 +13630,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredHand: 1
-  pieceType: 0
+  pieceType: 5
   state: 0
   requireRotation: 1
   rb: {fileID: 0}
@@ -13972,7 +13972,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredHand: 1
-  pieceType: 0
+  pieceType: 4
   state: 0
   requireRotation: 1
   rb: {fileID: 0}

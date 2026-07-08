@@ -11,25 +11,37 @@ public class DuckBehaviour : MonoBehaviour
     private Vector3 endPoint;
     private int floor;
     private float duration;
-
+    private HandType requiredHand;
     private float elapsedTime;
     private bool isMoving;
     private bool isHit = false;
+    [SerializeField] private Renderer body;
+    [SerializeField] private Renderer wings;
 
-    public void Initialize(SpawnSide side, float duration, Vector3 leftWorldBound, Vector3 rightWorldBound)
+    void Awake()
+    {
+        if (body == null)
+            body = GetComponent<Renderer>();
+    }
+
+    public void Initialize(SpawnSide side, HandType requiredHand, float duration, Vector3 leftWorldBound, Vector3 rightWorldBound)
     {
         this.duration = Mathf.Max(0.01f, duration);
+        this.requiredHand = requiredHand;
         //this.floor = floor;
         // El pato abstrae su origen y destino basado en el enum
         if (side == SpawnSide.Left)
         {
             startPoint = leftWorldBound;
             endPoint = rightWorldBound;
+            transform.rotation = Quaternion.Euler(0, 90, 0);
         }
         else // SpawnSide.Right
         {
             startPoint = rightWorldBound;
             endPoint = leftWorldBound;
+            transform.rotation = Quaternion.Euler(0, -90, 0);
+
         }
 
         transform.position = startPoint;
@@ -37,6 +49,18 @@ public class DuckBehaviour : MonoBehaviour
         elapsedTime = 0f;
         isMoving = true;
         isHit = false;
+        switch (this.requiredHand)
+        {
+            case HandType.NONE:
+                SetPieceColor(HandsColor.Default);
+                break;
+            case HandType.LEFT:
+                SetPieceColor(HandsColor.Left);
+                break;
+            case HandType.RIGHT:
+                SetPieceColor(HandsColor.Right);
+                break;
+        }
     }
 
     private void Update()
@@ -57,8 +81,11 @@ public class DuckBehaviour : MonoBehaviour
         }
     }
 
-    public void Hit()
+    public void Hit(HandType requiredHand)
     {
+        if (this.requiredHand != requiredHand && this.requiredHand != HandType.NONE)
+            return;
+
         if (isHit)
             return;
 
@@ -67,5 +94,12 @@ public class DuckBehaviour : MonoBehaviour
         Debug.Log("¡PATO CAZADO!");
 
         OnHit?.Invoke(this);
+    }
+
+    private void SetPieceColor(Color color)
+    {
+        body.material.color = color;
+        wings.material.color = color;
+
     }
 }
