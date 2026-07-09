@@ -35,12 +35,12 @@ public class MetricsTrackingSystem : MonoBehaviour
     {
         isTracking = false;
         OnTrackingStop?.Invoke(GetLeftSummary(duration), GetRightSummary(duration));
-        //REVISAR
-        ExerciseSummary summary = new ExerciseSummary();
-        summary.exerciseType = ExerciseType.Duck;
-        summary.leftHand = GetLeftSummary(duration);
-        summary.rightHand = GetRightSummary(duration);
-        SessionManager.Instance.AddExerciseSummary(summary);
+        //REVISAR <--------------------------------------------------------------------
+        // ExerciseSummary summary = new ExerciseSummary();
+        // summary.exerciseType = ExerciseType.Duck;
+        // summary.leftHand = GetLeftSummary(duration);
+        // summary.rightHand = GetRightSummary(duration);
+        // SessionManager.Instance.AddExerciseSummary(summary);
 
     }
 
