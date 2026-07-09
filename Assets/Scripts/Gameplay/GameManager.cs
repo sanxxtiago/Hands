@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
     private void OnDisable()
     {
         //transition.OnFadeOutCompleted -= StartCountdown;
-        MetricsTrackingSystem.OnTrackingStop += SaveExerciseSummary;
+        MetricsTrackingSystem.OnTrackingStop -= SaveExerciseSummary;
         DemoManager.OnDemoClosed -= StartCountdown;
         CountdownUI.OnCountdownFinished -= OnCountdownFinished;
     }
