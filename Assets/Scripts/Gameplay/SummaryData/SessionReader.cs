@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -26,12 +27,12 @@ public class SessionReader : MonoBehaviour
     [SerializeField] private LineChart rightWristChart;
     [SerializeField] private LineChart rightForearmChart;
 
-
-
     private SessionSummary session;
     private ExerciseSummary CurrentSummary =>
         session.Summaries[exerciseDropdown.value];
     private SummaryMode currentMode = SummaryMode.Absolute;
+    [SerializeField] private TMP_Text totalTimeText;
+    private readonly List<ExerciseSummary> exercises = new();
 
     private void Start()
     {
@@ -48,7 +49,8 @@ public class SessionReader : MonoBehaviour
             Debug.LogWarning("No hay datos de sesión para mostrar.");
             return;
         }
-
+        
+        UpdateSessionInfo();
         ConfigureDropdown();
 
         absoluteButton.onClick.AddListener(ShowAbsolute);
@@ -59,7 +61,12 @@ public class SessionReader : MonoBehaviour
         RefreshUI();
     }
 
-    private readonly List<ExerciseSummary> exercises = new();
+    private void UpdateSessionInfo()
+    {
+        float duration = GetSessionDuration();
+
+        totalTimeText.text = FormatDuration(duration);
+    }
 
     private void ConfigureDropdown()
     {
@@ -168,5 +175,21 @@ public class SessionReader : MonoBehaviour
         series[6] = GetUsageValue(summary, zone);
 
         return series;
+    }
+
+    private float GetSessionDuration()
+    {
+        float total = 0f;
+
+        foreach (ExerciseSummary summary in session.Summaries)
+            total += summary.exerciseDuration;
+
+        return total;
+    }
+    private string FormatDuration(float seconds)
+    {
+        return TimeSpan
+            .FromSeconds(seconds)
+            .ToString(@"mm\:ss");
     }
 }
