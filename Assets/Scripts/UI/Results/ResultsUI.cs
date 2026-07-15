@@ -41,16 +41,6 @@ public class ResultsUI : MonoBehaviour
 
     public CanvasGroup group;
 
-    void OnEnable()
-    {
-        GameManager.OnExerciseEnd += SetTimeText;
-    }
-
-    void OnDisable()
-    {
-        GameManager.OnExerciseEnd -= SetTimeText;
-    }
-
     void Start()
     {
         group.alpha = 0f;
@@ -61,13 +51,11 @@ public class ResultsUI : MonoBehaviour
         group.alpha = 0;
         group.DOFade(1, 0.3f);
     }
-    public void SetTimeText(float duration)
+
+    public void SetResults(float duration, HandUsageSummary left, HandUsageSummary right)
     {
         timeElapsedText.text = $"Tiempo total: {Math.Round(duration,2)} S";
-    }
 
-    public void SetResults(HandUsageSummary left, HandUsageSummary right)
-    {
         //pintar brazos
         leftArmAbsoluteResult.Paint(left, left.absoluteUsage);
         rightArmAbsoluteResult.Paint(right, right.absoluteUsage);

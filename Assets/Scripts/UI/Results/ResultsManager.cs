@@ -20,8 +20,8 @@ public class ResultsManager : MonoBehaviour
         resultsUI.Display();
     }
 
-    private void HandleSetResults(HandUsageSummary leftSummary, HandUsageSummary rightSummary)
+    private void HandleSetResults(float duration, HandUsageSummary leftSummary, HandUsageSummary rightSummary)
     {
-        resultsUI.SetResults(leftSummary, rightSummary);
+        resultsUI.SetResults(duration, leftSummary, rightSummary);
     }
 }

@@ -41,7 +41,7 @@ public static class MetricsSummaryBuilder
             absoluteUsage = absolute,
             relativeUsage = relative,
             intensity = intensity,
-            totalDurationSeconds = tracker.ElapsedTime,
+            //totalDurationSeconds = tracker.ElapsedTime,
             totalActiveSeconds = totalActiveTime,
             activityRatio = tracker.GetActivityRatio(duration)
         };

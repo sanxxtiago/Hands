@@ -27,7 +27,10 @@ public abstract class ExerciseController : MonoBehaviour
         OnExerciseStart();
 
         float elapsedTime = 0;
-
+        if (SessionManager.Instance.CurrentSession == null)
+        {
+            SessionManager.Instance.BeginSession();
+        }
 
         while (!progressManager.IsCompleted())
         {
@@ -38,6 +41,10 @@ public abstract class ExerciseController : MonoBehaviour
         }
 
         OnExerciseEnd(elapsedTime);
+        if (SessionManager.Instance.CurrentSession != null)
+        {
+            SessionManager.Instance.EndSession();
+        }
     }
 
     protected abstract void OnExerciseStart();

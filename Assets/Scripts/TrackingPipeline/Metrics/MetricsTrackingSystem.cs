@@ -8,8 +8,8 @@ public class MetricsTrackingSystem : MonoBehaviour
     public ExerciseMetricsTracker leftTracker = new ExerciseMetricsTracker(HandType.LEFT);
     public ExerciseMetricsTracker rightTracker = new ExerciseMetricsTracker(HandType.RIGHT);
 
-    public static event Action<HandUsageSummary, HandUsageSummary> OnTrackingStop;
-    public static event Action<RuntimeMetrics, RuntimeMetrics> OnSnapshot;
+    public static event Action<float, HandUsageSummary, HandUsageSummary> OnTrackingStop;
+    //public static event Action<RuntimeMetrics, RuntimeMetrics> OnSnapshot;
    
     void OnEnable()
     {
@@ -34,7 +34,7 @@ public class MetricsTrackingSystem : MonoBehaviour
     public void StopTracking(float duration)
     {
         isTracking = false;
-        OnTrackingStop?.Invoke(GetLeftSummary(duration), GetRightSummary(duration));
+        OnTrackingStop?.Invoke(duration, GetLeftSummary(duration), GetRightSummary(duration));
         //REVISAR <--------------------------------------------------------------------
         // ExerciseSummary summary = new ExerciseSummary();
         // summary.exerciseType = ExerciseType.Duck;

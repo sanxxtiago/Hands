@@ -5,7 +5,6 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private Transition transition;
     public MetricsTrackingSystem trackingSystem;
-    [SerializeField] private ExerciseType exerciseType;
     public GAMESTATE currentState;
     public CountdownUI countdown;
     public ArmRuntimeUI left;
@@ -19,7 +18,6 @@ public class GameManager : MonoBehaviour
     private void OnEnable()
     {
         //transition.OnFadeOutCompleted += StartCountdown;
-        MetricsTrackingSystem.OnTrackingStop += SaveExerciseSummary;
         DemoManager.OnDemoClosed += StartCountdown;
         CountdownUI.OnCountdownFinished += OnCountdownFinished;
     }
@@ -27,7 +25,6 @@ public class GameManager : MonoBehaviour
     private void OnDisable()
     {
         //transition.OnFadeOutCompleted -= StartCountdown;
-        MetricsTrackingSystem.OnTrackingStop -= SaveExerciseSummary;
         DemoManager.OnDemoClosed -= StartCountdown;
         CountdownUI.OnCountdownFinished -= OnCountdownFinished;
     }
@@ -76,15 +73,6 @@ public class GameManager : MonoBehaviour
         SetState(GAMESTATE.RESULTS);
     }
 
-    private void SaveExerciseSummary(HandUsageSummary leftSummary, HandUsageSummary rightSummary)
-    {
-        ExerciseSummary summary = new()
-        {
-            exerciseType = exerciseType,
-            leftHand = leftSummary,
-            rightHand = rightSummary
-        };
-        SessionManager.Instance.AddExerciseSummary(summary);
-    }
+
 
 }

@@ -11,7 +11,7 @@ public struct HandUsageSummary
     public float[] relativeUsage;
     public float[] intensity;
 
-    public float totalDurationSeconds;
+    //public float totalDurationSeconds;
     public float totalActiveSeconds;
 
     public float activityRatio;

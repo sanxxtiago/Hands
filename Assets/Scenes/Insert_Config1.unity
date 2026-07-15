@@ -168,6 +168,7 @@ GameObject:
   m_Component:
   - component: {fileID: 14109556}
   - component: {fileID: 14109557}
+  - component: {fileID: 14109558}
   m_Layer: 0
   m_Name: <======Excersice_insert======>
   m_TagString: Untagged
@@ -206,6 +207,19 @@ MonoBehaviour:
   progressManager: {fileID: 1956825095}
   feedbackSystem: {fileID: 1460689778}
   piecesCount: 6
+--- !u!114 &14109558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 14109555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc4d026d44c5cef4296ad57b3e19d9d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  exerciseType: 0
 --- !u!1 &41947975
 GameObject:
   m_ObjectHideFlags: 0
