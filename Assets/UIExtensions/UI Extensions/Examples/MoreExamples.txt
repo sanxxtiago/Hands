@@ -1,0 +1,7 @@
+For more examples, visit the Unity UI Extensions documentation site below.
+
+https://unity-ui-extensions.github.io/
+
+You can also download the full Examples package from the GitHub site here:
+
+https://github.com/Unity-UI-Extensions/com.unity.uiextensions/releases
