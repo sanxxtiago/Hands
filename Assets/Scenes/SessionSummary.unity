@@ -4275,6 +4275,8 @@ MonoBehaviour:
   rightHandChart: {fileID: 1770197918}
   rightWristChart: {fileID: 1870213298}
   rightForearmChart: {fileID: 1947231811}
+  totalTimeText: {fileID: 1499474342}
+  dateText: {fileID: 2087141608}
 --- !u!4 &876567127
 Transform:
   m_ObjectHideFlags: 0

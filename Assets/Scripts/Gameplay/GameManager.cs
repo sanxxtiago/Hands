@@ -73,6 +73,4 @@ public class GameManager : MonoBehaviour
         SetState(GAMESTATE.RESULTS);
     }
 
-
-
 }

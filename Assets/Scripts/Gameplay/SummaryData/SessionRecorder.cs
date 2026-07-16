@@ -16,6 +16,7 @@ public class SessionRecorder : MonoBehaviour
 
     private void SaveExerciseSummary(float duration, HandUsageSummary leftSummary, HandUsageSummary rightSummary)
     {
+        Debug.Log("Saving summary");
         ExerciseSummary summary = new()
         {
             exerciseType = exerciseType,

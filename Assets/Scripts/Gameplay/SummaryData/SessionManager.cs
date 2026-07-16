@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class SessionManager : MonoBehaviour
@@ -21,6 +22,7 @@ public class SessionManager : MonoBehaviour
 
     public void BeginSession()
     {
+        Debug.Log("Sesion iniciada");
         currentSession = new SessionSummary();
     }
 

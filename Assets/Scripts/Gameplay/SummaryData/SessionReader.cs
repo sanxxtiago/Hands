@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -32,6 +33,8 @@ public class SessionReader : MonoBehaviour
         session.Summaries[exerciseDropdown.value];
     private SummaryMode currentMode = SummaryMode.Absolute;
     [SerializeField] private TMP_Text totalTimeText;
+    [SerializeField] private TMP_Text dateText;
+
     private readonly List<ExerciseSummary> exercises = new();
 
     private void Start()
@@ -41,6 +44,10 @@ public class SessionReader : MonoBehaviour
             Debug.LogWarning("No existe un SessionManager.");
             return;
         }
+        else
+        {
+            Debug.Log("Si hay xs");
+        }
 
         session = SessionManager.Instance.CurrentSession;
 
@@ -49,7 +56,7 @@ public class SessionReader : MonoBehaviour
             Debug.LogWarning("No hay datos de sesión para mostrar.");
             return;
         }
-        
+
         UpdateSessionInfo();
         ConfigureDropdown();
 
@@ -66,6 +73,7 @@ public class SessionReader : MonoBehaviour
         float duration = GetSessionDuration();
 
         totalTimeText.text = FormatDuration(duration);
+        dateText.text = FormatSessionDate(session.date);
     }
 
     private void ConfigureDropdown()
@@ -188,8 +196,17 @@ public class SessionReader : MonoBehaviour
     }
     private string FormatDuration(float seconds)
     {
-        return TimeSpan
-            .FromSeconds(seconds)
-            .ToString(@"mm\:ss");
+        return $"Duracion: {TimeSpan.FromSeconds(seconds).ToString(@"mm\:ss")} min";
+    }
+    private string FormatSessionDate(DateTime date)
+    {
+        CultureInfo culture = new("es-ES");
+
+        string day = date.ToString("dd", culture);
+        string month = culture.TextInfo.ToTitleCase(
+            date.ToString("MMMM", culture));
+        string year = date.ToString("yyyy", culture);
+
+        return $"{day} de {month} {year}";
     }
 }
