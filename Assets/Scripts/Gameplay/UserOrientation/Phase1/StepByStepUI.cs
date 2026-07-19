@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
-using UnityEditor.VersionControl;
+
 public class StepByStepUI : MonoBehaviour
 {
     [SerializeField] private OrientationPhase1Manager phase1;
