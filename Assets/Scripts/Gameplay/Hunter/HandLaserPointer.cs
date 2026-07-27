@@ -17,7 +17,8 @@ public class HandLaserPointer : MonoBehaviour
 
     // Variable para recordar a qué pato le estamos apuntando en el frame actual
     private DuckBehaviour currentTarget;
-
+    private bool isAiming;
+    private bool isShooting;
     private void Awake()
     {
         lineRenderer = GetComponent<LineRenderer>();
@@ -27,20 +28,20 @@ public class HandLaserPointer : MonoBehaviour
 
     private void OnEnable()
     {
-        poseListener.AimStarted += EnableLaser;
-        poseListener.AimEnded += DisableLaser;
+        poseListener.AimStarted += HandleAimStarted;
+        poseListener.AimEnded += HandleAimEnded;
 
-        // NUEVO: Nos suscribimos al evento de disparo
-        poseListener.ShootStarted += HandleShoot;
+        poseListener.ShootStarted += HandleShootStarted;
+        poseListener.ShootEnded += HandleShootEnded;
     }
 
     private void OnDisable()
     {
-        poseListener.AimStarted -= EnableLaser;
-        poseListener.AimEnded -= DisableLaser;
+        poseListener.AimStarted -= HandleAimStarted;
+        poseListener.AimEnded -= HandleAimEnded;
 
-        // NUEVO: Nos desuscribimos para evitar memory leaks
-        poseListener.ShootStarted -= HandleShoot;
+        poseListener.ShootStarted -= HandleShootStarted;
+        poseListener.ShootEnded -= HandleShootEnded;
     }
 
     private void Update()
@@ -106,5 +107,45 @@ public class HandLaserPointer : MonoBehaviour
     {
         lineRenderer.enabled = false;
         currentTarget = null; // Limpiamos la mira al bajar la mano
+    }
+
+    private void HandleAimStarted()
+    {
+        isAiming = true;
+        UpdateLaserState();
+    }
+
+    private void HandleAimEnded()
+    {
+        isAiming = false;
+        UpdateLaserState();
+    }
+
+    private void HandleShootStarted()
+    {
+        isShooting = true;
+        UpdateLaserState();
+
+        if (currentTarget != null)
+        {
+            Debug.Log($"¡PUM! Le diste al pato: {currentTarget.name}");
+            currentTarget.Hit(handType);
+        }
+    }
+
+    private void HandleShootEnded()
+    {
+        isShooting = false;
+        UpdateLaserState();
+    }
+
+    private void UpdateLaserState()
+    {
+        bool enabled = isAiming || isShooting;
+
+        lineRenderer.enabled = enabled;
+
+        if (!enabled)
+            currentTarget = null;
     }
 }
