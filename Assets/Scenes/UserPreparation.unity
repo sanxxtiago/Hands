@@ -3217,18 +3217,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!225 &469872579
-CanvasGroup:
+--- !u!114 &469872579
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 469872575}
   m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0060526e62f679b4aab30d2ac98caed8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  registrationPanel: {fileID: 573835050}
 --- !u!1 &542684535
 GameObject:
   m_ObjectHideFlags: 0
@@ -3487,7 +3488,7 @@ GameObject:
   - component: {fileID: 573835053}
   - component: {fileID: 573835055}
   m_Layer: 5
-  m_Name: RegisterForm
+  m_Name: RegistrationForm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5307,6 +5308,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1117960205}
   - component: {fileID: 1117960204}
+  - component: {fileID: 1117960206}
   m_Layer: 0
   m_Name: OrientationManager
   m_TagString: Untagged
@@ -5349,6 +5351,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1117960206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1117960203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0060526e62f679b4aab30d2ac98caed8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  registrationPanel: {fileID: 573835050}
 --- !u!1 &1122035073
 GameObject:
   m_ObjectHideFlags: 0
@@ -8221,8 +8236,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e923bb770cde44408ee35aa54e2eadf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TargetTime: 10
-  timeElapsed: 0
 --- !u!1 &1989680124
 GameObject:
   m_ObjectHideFlags: 0

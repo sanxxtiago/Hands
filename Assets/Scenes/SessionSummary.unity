@@ -311,7 +311,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Santiago Rios
+  m_text: 'Sanxxtiago '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1008,6 +1008,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 263091b3655d23240b3232daa4265191, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentSession:
+    SessionId: 0
 --- !u!4 &201941217
 Transform:
   m_ObjectHideFlags: 0
@@ -4275,8 +4277,10 @@ MonoBehaviour:
   rightHandChart: {fileID: 1770197918}
   rightWristChart: {fileID: 1870213298}
   rightForearmChart: {fileID: 1947231811}
+  sessionText: {fileID: 882610362}
   totalTimeText: {fileID: 1499474342}
   dateText: {fileID: 2087141608}
+  userName: {fileID: 28755952}
 --- !u!4 &876567127
 Transform:
   m_ObjectHideFlags: 0

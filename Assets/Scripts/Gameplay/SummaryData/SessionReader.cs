@@ -32,8 +32,11 @@ public class SessionReader : MonoBehaviour
     private ExerciseSummary CurrentSummary =>
         session.Summaries[exerciseDropdown.value];
     private SummaryMode currentMode = SummaryMode.Absolute;
+    [SerializeField] private TMP_Text sessionText;
     [SerializeField] private TMP_Text totalTimeText;
     [SerializeField] private TMP_Text dateText;
+    [SerializeField] private TMP_Text userName;
+
 
     private readonly List<ExerciseSummary> exercises = new();
 
@@ -49,7 +52,10 @@ public class SessionReader : MonoBehaviour
             Debug.Log("Si hay xs");
         }
 
-        session = SessionManager.Instance.CurrentSession;
+        //Guarda la sesión actual y obtiene esa misma para una única fuente de verdad
+        session = PersistenceManager.Instance
+            .SessionService
+            .AddSession(SessionManager.Instance.CurrentSession);
 
         if (session == null || session.Summaries.Count == 0)
         {
@@ -71,7 +77,8 @@ public class SessionReader : MonoBehaviour
     private void UpdateSessionInfo()
     {
         float duration = GetSessionDuration();
-
+        sessionText.text = $"Sesión #{session.SessionId}";
+        userName.text = PersistenceManager.Instance.UserService.UserName;
         totalTimeText.text = FormatDuration(duration);
         dateText.text = FormatSessionDate(session.date);
     }
@@ -89,9 +96,9 @@ public class SessionReader : MonoBehaviour
 
             options.Add(summary.exerciseType switch
             {
-                ExerciseType.Insert => "🧩 Inserción de piezas",
-                ExerciseType.Duck => "🦆 Cazador de patos",
-                ExerciseType.OSU => "🎯 Precisión",
+                ExerciseType.Insert => "Inserción de piezas",
+                ExerciseType.Duck => "Cazador de patos",
+                ExerciseType.OSU => "Precisión",
                 _ => summary.exerciseType.ToString()
             });
         }
@@ -144,22 +151,22 @@ public class SessionReader : MonoBehaviour
 
         //<-------------LINE CHARTS--------------->
         leftHandChart.SetValues(
-    BuildCurrentSessionSeries(CurrentSummary.leftHand, MotionZone.Hand));
+       BuildCurrentSessionSeries(MotionZone.Hand, true));
 
         leftWristChart.SetValues(
-            BuildCurrentSessionSeries(CurrentSummary.leftHand, MotionZone.Wrist));
+            BuildCurrentSessionSeries(MotionZone.Wrist, true));
 
         leftForearmChart.SetValues(
-            BuildCurrentSessionSeries(CurrentSummary.leftHand, MotionZone.Forearm));
+            BuildCurrentSessionSeries(MotionZone.Forearm, true));
 
         rightHandChart.SetValues(
-            BuildCurrentSessionSeries(CurrentSummary.rightHand, MotionZone.Hand));
+            BuildCurrentSessionSeries(MotionZone.Hand, false));
 
         rightWristChart.SetValues(
-            BuildCurrentSessionSeries(CurrentSummary.rightHand, MotionZone.Wrist));
+            BuildCurrentSessionSeries(MotionZone.Wrist, false));
 
         rightForearmChart.SetValues(
-            BuildCurrentSessionSeries(CurrentSummary.rightHand, MotionZone.Forearm));
+            BuildCurrentSessionSeries(MotionZone.Forearm, false));
     }
     private float GetUsageValue(HandUsageSummary summary, MotionZone zone)
     {
@@ -176,11 +183,29 @@ public class SessionReader : MonoBehaviour
         return 0f;
     }
 
-    private float[] BuildCurrentSessionSeries(HandUsageSummary summary, MotionZone zone)
+    private float[] BuildCurrentSessionSeries(MotionZone zone, bool isLeftHand)
     {
+        IReadOnlyList<SessionSummary> history =
+            PersistenceManager.Instance
+                .SessionService
+                .GetLastSessions();
+
         float[] series = new float[7];
 
-        series[6] = GetUsageValue(summary, zone);
+        int offset = 7 - history.Count;
+
+        for (int i = 0; i < history.Count; i++)
+        {
+            ExerciseSummary exercise =
+                history[i].Summaries[exerciseDropdown.value];
+
+            HandUsageSummary hand =
+                isLeftHand
+                    ? exercise.leftHand
+                    : exercise.rightHand;
+
+            series[offset + i] = GetUsageValue(hand, zone);
+        }
 
         return series;
     }

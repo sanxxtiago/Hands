@@ -6,7 +6,7 @@ public class PersistenceManager : MonoBehaviour
     public static PersistenceManager Instance { get; private set; }
 
     public UserService UserService { get; private set; }
-    //public SessionService SessionService { get; private set; }
+    public SessionService SessionService { get; private set; }
     //public SettingsService SettingsService { get; private set; }
 
     private void Awake()
@@ -26,12 +26,11 @@ public class PersistenceManager : MonoBehaviour
     private void InitializeServices()
     {
         UserService = new UserService();
-        //SessionService = new SessionService();
+        SessionService = new SessionService();
         //SettingsService = new SettingsService();
 
         UserService.Load();
-        Debug.Log(UserService.UserName);
-        //SessionService.Load();
+        SessionService.Load();
         //SettingsService.Load();
     }
 }

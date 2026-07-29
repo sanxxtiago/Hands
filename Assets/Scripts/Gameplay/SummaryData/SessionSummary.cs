@@ -3,6 +3,7 @@ using System.Collections.Generic;
 [Serializable]
 public class SessionSummary
 {
+    public int SessionId;
     public List<ExerciseSummary> Summaries { get; } = new();
     public DateTime date;
     public SessionSummary()

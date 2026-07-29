@@ -15,5 +15,5 @@ MonoBehaviour:
   steps:
   - spawnSide: 1
     requiredHand: 1
-    movementDuration: 7
+    movementDuration: 10
     delayBeforeSpawn: 0.3
