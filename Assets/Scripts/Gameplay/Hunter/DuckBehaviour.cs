@@ -36,10 +36,18 @@ public class DuckBehaviour : MonoBehaviour
             endPoint = rightWorldBound;
             transform.rotation = Quaternion.Euler(0, 90, 0);
         }
-        else // SpawnSide.Right
+        else if (side == SpawnSide.Right)
         {
             startPoint = rightWorldBound;
             endPoint = leftWorldBound;
+            transform.rotation = Quaternion.Euler(0, -90, 0);
+
+        }
+        else //SpawnSide.Center
+        {
+            Vector3 worldCenter = new(0, rightWorldBound.y, rightWorldBound.z);
+            startPoint = worldCenter;
+            endPoint = worldCenter;
             transform.rotation = Quaternion.Euler(0, -90, 0);
 
         }

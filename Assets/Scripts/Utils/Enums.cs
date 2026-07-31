@@ -91,6 +91,7 @@ public enum GAMESTATE
 
 public enum SpawnSide
 {
+    Center,
     Left,
     Right
 }

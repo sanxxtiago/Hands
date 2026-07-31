@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DuckSequence
   m_EditorClassIdentifier: 
   steps:
-  - spawnSide: 1
-    requiredHand: 1
-    movementDuration: 10
+  - spawnSide: 0
+    requiredHand: 0
+    movementDuration: 100
     delayBeforeSpawn: 0.3
