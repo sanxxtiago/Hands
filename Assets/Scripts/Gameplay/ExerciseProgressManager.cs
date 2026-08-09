@@ -3,42 +3,44 @@ using UnityEngine;
 
 public class ExerciseProgressManager : MonoBehaviour
 {
-    [SerializeField] private int currentSteps;
-    [SerializeField] private int targetSteps;
-    public bool simulateEndExercise = false;
+    private int completedSteps;
+    private int targetSteps;
+    private int processedSteps;
+
     public static event Action<int, int> OnProgressChanged;
     public static event Action<int> OnManagerInitialized;
-
-    void Update()
-    {
-        if (simulateEndExercise)
-        {
-            simulateEndExercise = false;
-            int stepsRemaining = targetSteps - currentSteps;
-            AddStep(stepsRemaining);
-        }
-    }
-    public float Progress()
-    {
-        return targetSteps > 0
-            ? (float)currentSteps / targetSteps
-            : 0f;
-    }
-    public bool IsCompleted()
-    {
-        return currentSteps >= targetSteps;
-    }
 
     public void Initialize(int targetSteps)
     {
         this.targetSteps = targetSteps;
-        currentSteps = 0;
+        completedSteps = 0;
+        processedSteps = 0;
+
         OnManagerInitialized?.Invoke(targetSteps);
     }
 
-    public void AddStep(int amount)
+    public void AddCompletedStep()
     {
-        currentSteps += amount;
-        OnProgressChanged?.Invoke(currentSteps, targetSteps);
+        completedSteps++;
+        processedSteps++;
+
+        OnProgressChanged?.Invoke(completedSteps, targetSteps);
+    }
+
+    public void AddMissedStep()
+    {
+        processedSteps++;
+    }
+
+    public bool IsCompleted()
+    {
+        return processedSteps >= targetSteps;
+    }
+
+    public float Progress()
+    {
+        return targetSteps > 0
+            ? (float)completedSteps / targetSteps
+            : 0f;
     }
 }

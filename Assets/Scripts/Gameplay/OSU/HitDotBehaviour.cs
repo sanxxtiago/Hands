@@ -1,10 +1,13 @@
+using System.Collections;
 using UnityEngine;
 
 public class HitDotBehaviour : DotBehaviour
 {
+
     public override void Hit()
     {
-        if (IsHitted) return;
+        if (IsHitted)
+            return;
 
         IsHitted = true;
 

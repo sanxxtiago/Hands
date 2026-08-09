@@ -57,14 +57,38 @@ public class OSUSequenceRunner : MonoBehaviour
         detector.target = currentDot;
 
         currentDot.OnCompleted += HandleDotCompleted;
+        currentDot.OnMissed += HandleDotMissed;
     }
 
     private void HandleDotCompleted(DotBehaviour dot)
     {
-        dot.OnCompleted -= HandleDotCompleted;
+        UnsubscribeDot(dot);
 
         currentStepIndex++;
-        exerciseController.OnDotCompleted();
+
+        exerciseController.progressManager.AddCompletedStep();
+
+        Destroy(dot.gameObject);
+
         SpawnCurrentStep();
+    }
+
+    private void HandleDotMissed(DotBehaviour dot)
+    {
+        UnsubscribeDot(dot);
+
+        currentStepIndex++;
+
+        exerciseController.progressManager.AddMissedStep();
+
+        Destroy(dot.gameObject);
+
+        SpawnCurrentStep();
+    }
+
+    private void UnsubscribeDot(DotBehaviour dot)
+    {
+        dot.OnCompleted -= HandleDotCompleted;
+        dot.OnMissed -= HandleDotMissed;
     }
 }

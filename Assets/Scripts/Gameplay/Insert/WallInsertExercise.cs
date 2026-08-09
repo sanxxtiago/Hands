@@ -25,6 +25,6 @@ public class WallInsertExercise : ExerciseController
 
     public void OnPieceSnapped()
     {
-        progressManager.AddStep(1);
+        progressManager.AddCompletedStep();
     }
 }

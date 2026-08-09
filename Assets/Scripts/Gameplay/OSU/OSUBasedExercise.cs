@@ -22,9 +22,5 @@ public class OSUBasedExercise : ExerciseController
         sequenceRunner.StartSequence(sequence, this);
 
     }
-    public void OnDotCompleted()
-    {
-        progressManager.AddStep(1);
-    }
 
 }

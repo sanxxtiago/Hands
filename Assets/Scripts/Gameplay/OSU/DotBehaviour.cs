@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class DotBehaviour : MonoBehaviour
 {
-    public float lifeTime = 3;
+    public float timeToInteract = 3f;
     public float hitRadius = .05f;
 
     [SerializeField] private float fadeDuration = .2f;
@@ -19,6 +19,7 @@ public abstract class DotBehaviour : MonoBehaviour
     public HandType requiredHand = HandType.NONE;
 
     public event Action<DotBehaviour> OnCompleted;
+    public event Action<DotBehaviour> OnMissed;
     public event Action<DotBehaviour> OnFailed;
 
     protected virtual void Awake()
@@ -29,6 +30,7 @@ public abstract class DotBehaviour : MonoBehaviour
     protected virtual void Start()
     {
         StartCoroutine(Fade(0, 1));
+        StartCoroutine(WaitForInteraction());
     }
 
     public abstract void Hit();
@@ -49,6 +51,22 @@ public abstract class DotBehaviour : MonoBehaviour
     {
         Debug.Log($"{name} Failed");
         OnFailed?.Invoke(this);
+    }
+
+    protected IEnumerator WaitForInteraction()
+    {
+        float time = 0;
+
+        while (time < timeToInteract && !IsHitted)
+        {
+            time += Time.deltaTime;
+            yield return null;
+        }
+
+        if (!IsHitted)
+        {
+            OnMissed?.Invoke(this);
+        }
     }
 
     public void SetColor(HandType hand)

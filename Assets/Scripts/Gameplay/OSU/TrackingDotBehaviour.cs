@@ -23,6 +23,7 @@ public class TrackingDotBehaviour : DotBehaviour
         this.path = path;
 
         pathInstance = Instantiate(pathPrefab);
+        pathInstance.transform.SetParent(transform, true);
         pathInstance.transform.position += Vector3.forward * 0.01f;
 
         DrawPath();

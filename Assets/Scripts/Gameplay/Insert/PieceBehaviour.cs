@@ -23,8 +23,18 @@ public class PieceBehaviour : Interactable
     [HideInInspector] public Rigidbody rb;
     private IgnorePhysicalHands ignoreHands;
     [SerializeField] private Renderer pieceRenderer;
+    void OnEnable()
+    {
+        CountdownUI.OnCountdownFinished += SetPieceChirality;
+    }
+    void OnDisable()
+    {
+        CountdownUI.OnCountdownFinished -= SetPieceChirality;
+    }
+
     void Awake()
     {
+
         rb = GetComponent<Rigidbody>();
         ignoreHands = GetComponent<IgnorePhysicalHands>();
         if (pieceRenderer == null)
@@ -33,18 +43,12 @@ public class PieceBehaviour : Interactable
         switch (requiredHand)
         {
             case HandType.NONE:
-                ignoreHands.DisableAllGrabbing = false;
-                ignoreHands.DisableAllHandCollisions = false;
                 SetPieceColor(HandsColor.Default);
                 break;
             case HandType.LEFT:
-                ignoreHands.DisableAllGrabbing = true;
-                ignoreHands.HandToIgnoreGrabs = ChiralitySelection.RIGHT;
                 SetPieceColor(HandsColor.Left);
                 break;
             case HandType.RIGHT:
-                ignoreHands.DisableAllGrabbing = true;
-                ignoreHands.HandToIgnoreGrabs = ChiralitySelection.LEFT;
                 SetPieceColor(HandsColor.Right);
                 break;
         }
@@ -120,5 +124,26 @@ public class PieceBehaviour : Interactable
     private void SetPieceColor(Color color)
     {
         pieceRenderer.material.color = color;
+    }
+
+    private void SetPieceChirality()
+    {
+        switch (requiredHand)
+        {
+            case HandType.NONE:
+                ignoreHands.DisableAllGrabbing = false;
+                ignoreHands.DisableAllHandCollisions = false;
+                break;
+            case HandType.LEFT:
+                ignoreHands.DisableAllGrabbing = true;
+                ignoreHands.HandToIgnoreGrabs = ChiralitySelection.RIGHT;
+                ignoreHands.HandToIgnoreCollisions = ChiralitySelection.RIGHT;
+                break;
+            case HandType.RIGHT:
+                ignoreHands.DisableAllGrabbing = true;
+                ignoreHands.HandToIgnoreGrabs = ChiralitySelection.LEFT;
+                ignoreHands.HandToIgnoreCollisions = ChiralitySelection.LEFT;
+                break;
+        }
     }
 }
