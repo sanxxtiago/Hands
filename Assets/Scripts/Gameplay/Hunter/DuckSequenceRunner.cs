@@ -19,6 +19,9 @@ public class DuckSequenceRunner : MonoBehaviour
         private DuckBehaviour activeDuck;
         private Coroutine sequenceCoroutine;
 
+        public int DucksHit {get; private set;}
+        public int DucksMissed {get; private set;}
+
         public void StartSequence(DuckSequence sequence)
         {
             currentSequence = sequence;
@@ -45,30 +48,27 @@ public class DuckSequenceRunner : MonoBehaviour
             {
                 DuckSequenceStep currentStep = currentSequence.steps[currentStepIndex];
 
-                // 1. Pausa terapéutica antes de que salga el pato
+                //Pausa antes de que salga el pato
                 yield return new WaitForSeconds(currentStep.delayBeforeSpawn);
 
-                // 2. Aparece el pato
                 SpawnDuck(currentStep);
 
-                // 3. El Runner se queda esperando aquí hasta que el pato desaparezca
+                //El Runner se queda esperando aquí hasta que el pato desaparezca
                 // (activeDuck se vuelve null cuando lo cazan o llega al final)
                 yield return new WaitUntil(() => activeDuck == null);
 
-                // 4. Pasamos al siguiente paso
+                //siguiente paso
                 currentStepIndex++;
             }
 
-            // 5. Se acabó la terapia
             OnSequenceCompleted?.Invoke();
         }
 
         private void SpawnDuck(DuckSequenceStep step)
         {
-            // Nota: Para optimizar más adelante puedes usar un Object Pool
             activeDuck = Instantiate(duckPrefab);
 
-            // Nos suscribimos a los eventos del pato
+            //suscribimos a los eventos del pato
             activeDuck.OnHit += HandleDuckHit;
             activeDuck.OnReachedDestination += HandleDuckMissed;
 
@@ -78,12 +78,14 @@ public class DuckSequenceRunner : MonoBehaviour
 
         private void HandleDuckHit(DuckBehaviour duck)
         {
+            DucksHit++;
             CleanUpDuck(duck);
             OnDuckHit?.Invoke();
         }
 
         private void HandleDuckMissed(DuckBehaviour duck)
         {
+            DucksMissed++;
             CleanUpDuck(duck);
             OnDuckMissed?.Invoke();
         }

@@ -1,15 +1,8 @@
 public class LowForearmRule : IRule
 {
-    private float tolerance;
-
-    public LowForearmRule(float tolerance)
-    {
-        this.tolerance = tolerance;
-    }
-
     public bool Evaluate(AnalysisContext ctx)
     {
-        return ctx.deviation.forearm < -tolerance;
+        return ctx.deviation.forearm < -1f;
     }
 
     public Suggestion Build(AnalysisContext ctx)

@@ -9,16 +9,20 @@ public class LowActivityRule : IRule
 
     public Suggestion Build(AnalysisContext ctx)
     {
+        float severity = threshold > 0f
+            ? (threshold - ctx.activityRatio) / threshold
+            : 1f;
+
         return new Suggestion
         {
             message = "Muévete más, hay poca actividad",
-            severity = 1f - ctx.activityRatio
+            severity = UnityEngine.Mathf.Clamp01(severity)
         };
     }
 
     public bool Evaluate(AnalysisContext ctx)
     {
-        return ctx.activityRatio < 1f;
+        return ctx.activityRatio < threshold;
     }
 
 

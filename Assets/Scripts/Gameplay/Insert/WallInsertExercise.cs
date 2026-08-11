@@ -3,6 +3,7 @@ using UnityEngine;
 public class WallInsertExercise : ExerciseController
 {
     [SerializeField] private int piecesCount;
+    public float CompletionTime => elapsedTime;
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -26,5 +27,10 @@ public class WallInsertExercise : ExerciseController
     public void OnPieceSnapped()
     {
         progressManager.AddCompletedStep();
+    }
+
+    protected override void SetSpecificData()
+    {
+        sessionRecorder.SetInsertPiecesData(CompletionTime);
     }
 }

@@ -1,12 +1,5 @@
 public class ExcessWristRule : IRule
 {
-    private float tolerance;
-
-    public ExcessWristRule(float tolerance)
-    {
-        this.tolerance = tolerance;
-    }
-
     public bool Evaluate(AnalysisContext ctx)
     {
         return ctx.deviation.wrist > 1f;

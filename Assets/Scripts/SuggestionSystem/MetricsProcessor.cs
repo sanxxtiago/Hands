@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 public static class MetricsProcessor
 {
@@ -22,11 +23,16 @@ public static class MetricsProcessor
 
     public static Deviation GetDeviation(NormalizedMetrics m, HandProfile p)
     {
+        const float minimumTolerance = 0.0001f;
+
         return new Deviation
         {
-            hand = (m.hand - p.hand.normalized) / p.hand.tolerance,
-            wrist = (m.wrist - p.wrist.normalized) / p.wrist.tolerance,
-            forearm = (m.forearm - p.forearm.normalized) / p.forearm.tolerance
+            hand = (m.hand - p.hand.normalized) /
+                Mathf.Max(p.hand.tolerance, minimumTolerance),
+            wrist = (m.wrist - p.wrist.normalized) /
+                Mathf.Max(p.wrist.tolerance, minimumTolerance),
+            forearm = (m.forearm - p.forearm.normalized) /
+                Mathf.Max(p.forearm.tolerance, minimumTolerance)
         };
     }
 }

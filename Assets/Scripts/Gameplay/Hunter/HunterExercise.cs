@@ -5,6 +5,9 @@ public class HunterExercise : ExerciseController
     [SerializeField] private DuckSequenceRunner sequenceRunner;
     [SerializeField] private DuckSequence sequence;
 
+    public int DucksHit => sequenceRunner.DucksHit;
+    public int DucksMissed => sequenceRunner.DucksMissed;
+    
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -50,5 +53,13 @@ public class HunterExercise : ExerciseController
     private void HandleSequenceCompleted()
     {
         //OnExerciseEnd();
+    }
+
+    protected override void SetSpecificData()
+    {
+        sessionRecorder.SetDuckHunterData(
+            DucksHit,
+            DucksMissed
+        );
     }
 }

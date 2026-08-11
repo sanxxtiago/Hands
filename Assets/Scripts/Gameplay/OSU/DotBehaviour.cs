@@ -21,6 +21,7 @@ public abstract class DotBehaviour : MonoBehaviour
     public event Action<DotBehaviour> OnCompleted;
     public event Action<DotBehaviour> OnMissed;
     public event Action<DotBehaviour> OnFailed;
+    public event Action<DotBehaviour> OnTouched;
 
     protected virtual void Awake()
     {
@@ -33,7 +34,16 @@ public abstract class DotBehaviour : MonoBehaviour
         StartCoroutine(WaitForInteraction());
     }
 
-    public abstract void Hit();
+    public virtual void Hit()
+    {
+        if (IsHitted)
+            return;
+
+        IsHitted = true;
+
+        OnTouched?.Invoke(this);
+    }
+
 
     protected void Complete()
     {

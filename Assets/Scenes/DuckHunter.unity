@@ -597,6 +597,7 @@ MonoBehaviour:
   gameManager: {fileID: 1956825092}
   progressManager: {fileID: 1956825095}
   feedbackSystem: {fileID: 1460689778}
+  sessionRecorder: {fileID: 43925662}
   sequenceRunner: {fileID: 43925661}
   sequence: {fileID: 11400000, guid: 3dc2402c24778ae439b651d3b5df45b9, type: 2}
 --- !u!114 &43925657
@@ -5662,6 +5663,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 263091b3655d23240b3232daa4265191, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentSession:
+    SessionId: 0
 --- !u!4 &969369286
 Transform:
   m_ObjectHideFlags: 0
@@ -8518,6 +8521,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   profile: {fileID: 11400000, guid: 985222d45ab32e24c9709c8c8ac63a27, type: 2}
   trackingSystem: {fileID: 1956825094}
+  warmupTime: 2
+  maxSuggestionsPerExercise: 3
+  suggestionCooldown: 8
 --- !u!4 &1460689779
 Transform:
   m_ObjectHideFlags: 0
@@ -10832,9 +10838,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9eaed769314bc8943ad07dbc0e034230, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentSteps: 0
-  targetSteps: 6
-  simulateEndExercise: 0
 --- !u!1 &1957538744
 GameObject:
   m_ObjectHideFlags: 0

@@ -206,6 +206,7 @@ MonoBehaviour:
   gameManager: {fileID: 1956825092}
   progressManager: {fileID: 1956825095}
   feedbackSystem: {fileID: 1460689778}
+  sessionRecorder: {fileID: 14109558}
   piecesCount: 6
 --- !u!114 &14109558
 MonoBehaviour:
@@ -5277,7 +5278,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1460689778
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5285,13 +5286,16 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1460689777}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1c8dfb26bcc52e443ba68eee364a989f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   profile: {fileID: 11400000, guid: 985222d45ab32e24c9709c8c8ac63a27, type: 2}
   trackingSystem: {fileID: 1956825094}
+  warmupTime: 2
+  maxSuggestionsPerExercise: 3
+  suggestionCooldown: 8
 --- !u!4 &1460689779
 Transform:
   m_ObjectHideFlags: 0
@@ -6419,9 +6423,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9eaed769314bc8943ad07dbc0e034230, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentSteps: 0
-  targetSteps: 6
-  simulateEndExercise: 0
 --- !u!1 &1957538744
 GameObject:
   m_ObjectHideFlags: 0

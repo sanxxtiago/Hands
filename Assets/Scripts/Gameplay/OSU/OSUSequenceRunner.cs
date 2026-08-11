@@ -11,11 +11,17 @@ public class OSUSequenceRunner : MonoBehaviour
 
     private DotBehaviour currentDot;
 
+    private float _stepSpawnTime;
+    public float TotalInteractionTime { get; private set; }
+    public int InteractionCount {get; private set;}
+
     public void StartSequence(OSUSequence sequence, OSUBasedExercise controller)
     {
         exerciseController = controller;
         this.sequence = sequence;
         currentStepIndex = 0;
+        TotalInteractionTime = 0f;
+        InteractionCount = 0;
 
         SpawnCurrentStep();
     }
@@ -28,6 +34,8 @@ public class OSUSequenceRunner : MonoBehaviour
         }
 
         OSUStep step = sequence.steps[currentStepIndex];
+
+        _stepSpawnTime = Time.time;
 
         Vector3 spawnPosition = step.spawnPosition;
 
@@ -58,6 +66,14 @@ public class OSUSequenceRunner : MonoBehaviour
 
         currentDot.OnCompleted += HandleDotCompleted;
         currentDot.OnMissed += HandleDotMissed;
+        currentDot.OnTouched += HandleDotTouched;
+    }
+
+    private void HandleDotTouched(DotBehaviour dot)
+    {
+        InteractionCount++;
+        TotalInteractionTime += Time.time - _stepSpawnTime;
+        Debug.Log($"TT: {TotalInteractionTime}");
     }
 
     private void HandleDotCompleted(DotBehaviour dot)
@@ -90,5 +106,6 @@ public class OSUSequenceRunner : MonoBehaviour
     {
         dot.OnCompleted -= HandleDotCompleted;
         dot.OnMissed -= HandleDotMissed;
+        dot.OnTouched -= HandleDotTouched;
     }
 }

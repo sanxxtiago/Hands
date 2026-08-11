@@ -7,7 +7,9 @@ public abstract class ExerciseController : MonoBehaviour
     public GameManager gameManager;
     public ExerciseProgressManager progressManager;
     public ExerciseFeedbackSystem feedbackSystem;
+    public SessionRecorder sessionRecorder;
 
+    protected float elapsedTime = 0;
     protected virtual void OnEnable()
     {
         GameManager.OnExcerciseStart += HandleStartExercise;
@@ -25,9 +27,12 @@ public abstract class ExerciseController : MonoBehaviour
 
     IEnumerator ExerciseRoutine()
     {
+        elapsedTime = 0f;
         OnExerciseStart();
 
-        float elapsedTime = 0;
+        feedbackSystem?.BeginExercise();
+
+        
         if (SessionManager.Instance.CurrentSession == null)
         {
             SessionManager.Instance.BeginSession();
@@ -37,10 +42,9 @@ public abstract class ExerciseController : MonoBehaviour
         {
             elapsedTime += Time.deltaTime;
             //El sistema de feedback evalúa durante la duración del ejercicio
-            //feedbackSystem.Evaluate(elapsedTime, Time.deltaTime);
+            feedbackSystem?.Evaluate(elapsedTime, Time.deltaTime);
             yield return null;
         }
-
         OnExerciseEnd(elapsedTime);
         if (SessionManager.Instance.CurrentSession != null)
         {
@@ -51,7 +55,10 @@ public abstract class ExerciseController : MonoBehaviour
     protected abstract void OnExerciseStart();
     protected void OnExerciseEnd(float duration)
     {
+        SetSpecificData();
         gameManager.EndExercise(duration);
     }
+
+    protected abstract void SetSpecificData();
 
 }

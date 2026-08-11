@@ -1,12 +1,5 @@
 public class ExcessHandRule : IRule
 {
-    private float tolerance;
-
-    public ExcessHandRule(float tolerance)
-    {
-        this.tolerance = tolerance;
-    }
-
     public bool Evaluate(AnalysisContext ctx)
     {
         return ctx.deviation.hand > 1f;
