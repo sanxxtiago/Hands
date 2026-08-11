@@ -16,10 +16,19 @@ public class ExerciseProfile : ScriptableObject
 [System.Serializable]
 public class HandProfile
 {
-    public bool isActive; //Para ejercicios unilaterales
+    //public bool isActive; //Para ejercicios unilaterales
     public ZoneTarget hand;
     public ZoneTarget wrist;
     public ZoneTarget forearm;
+
+    [Header("Criticidad por zona")]
+    [Range(0f, 1f)]
+    public float handCriticality = 1f;
+    [Range(0f, 1f)]
+    public float wristCriticality = 0.8f;
+    [Range(0f, 1f)]
+    public float forearmCriticality = 0.6f;
+
     [Range(0f, 1f)]
     public float minActivity = 0.4f;
     public void NormalizeZones()

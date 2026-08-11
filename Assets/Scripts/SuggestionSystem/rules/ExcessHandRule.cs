@@ -1,5 +1,14 @@
+using UnityEngine;
+
 public class ExcessHandRule : IRule
 {
+    private readonly float criticality;
+
+    public ExcessHandRule(float criticality)
+    {
+        this.criticality = criticality;
+    }
+
     public bool Evaluate(AnalysisContext ctx)
     {
         return ctx.deviation.hand > 1f;
@@ -10,7 +19,7 @@ public class ExcessHandRule : IRule
         return new Suggestion
         {
             message = "Estás abusando de la mano",
-            severity = ctx.deviation.hand
+            severity = Mathf.Clamp01(ctx.deviation.hand - 1f) * criticality
         };
     }
 }

@@ -13,10 +13,11 @@ public class LowActivityRule : IRule
             ? (threshold - ctx.activityRatio) / threshold
             : 1f;
 
-        return new Suggestion
+return new Suggestion
         {
             message = "Muévete más, hay poca actividad",
-            severity = UnityEngine.Mathf.Clamp01(severity)
+            severity = UnityEngine.Mathf.Clamp01(severity),
+            type = SuggestionType.LowActivity
         };
     }
 
