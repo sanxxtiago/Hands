@@ -13,32 +13,36 @@ MonoBehaviour:
   m_Name: Insert_ExerciseProfile
   m_EditorClassIdentifier: 
   leftHand:
-    isActive: 1
     hand:
       editorValue: 40
       normalized: 0.4
       tolerance: 0.05
     wrist:
-      editorValue: 20
-      normalized: 0.2
-      tolerance: 0.05
-    forearm:
       editorValue: 40
       normalized: 0.4
       tolerance: 0.05
+    forearm:
+      editorValue: 20
+      normalized: 0.2
+      tolerance: 0.05
+    handCriticality: 1
+    wristCriticality: 0.8
+    forearmCriticality: 0.6
     minActivity: 0.4
   rightHand:
-    isActive: 0
     hand:
       editorValue: 40
       normalized: 0.4
       tolerance: 0.05
     wrist:
-      editorValue: 20
-      normalized: 0.2
-      tolerance: 0.05
-    forearm:
       editorValue: 40
       normalized: 0.4
       tolerance: 0.05
+    forearm:
+      editorValue: 20
+      normalized: 0.2
+      tolerance: 0.05
+    handCriticality: 1
+    wristCriticality: 0.8
+    forearmCriticality: 0.6
     minActivity: 0.4

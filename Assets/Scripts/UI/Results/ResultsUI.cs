@@ -39,6 +39,9 @@ public class ResultsUI : MonoBehaviour
     public TMP_Text rightActivityText;
     public TMP_Text rightDurationText;
 
+    [Header("GENERAL SUGGESTION")]
+    public TMP_Text generalSuggestionText;
+
     public CanvasGroup group;
 
     void Start()
@@ -86,6 +89,14 @@ public class ResultsUI : MonoBehaviour
 
         rightActivityText.text = $"Actividad: {right.activityRatio * 100f:F1}%";
         rightDurationText.text = $"Tiempo activo: {right.totalActiveSeconds:F1}s";
+
+        if (generalSuggestionText != null)
+        {
+            string suggestion = SessionRecorder.LastGeneralSuggestion;
+            generalSuggestionText.text = string.IsNullOrWhiteSpace(suggestion)
+                ? "Continúa practicando para mejorar tu desempeño."
+                : suggestion;
+        }
     }
     void SetZoneTexts(HandUsageSummary summary, float[] values,
                   TMP_Text handText,

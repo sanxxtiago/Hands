@@ -36,6 +36,7 @@ public class SessionReader : MonoBehaviour
     [SerializeField] private TMP_Text totalTimeText;
     [SerializeField] private TMP_Text dateText;
     [SerializeField] private TMP_Text userName;
+    [SerializeField] private TMP_Text generalSuggestionText;
 
 
     private readonly List<ExerciseSummary> exercises = new();
@@ -112,6 +113,17 @@ public class SessionReader : MonoBehaviour
         RefreshUI();
     }
 
+    void SetGeneralSuggestion()
+    {
+        if (generalSuggestionText == null)
+            return;
+
+        string suggestion = CurrentSummary.generalSuggestion;
+        generalSuggestionText.text = string.IsNullOrWhiteSpace(suggestion)
+            ? "Continúa practicando para mejorar tu desempeño."
+            : suggestion;
+    }
+
     private void ShowAbsolute()
     {
         currentMode = SummaryMode.Absolute;
@@ -126,6 +138,8 @@ public class SessionReader : MonoBehaviour
 
     private void RefreshUI()
     {
+        SetGeneralSuggestion();
+
         switch (currentMode)
         {
             case SummaryMode.Absolute:

@@ -4,6 +4,8 @@ public class SessionRecorder : MonoBehaviour
 {
     [SerializeField] private ExerciseType exerciseType;
 
+    public static string LastGeneralSuggestion { get; private set; }
+
     private float totalInteractionDelay;
     private int interactionCount;
 
@@ -44,6 +46,15 @@ public class SessionRecorder : MonoBehaviour
         HandUsageSummary leftSummary,
         HandUsageSummary rightSummary)
     {
+        string generalSuggestion = GeneralSuggestionBuilder.Build(
+            exerciseType,
+            completionTime,
+            totalInteractionDelay,
+            ducksHit,
+            ducksMissed);
+
+        LastGeneralSuggestion = generalSuggestion;
+
         ExerciseSummary summary = new()
         {
             exerciseType = exerciseType,
@@ -57,13 +68,8 @@ public class SessionRecorder : MonoBehaviour
             ducksHit = ducksHit,
             ducksMissed = ducksMissed,
 
-            completionTime = completionTime,
-            generalSuggestion = GeneralSuggestionBuilder.Build(
-                exerciseType,
-                completionTime,
-                totalInteractionDelay,
-                ducksHit,
-                ducksMissed)
+completionTime = completionTime,
+            generalSuggestion = generalSuggestion
         };
 
         Debug.Log($"[SuggestionSystem] Sugerencia final: {summary.generalSuggestion}");

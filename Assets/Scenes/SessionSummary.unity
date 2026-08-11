@@ -2873,7 +2873,7 @@ GameObject:
   - component: {fileID: 457566033}
   - component: {fileID: 457566032}
   m_Layer: 5
-  m_Name: Text (TMP) (1)
+  m_Name: GeneralSuggestion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4500,7 +4500,7 @@ GameObject:
   - component: {fileID: 865574065}
   - component: {fileID: 865574064}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: SuggestionTittle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4545,7 +4545,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Recomendaci\xF3n"
+  m_text: Sugerencia
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4666,6 +4666,7 @@ MonoBehaviour:
   totalTimeText: {fileID: 1499474342}
   dateText: {fileID: 2087141608}
   userName: {fileID: 28755952}
+  generalSuggestionText: {fileID: 457566032}
 --- !u!4 &876567127
 Transform:
   m_ObjectHideFlags: 0
