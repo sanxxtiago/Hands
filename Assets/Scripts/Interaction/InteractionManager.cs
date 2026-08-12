@@ -159,7 +159,10 @@ public class InteractionManager : MonoBehaviour
     {
         //($"HAND: {r.source.handType}");
 
-        if (r.target == null)
+        // El GRAB debe procesarse siempre, incluso con target null,
+        // para que la fase END pueda liberar el agarre actual cuando
+        // la mano ya se ha alejado de la pieza al soltarla.
+        if (r.target == null && r.type != InteractionType.Grab)
         {
             //Debug.Log($"TARGET: NULL");
 
@@ -190,6 +193,9 @@ public class InteractionManager : MonoBehaviour
         if (e.phase == GesturePhase.START)
         {
             if (grabbed != null)
+                return;
+
+            if (r.target == null)
                 return;
 
             grabbed = r.target;

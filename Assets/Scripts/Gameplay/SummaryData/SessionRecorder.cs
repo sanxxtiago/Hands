@@ -68,7 +68,7 @@ public class SessionRecorder : MonoBehaviour
             ducksHit = ducksHit,
             ducksMissed = ducksMissed,
 
-completionTime = completionTime,
+            completionTime = completionTime,
             generalSuggestion = generalSuggestion
         };
 
