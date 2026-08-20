@@ -10,6 +10,56 @@
 
 ---
 
+## Objetivo del Prototipo
+
+**Hands** es un prototipo de prevención motora del miembro superior basado en **seguimiento de manos sin contacto** (Ultraleap Leap Motion / OpenXR). Su objetivo es que el paciente realice **ejercicios de terapia guiados** mientras el sistema **observa y cuantifica el uso articular** (mano, muñeca, antebrazo) en tiempo real, sin depender de sensores o dispositivos que el usuario deba sujetar.
+
+El prototipo persigue tres metas:
+1. **Ejercitar** el miembro superior mediante actividades gamificadas que motivan a mover mano, muñeca y antebrazo.
+2. **Medir** el patrón de movimiento (zonas articulares usadas, tiempo activo, intensidad) para cada mano y por ejercicio.
+3. **Guiar** al paciente con feedback inmediato (sugerencias en vivo) y una sugerencia final por ejercicio y por sesión.
+
+## Funcionamiento General
+
+### Ciclo de una sesión
+1. **Orientación del usuario** (`UserOrientation`): el paciente aprende a posicionar las manos frente al sensor antes de empezar (fases previas al ejercicio, ej. `Phase3`).
+2. **Cuenta atrás** (`CountdownUI`): tras iniciar el ejercicio, una cuenta regresiva da tiempo a prepararse (p. ej. permite configurar la quirralidad de las piezas).
+3. **Ejercicio activo** (`GAMESTATE.PLAYING`): el paciente interactúa mientras el sistema acumula métricas y emite sugerencias en vivo.
+4. **Resultados** (`GAMESTATE.RESULTS`): se muestran las métricas por mano (uso de zonas absoluto/relativo) junto con la sugerencia general del ejercicio.
+5. **Resumen de sesión** (`SessionSummary`): el terapeuta/paciente revisa el acumulado de todos los ejercicios realizados.
+
+### Pila de datos (cómo funciona por dentro)
+```
+Captura (LeapDataProvider)                    → frames raw de Ultraleap
+  ➔ Snapshot (HandSnapshotBuilder)            → datos desacoplados por mano (posiciones, rotaciones, gestos)
+  ➔ Pipeline de movimiento (MotionPipelineRunner)
+      • Agregadores (MotionAggregator L/R)    → valida, filtra por mano, evita frames duplicados
+      • Detectores continuos/discretos        → rotación muñeca, antebrazo, desplazamiento palma, grab/pinch
+  ➔ FrameMotionData → MotionEventBus          → bus global (un único frame por frameId por mano)
+      ├─ MetricsTrackingSystem                → acumula uso articular (zona, frames activos, tiempo)
+      │    ➔ ExerciseMetricsTracker (L/R) ➔ MetricsProcessor ➔ HandUsageSummary (resultados)
+      └─ InteractionTracking (InteractionTracker + InteractionManager)
+           ➔ Gestos (GRAB/PINCH/ROTATE) ➔ Interactable (agarrar/soltar/rotar/seleccionar)
+      └─ SuggestionSystem (ExerciseFeedbackSystem)
+           ➔ Engines por mano + reglas (exceso mano/muñeca, baja participación antebrazo, baja actividad)
+           ➔ Selección anti-spam ➔ Debug.Log + Snackbar (feedback en vivo)
+```
+
+### Experiencia de usuario (qué percibe el paciente)
+- **Insert:** coge piezas con la mano indicada y las encaja en el slot de su pared. Primera aproximación a la terapia manipulativa (agarre + precisión + rotación).
+- **OSU:** alcanza objetivos que aparecen en pantalla con la mano correcta; mide la velocidad de reacción y la interacción acumulada.
+- **DuckHunter:** apunta y "dispara" a patos con el láser de la mano; trabaja precisión, mantenimiento de postura y seguimiento visual.
+- **Feedback en vivo:** si compensa con la mano en lugar de mover el antebrazo (o viceversa), o si mantiene baja actividad, recibe una advertencia inmediata (snackbar + consola), con un máximo de 3 por ejercicio para no saturar.
+- **Feedback final:** al terminar, una frase resume si resolvió el ejercicio en un tiempo adecuado o con pocos fallos.
+
+### Decisiones de diseño clave
+- **Desacoplamiento total del tracking:** ninguna lógica de juego conoce el SDK de Leap; todo pasa por `FrameMotionData` y `MotionEventBus`.
+- **Dos métricas distintas y no intercambiables:** las **sugerencias en vivo** usan métricas relativas de runtime (`activeFrames / totalFrames`); los **resultados finales** usan `HandUsageSummary` (absoluto, relativo, intensidad) construido solo al detener el tracking.
+- **Feedback acotado:** anti-spam estricto (máx. 3 sugerencias, cooldown, deduplicación) para que la terapia no se convierta en ruido.
+- **Evaluación de ambas manos siempre:** no se descarta la mano "inactiva" porque puede estar compensando; la prioridad la marca la mano con más movimiento.
+
+---
+
 ## Captura y Arquitectura de Frames (Leap Motion)
 
 1. **Captura de Frames Raw (`LeapDataProvider`)**

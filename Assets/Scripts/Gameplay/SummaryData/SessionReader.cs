@@ -58,6 +58,9 @@ public class SessionReader : MonoBehaviour
             .SessionService
             .AddSession(SessionManager.Instance.CurrentSession);
 
+        // The persisted session is now owned by this view; later exercises start fresh.
+        SessionManager.Instance.ClearSession();
+
         if (session == null || session.Summaries.Count == 0)
         {
             Debug.LogWarning("No hay datos de sesión para mostrar.");
