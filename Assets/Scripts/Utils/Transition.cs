@@ -67,10 +67,9 @@ public class Transition : MonoBehaviour
 
     public void SetMessage(string text)
     {
-        if (message.Equals(""))
+        if (message == null)
             return;
 
-        if (message != null)
-            message.text = text;
+        message.text = text;
     }
 }
