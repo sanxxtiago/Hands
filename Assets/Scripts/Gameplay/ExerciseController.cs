@@ -38,7 +38,7 @@ public abstract class ExerciseController : MonoBehaviour
             SessionManager.Instance.BeginSession();
         }
 
-        while (!progressManager.IsCompleted())
+        while (!IsExerciseCompleted())
         {
             elapsedTime += Time.deltaTime;
             //El sistema de feedback evalúa durante la duración del ejercicio
@@ -53,6 +53,12 @@ public abstract class ExerciseController : MonoBehaviour
     }
 
     protected abstract void OnExerciseStart();
+
+    protected virtual bool IsExerciseCompleted()
+    {
+        return progressManager != null && progressManager.IsExerciseCompleted();
+    }
+
     protected void OnExerciseEnd(float duration)
     {
         SetSpecificData();

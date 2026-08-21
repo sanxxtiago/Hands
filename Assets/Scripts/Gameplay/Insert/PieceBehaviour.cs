@@ -14,7 +14,7 @@ public enum PieceState
 [RequireComponent(typeof(Renderer))]
 public class PieceBehaviour : Interactable
 {
-    public static event Action OnPieceSnapped;
+    public static event Action<PieceBehaviour> OnPieceSnapped;
     public HandType requiredHand = HandType.NONE;
     public SlotType pieceType;
     public PieceState state = PieceState.Idle;
@@ -118,7 +118,7 @@ public class PieceBehaviour : Interactable
         state = PieceState.Snapped;
         LockPhysics();
         UpdateLayer();
-        OnPieceSnapped?.Invoke();
+        OnPieceSnapped?.Invoke(this);
     }
 
     private void SetPieceColor(Color color)
@@ -145,5 +145,10 @@ public class PieceBehaviour : Interactable
                 ignoreHands.HandToIgnoreCollisions = ChiralitySelection.LEFT;
                 break;
         }
+    }
+
+    public void ApplyChirality()
+    {
+        SetPieceChirality();
     }
 }

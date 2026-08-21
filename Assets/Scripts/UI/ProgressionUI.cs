@@ -9,6 +9,7 @@ public class ProgressionUI : MonoBehaviour
     [SerializeField] private float animationDuration = 0.35f;
 
     [SerializeField] private TMP_Text progressionText;
+    [SerializeField] private TMP_Text phaseText;
 
     private Tween progressTween;
 
@@ -16,12 +17,14 @@ public class ProgressionUI : MonoBehaviour
     {
         ExerciseProgressManager.OnProgressChanged += UpdateProgressBar;
         ExerciseProgressManager.OnManagerInitialized += InitializeUI;
+        ExerciseProgressManager.OnPhaseChanged += UpdatePhase;
     }
 
     private void OnDisable()
     {
         ExerciseProgressManager.OnProgressChanged -= UpdateProgressBar;
         ExerciseProgressManager.OnManagerInitialized -= InitializeUI;
+        ExerciseProgressManager.OnPhaseChanged -= UpdatePhase;
 
         progressTween?.Kill();
     }
@@ -44,5 +47,15 @@ public class ProgressionUI : MonoBehaviour
     {
         progressionText.text = $"0/{targetCount}";
         progressBar.maxValue = targetCount;
+    }
+
+    private void UpdatePhase(int phaseIndex, int phaseCount)
+    {
+        if (phaseText == null)
+            return;
+
+        phaseText.text = phaseCount > 0
+            ? $"Fase {phaseIndex + 1}/{phaseCount}"
+            : string.Empty;
     }
 }
