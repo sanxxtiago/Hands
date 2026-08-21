@@ -175,6 +175,7 @@ GameObject:
   - component: {fileID: 201}
   - component: {fileID: 202}
   - component: {fileID: 203}
+  - component: {fileID: 204}
   m_Layer: 0
   m_Name: InitialScreen
   m_TagString: Untagged
@@ -227,6 +228,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   registrationPanel: {fileID: 617758356}
+--- !u!114 &204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 881bfa9bddfe4f14b1738ac9a25c42af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showcaseCamera: {fileID: 1784544025}
+  insertPiecePrefab: {fileID: 919132149155446097, guid: 112f0308ee4bb084ca8000e6fdb334eb,
+    type: 3}
+  duckPrefab: {fileID: 919132149155446097, guid: b20fedaea66dfa349b17d4f79fcba386,
+    type: 3}
 --- !u!1 &32047128
 GameObject:
   m_ObjectHideFlags: 0

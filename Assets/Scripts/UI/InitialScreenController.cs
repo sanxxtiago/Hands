@@ -30,6 +30,7 @@ public class InitialScreenController : MonoBehaviour
 
     private void Start()
     {
+        ApplyVisualTheme();
         RefreshUserState();
         transition?.FadeOut();
     }
@@ -109,5 +110,31 @@ public class InitialScreenController : MonoBehaviour
         rectTransform.offsetMax = Vector2.zero;
 
         return transitionObject.AddComponent<Transition>();
+    }
+
+    private void ApplyVisualTheme()
+    {
+        if (startButton != null)
+        {
+            startButton.image.color = new Color(0.04f, 0.55f, 0.62f, 1f);
+            startButton.GetComponent<RectTransform>().sizeDelta = new Vector2(360f, 86f);
+        }
+
+        if (registeredUserText != null)
+            registeredUserText.color = new Color(0.68f, 0.9f, 0.96f, 1f);
+
+        if (registrationPanel != null)
+        {
+            Image panelImage = registrationPanel.GetComponent<Image>();
+            if (panelImage != null)
+                panelImage.color = new Color(0.035f, 0.08f, 0.14f, 0.92f);
+        }
+
+        GameObject titleObject = GameObject.Find("Tittle");
+        if (titleObject != null && titleObject.TryGetComponent(out TMPro.TMP_Text titleText))
+        {
+            titleText.color = new Color(0.78f, 0.95f, 1f, 1f);
+            titleText.fontSize = 72f;
+        }
     }
 }
