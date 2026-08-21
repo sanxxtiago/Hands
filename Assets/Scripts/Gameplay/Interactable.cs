@@ -4,6 +4,8 @@ public abstract class Interactable : MonoBehaviour
 {
     public event System.Action<Interactable> OnForcedRelease;
 
+    private Collider[] clampColliders;
+
     // =========================
     // CAPABILITIES
     // =========================
@@ -38,6 +40,14 @@ public abstract class Interactable : MonoBehaviour
     // =========================
     protected Vector3 ClampPosition(Vector3 worldPosition)
     {
-        return BoundingBox.Instance.ClampInsideBox(worldPosition);
+        if (BoundingBox.Instance == null)
+            return worldPosition;
+
+        clampColliders ??= GetComponentsInChildren<Collider>();
+
+        return BoundingBox.Instance.ClampInsideBox(
+            worldPosition,
+            transform,
+            clampColliders);
     }
 }

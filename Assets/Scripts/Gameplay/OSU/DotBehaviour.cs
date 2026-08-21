@@ -75,7 +75,8 @@ public abstract class DotBehaviour : MonoBehaviour
 
         if (!IsHitted)
         {
-            OnMissed?.Invoke(this);
+            //Descomentar si se va a usar MissedObjectives
+            //OnMissed?.Invoke(this);
         }
     }
 

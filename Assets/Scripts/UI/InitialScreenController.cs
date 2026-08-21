@@ -62,7 +62,7 @@ public class InitialScreenController : MonoBehaviour
         {
             registeredUserText.text = wasRegistered
                 ? userService.UserName
-                : "Usuario sin registrar";
+                : "Sin registrar";
         }
 
         if (registrationPanel != null)

@@ -91,6 +91,7 @@ public class OSUSequenceRunner : MonoBehaviour
 
     private void HandleDotMissed(DotBehaviour dot)
     {
+        Debug.Log("Missed");
         UnsubscribeDot(dot);
 
         currentStepIndex++;

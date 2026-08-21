@@ -65,7 +65,70 @@ public class BoundingBox : MonoBehaviour
         Debug.DrawLine(points[3], points[7], Color.red);
     }
 
-    public Vector3 ClampInsideBox(Vector3 worldPosition)
+    public Vector3 ClampInsideBox(
+        Vector3 worldPosition,
+        Transform objectTransform,
+        Collider[] objectColliders)
+    {
+        if (objectTransform == null || objectColliders == null || objectColliders.Length == 0)
+            return ClampPointInsideBox(worldPosition);
+
+        Vector3 objectLocalPosition = transform.InverseTransformPoint(objectTransform.position);
+        Vector3 minOffset = Vector3.zero;
+        Vector3 maxOffset = Vector3.zero;
+        bool hasBounds = false;
+
+        foreach (Collider objectCollider in objectColliders)
+        {
+            if (objectCollider == null || !objectCollider.enabled)
+                continue;
+
+            Bounds worldBounds = objectCollider.bounds;
+            Vector3 boundsMin = worldBounds.min;
+            Vector3 boundsMax = worldBounds.max;
+
+            for (int x = 0; x <= 1; x++)
+            {
+                for (int y = 0; y <= 1; y++)
+                {
+                    for (int z = 0; z <= 1; z++)
+                    {
+                        Vector3 worldCorner = new Vector3(
+                            x == 0 ? boundsMin.x : boundsMax.x,
+                            y == 0 ? boundsMin.y : boundsMax.y,
+                            z == 0 ? boundsMin.z : boundsMax.z);
+
+                        Vector3 localOffset =
+                            transform.InverseTransformPoint(worldCorner) - objectLocalPosition;
+
+                        if (!hasBounds)
+                        {
+                            minOffset = localOffset;
+                            maxOffset = localOffset;
+                            hasBounds = true;
+                        }
+                        else
+                        {
+                            minOffset = Vector3.Min(minOffset, localOffset);
+                            maxOffset = Vector3.Max(maxOffset, localOffset);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!hasBounds)
+            return ClampPointInsideBox(worldPosition);
+
+        Vector3 localPos = transform.InverseTransformPoint(worldPosition);
+        localPos.x = Mathf.Clamp(localPos.x, min.x - minOffset.x, max.x - maxOffset.x);
+        localPos.y = Mathf.Clamp(localPos.y, min.y - minOffset.y, max.y - maxOffset.y);
+        localPos.z = Mathf.Clamp(localPos.z, min.z - minOffset.z, max.z - maxOffset.z);
+
+        return transform.TransformPoint(localPos);
+    }
+
+    private Vector3 ClampPointInsideBox(Vector3 worldPosition)
     {
         Vector3 localPos = transform.InverseTransformPoint(worldPosition);
         localPos.x = Mathf.Clamp(localPos.x, min.x, max.x);

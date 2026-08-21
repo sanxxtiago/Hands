@@ -17,7 +17,7 @@ MonoBehaviour:
     requiredHand: 0
     prefab: {fileID: 8864962406679063765, guid: 8c01e15ef2e63444ea8bdfe129b000cd,
       type: 3}
-    spawnPosition: {x: 0, y: 0.2697, z: 0.6}
+    spawnPosition: {x: 0, y: 0.2697, z: 0.5}
     path: {fileID: 0}
   - stepId: 2
     requiredHand: 2
@@ -29,7 +29,7 @@ MonoBehaviour:
     requiredHand: 1
     prefab: {fileID: 8864962406679063765, guid: 8c01e15ef2e63444ea8bdfe129b000cd,
       type: 3}
-    spawnPosition: {x: 0.295, y: 0.126, z: 0.6}
+    spawnPosition: {x: 0.295, y: 0.126, z: 0.5}
     path: {fileID: 0}
   - stepId: 3
     requiredHand: 1
