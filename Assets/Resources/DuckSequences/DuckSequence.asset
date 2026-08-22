@@ -12,8 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b018c86fa4b208d42bc6ffdf0c705b96, type: 3}
   m_Name: DuckSequence
   m_EditorClassIdentifier: 
-  steps:
-  - spawnSide: 0
-    requiredHand: 0
-    movementDuration: 100
-    delayBeforeSpawn: 0.3
+  phases:
+  - phaseName: Fase 1
+    steps:
+    - spawnSide: 0
+      requiredHand: 0
+      movementDuration: 100
+      delayBeforeSpawn: 0.3
+    transitionDelay: 0.75
+  - phaseName: Fase 1
+    steps:
+    - spawnSide: 1
+      requiredHand: 0
+      movementDuration: 5
+      delayBeforeSpawn: 0.3
+    transitionDelay: 0.75

@@ -14,13 +14,41 @@ public class TrackingDotBehaviour : DotBehaviour
 
     private PathData path;
     private LineRenderer pathInstance;
+    private readonly List<BezierCurveData> depthAdjustedCurves = new();
 
     private readonly List<Vector3> pathPoints = new();
     private readonly List<float> pointDistances = new();
 
-    public void SetPath(PathData path, LineRenderer pathPrefab)
+    public void SetPath(
+        PathData path,
+        LineRenderer pathPrefab,
+        float pointsDepth)
     {
         this.path = path;
+        depthAdjustedCurves.Clear();
+
+        if (path != null && path.curves != null)
+        {
+            foreach (BezierCurveData curve in path.curves)
+            {
+                if (curve == null || curve.controlPoints == null)
+                    continue;
+
+                Vector3[] adjustedControlPoints =
+                    new Vector3[curve.controlPoints.Length];
+
+                for (int i = 0; i < curve.controlPoints.Length; i++)
+                {
+                    adjustedControlPoints[i] = curve.controlPoints[i];
+                    adjustedControlPoints[i].z = pointsDepth;
+                }
+
+                depthAdjustedCurves.Add(new BezierCurveData
+                {
+                    controlPoints = adjustedControlPoints
+                });
+            }
+        }
 
         pathInstance = Instantiate(pathPrefab);
         pathInstance.transform.SetParent(transform, true);
@@ -38,7 +66,7 @@ public class TrackingDotBehaviour : DotBehaviour
 
     IEnumerator StartPathFollowing()
     {
-        if (path == null || path.curves == null || path.curves.Count == 0)
+        if (depthAdjustedCurves.Count == 0)
         {
             Fail();
             yield break;
@@ -46,7 +74,7 @@ public class TrackingDotBehaviour : DotBehaviour
 
         float travelledDistance = 0;
 
-        foreach (var curve in path.curves)
+        foreach (BezierCurveData curve in depthAdjustedCurves)
         {
             float curveLength =
                 BezierCurve.GetCurveLength(curve);
@@ -138,7 +166,7 @@ public class TrackingDotBehaviour : DotBehaviour
         float accumulatedDistance = 0;
         Vector3? previous = null;
 
-        foreach (var curve in path.curves)
+        foreach (BezierCurveData curve in depthAdjustedCurves)
         {
             for (int i = 0; i <= samplesPerCurve; i++)
             {

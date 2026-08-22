@@ -18,7 +18,9 @@ public class OSUBasedExercise : ExerciseController
     }
     void Start()
     {
-        progressManager.Initialize(sequence.steps.Count);
+        progressManager.Initialize(sequence != null
+            ? sequence.GetPhaseTargets()
+            : System.Array.Empty<int>());
     }
     protected override void OnExerciseStart()
     {

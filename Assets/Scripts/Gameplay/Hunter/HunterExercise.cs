@@ -28,13 +28,14 @@ public class HunterExercise : ExerciseController
 
     void Start()
     {
-        progressManager.Initialize(sequence.steps.Count);
+        progressManager.Initialize(sequence != null
+            ? sequence.GetPhaseTargets()
+            : System.Array.Empty<int>());
     }
 
     protected override void OnExerciseStart()
     {
-        sequenceRunner.StartSequence(sequence);
-        //progressManager.Initialize(sequence.steps.Count);
+        sequenceRunner.StartSequence(sequence, this);
     }
 
     private void HandleDuckHit()

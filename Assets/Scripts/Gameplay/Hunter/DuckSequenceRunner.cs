@@ -3,102 +3,157 @@ using System.Collections;
 using UnityEngine;
 
 public class DuckSequenceRunner : MonoBehaviour
+{
+    // Eventos para que el HunterExercise registre los puntos y métricas.
+    public event Action OnSequenceCompleted;
+    public event Action OnDuckHit;
+    public event Action OnDuckMissed;
+
+    [Header("Referencias Espaciales")]
+    [SerializeField] private Transform leftBoundary;
+    [SerializeField] private Transform rightBoundary;
+    [SerializeField] private DuckBehaviour duckPrefab;
+
+    private DuckSequence currentSequence;
+    private HunterExercise exerciseController;
+    private int currentPhaseIndex;
+    private int currentStepIndex;
+    private DuckBehaviour activeDuck;
+    private Coroutine sequenceCoroutine;
+
+    public int DucksHit { get; private set; }
+    public int DucksMissed { get; private set; }
+
+    public void StartSequence(DuckSequence sequence, HunterExercise controller)
     {
-        // Eventos para que el HunterExercise registre los puntos y métricas
-        public event Action OnSequenceCompleted;
-        public event Action OnDuckHit;
-        public event Action OnDuckMissed;
+        StopSequence();
 
-        [Header("Referencias Espaciales")]
-        [SerializeField] private Transform leftBoundary;
-        [SerializeField] private Transform rightBoundary;
-        [SerializeField] private DuckBehaviour duckPrefab;
+        currentSequence = sequence;
+        exerciseController = controller;
+        currentPhaseIndex = 0;
+        currentStepIndex = 0;
+        DucksHit = 0;
+        DucksMissed = 0;
 
-        private DuckSequence currentSequence;
-        private int currentStepIndex;
-        private DuckBehaviour activeDuck;
-        private Coroutine sequenceCoroutine;
-
-        public int DucksHit {get; private set;}
-        public int DucksMissed {get; private set;}
-
-        public void StartSequence(DuckSequence sequence)
+        if (currentSequence == null || currentSequence.PhaseCount == 0)
         {
-            currentSequence = sequence;
+            Debug.LogError("DuckHunter: no hay fases configuradas en la secuencia.");
+            return;
+        }
+
+        sequenceCoroutine = StartCoroutine(SequenceRoutine());
+    }
+
+    public void StopSequence()
+    {
+        if (sequenceCoroutine != null)
+        {
+            StopCoroutine(sequenceCoroutine);
+            sequenceCoroutine = null;
+        }
+
+        if (activeDuck != null)
+            CleanUpDuck(activeDuck);
+    }
+
+    private void OnDisable()
+    {
+        StopSequence();
+    }
+
+    private IEnumerator SequenceRoutine()
+    {
+        while (currentPhaseIndex < currentSequence.PhaseCount)
+        {
+            DuckPhaseDefinition currentPhase =
+                currentSequence.Phases[currentPhaseIndex];
+
+            if (!exerciseController.progressManager.BeginPhase(currentPhaseIndex))
+            {
+                Debug.LogError(
+                    $"DuckHunter: no se pudo iniciar la fase {currentPhaseIndex + 1}.");
+                yield break;
+            }
+
             currentStepIndex = 0;
 
-            if (sequenceCoroutine != null)
-                StopCoroutine(sequenceCoroutine);
-
-            sequenceCoroutine = StartCoroutine(SequenceRoutine());
-        }
-
-        public void StopSequence()
-        {
-            if (sequenceCoroutine != null)
-                StopCoroutine(sequenceCoroutine);
-            
-            if (activeDuck != null)
-                CleanUpDuck(activeDuck);
-        }
-
-        private IEnumerator SequenceRoutine()
-        {
-            while (currentStepIndex < currentSequence.steps.Count)
+            while (currentStepIndex < currentPhase.StepCount)
             {
-                DuckSequenceStep currentStep = currentSequence.steps[currentStepIndex];
+                DuckSequenceStep currentStep =
+                    currentPhase.Steps[currentStepIndex];
 
-                //Pausa antes de que salga el pato
-                yield return new WaitForSeconds(currentStep.delayBeforeSpawn);
+                // Espera entre patos individuales de la misma fase.
+                if (currentStep.delayBeforeSpawn > 0f)
+                    yield return new WaitForSeconds(currentStep.delayBeforeSpawn);
 
                 SpawnDuck(currentStep);
 
-                //El Runner se queda esperando aquí hasta que el pato desaparezca
-                // (activeDuck se vuelve null cuando lo cazan o llega al final)
+                // El runner espera hasta que el pato es cazado o llega al destino.
                 yield return new WaitUntil(() => activeDuck == null);
 
-                //siguiente paso
                 currentStepIndex++;
             }
 
-            OnSequenceCompleted?.Invoke();
+            if (currentPhaseIndex >= currentSequence.PhaseCount - 1)
+                break;
+
+            // Pausa entre fases; no cuenta como objetivo procesado.
+            if (currentPhase.TransitionDelay > 0f)
+                yield return new WaitForSeconds(currentPhase.TransitionDelay);
+
+            currentPhaseIndex++;
         }
 
-        private void SpawnDuck(DuckSequenceStep step)
-        {
-            activeDuck = Instantiate(duckPrefab);
-
-            //suscribimos a los eventos del pato
-            activeDuck.OnHit += HandleDuckHit;
-            activeDuck.OnReachedDestination += HandleDuckMissed;
-
-            // Le pasamos la info espacial y lógica
-            activeDuck.Initialize(step.spawnSide, step.requiredHand,step.movementDuration, leftBoundary.position, rightBoundary.position);
-        }
-
-        private void HandleDuckHit(DuckBehaviour duck)
-        {
-            DucksHit++;
-            CleanUpDuck(duck);
-            OnDuckHit?.Invoke();
-        }
-
-        private void HandleDuckMissed(DuckBehaviour duck)
-        {
-            DucksMissed++;
-            CleanUpDuck(duck);
-            OnDuckMissed?.Invoke();
-        }
-
-        private void CleanUpDuck(DuckBehaviour duck)
-        {
-            duck.OnHit -= HandleDuckHit;
-            duck.OnReachedDestination -= HandleDuckMissed;
-            
-            Destroy(duck.gameObject);
-            
-            // Liberamos la referencia para que la corrutina siga su curso
-            if (activeDuck == duck)
-                activeDuck = null; 
-        }
+        sequenceCoroutine = null;
+        OnSequenceCompleted?.Invoke();
     }
+
+    private void SpawnDuck(DuckSequenceStep step)
+    {
+        if (duckPrefab == null)
+        {
+            Debug.LogError("DuckHunter: no hay un prefab de pato asignado.");
+            return;
+        }
+
+        activeDuck = Instantiate(duckPrefab);
+
+        // Suscribimos los eventos del pato.
+        activeDuck.OnHit += HandleDuckHit;
+        activeDuck.OnReachedDestination += HandleDuckMissed;
+
+        // Le pasamos la información espacial y lógica.
+        activeDuck.Initialize(
+            step.spawnSide,
+            step.requiredHand,
+            step.movementDuration,
+            leftBoundary.position,
+            rightBoundary.position);
+    }
+
+    private void HandleDuckHit(DuckBehaviour duck)
+    {
+        DucksHit++;
+        CleanUpDuck(duck);
+        OnDuckHit?.Invoke();
+    }
+
+    private void HandleDuckMissed(DuckBehaviour duck)
+    {
+        DucksMissed++;
+        CleanUpDuck(duck);
+        OnDuckMissed?.Invoke();
+    }
+
+    private void CleanUpDuck(DuckBehaviour duck)
+    {
+        duck.OnHit -= HandleDuckHit;
+        duck.OnReachedDestination -= HandleDuckMissed;
+
+        Destroy(duck.gameObject);
+
+        // Liberamos la referencia para que la coroutine siga su curso.
+        if (activeDuck == duck)
+            activeDuck = null;
+    }
+}
