@@ -10,6 +10,8 @@ public abstract class Interactable : MonoBehaviour
     // CAPABILITIES
     // =========================
     public virtual bool CanInteract(InteractionType interactionType) => true;
+    public virtual bool CanInteract(InteractionType interactionType, HandType handType) =>
+        CanInteract(interactionType);
 
     // =========================
     // GRAB

@@ -20,6 +20,7 @@ public class PieceBehaviour : Interactable
     public PieceState state = PieceState.Idle;
 
     public bool requireRotation = false;
+    public Color PieceColor => GetRequiredHandColor();
     [HideInInspector] public Rigidbody rb;
     private IgnorePhysicalHands ignoreHands;
     [SerializeField] private Renderer pieceRenderer;
@@ -29,6 +30,7 @@ public class PieceBehaviour : Interactable
     }
     void OnDisable()
     {
+        SlotBehaviour.ClearHighlightFor(this);
         CountdownUI.OnCountdownFinished -= SetPieceChirality;
     }
 
@@ -40,18 +42,7 @@ public class PieceBehaviour : Interactable
         if (pieceRenderer == null)
             pieceRenderer = GetComponent<Renderer>();
 
-        switch (requiredHand)
-        {
-            case HandType.NONE:
-                SetPieceColor(HandsColor.Default);
-                break;
-            case HandType.LEFT:
-                SetPieceColor(HandsColor.Left);
-                break;
-            case HandType.RIGHT:
-                SetPieceColor(HandsColor.Right);
-                break;
-        }
+        SetPieceColor(PieceColor);
 
     }
     void Update()
@@ -66,16 +57,49 @@ public class PieceBehaviour : Interactable
         return state != PieceState.Snapped;
     }
 
+    public override bool CanInteract(InteractionType interactionType, HandType handType)
+    {
+        if (!CanInteract(interactionType))
+            return false;
+
+        if (interactionType != InteractionType.Grab || requiredHand == HandType.NONE)
+            return true;
+
+        return requiredHand == handType;
+    }
+
     public override void OnGrabStart()
     {
         base.OnGrabStart();
+
+        if (state == PieceState.Snapped)
+        {
+            SlotBehaviour.ClearHighlightFor(this);
+            return;
+        }
+
         state = PieceState.Grabbed;
+
+        SlotBehaviour.ClearHighlightedSlot();
+        SlotBehaviour correspondingSlot =
+            SlotBehaviour.FindCorrespondingSlot(this);
+
+        if (correspondingSlot == null)
+        {
+            Debug.LogWarning(
+                $"[Insert] No se encontro un slot correspondiente para la pieza " +
+                $"'{name}' de tipo '{pieceType}'.");
+            return;
+        }
+
+        correspondingSlot.HighlightFor(this);
     }
 
     public override void OnGrabEnd()
     {
         base.OnGrabEnd();
         state = PieceState.Idle;
+        SlotBehaviour.ClearHighlightFor(this);
     }
 
     public void LockPhysics()
@@ -118,12 +142,26 @@ public class PieceBehaviour : Interactable
         state = PieceState.Snapped;
         LockPhysics();
         UpdateLayer();
+        SlotBehaviour.ClearHighlightFor(this);
         OnPieceSnapped?.Invoke(this);
     }
 
     private void SetPieceColor(Color color)
     {
         pieceRenderer.material.color = color;
+    }
+
+    private Color GetRequiredHandColor()
+    {
+        switch (requiredHand)
+        {
+            case HandType.LEFT:
+                return HandsColor.Left;
+            case HandType.RIGHT:
+                return HandsColor.Right;
+            default:
+                return HandsColor.Default;
+        }
     }
 
     private void SetPieceChirality()

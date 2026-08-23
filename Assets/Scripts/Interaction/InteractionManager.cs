@@ -198,6 +198,9 @@ public class InteractionManager : MonoBehaviour
             if (r.target == null)
                 return;
 
+            if (!r.target.CanInteract(InteractionType.Grab, e.handType))
+                return;
+
             grabbed = r.target;
             grabbed.OnForcedRelease += HandleForcedRelease;
 

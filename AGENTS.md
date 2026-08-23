@@ -213,7 +213,7 @@ Los tres ejercicios se ejecutan como escenas independientes y heredan de `Exerci
 
 ## Contexto adicional importante
 
-- **Compilar en CLI:** `dotnet build "Hands.sln" --no-restore` desde la raíz del proyecto. `Assembly-CSharp.csproj` contiene los scripts del juego.
+- **Compilar en CLI:** `dotnet build "Hands.sln" --no-restore` desde la raíz del proyecto. `Assembly-CSharp.csproj` contiene los scripts del juego. Si falla con `NETSDK1004` (falta `Temp/obj/**/project.assets.json`, p. ej. tras limpiar `Temp/`) o `MSB4166` (nodo MSBuild cerrado), recompilar sin `--no-restore` y con `-m:1`.
 - **Proyectos generados por Unity:** los `.csproj` se regeneran en `Temp/`. Al crear **archivos `.cs` nuevos**, el proyecto puede no incluirlos hasta que Unity reimporte/regenera. Por eso las clases nuevas se colocaron dentro de archivos ya incluidos (ej. `GeneralSuggestionBuilder` vive en `SessionRecorder.cs`).
 - **Campos que exigen asignación en Inspector** (no auto-cablean):
   - `ResultsUI.generalSuggestionText` en las 3 escenas de ejercicio.
@@ -237,3 +237,50 @@ Los tres ejercicios se ejecutan como escenas independientes y heredan de `Exerci
   - Cancelar siempre suscripciones a eventos en `OnDestroy()` u `OnDisable()`.
 - **Archivos Meta:**
   - Unity requiere un archivo `.meta` para cada asset/script creado o cambiado.
+
+---
+
+## Estilo de Código y Pautas de Diseño
+
+Estas pautas destilan el estilo ya aplicado en el proyecto. Prevalecen dos principios: **separación de responsabilidades** (cada componente hace una sola cosa y la hace bien) y **comunicación event-driven** (los subsistemas no se conocen entre sí; se hablan por eventos y datos desacoplados).
+
+### 1. Separación de responsabilidades
+- **Controladores de ejercicio como orquestadores:** `WallInsertExercise`, `OSUBasedExercise` y `HunterExercise` solo traducen los eventos de su dominio a llamadas de `ExerciseProgressManager` (y `SessionRecorder` vía `SetSpecificData()`). Nunca gestionan spawns ni índices internos.
+- **Runners dueños del flujo secuencial:** quien instancia pasos, avanza fases y administra corutinas es un *runner* dedicado (`OSUSequenceRunner`, `DuckSequenceRunner`) con una única entrada pública (ej. `StartSequence(sequence, controller)`).
+- **Lógica pura fuera de MonoBehaviour:** los cálculos viven en clases estáticas o POCO (`MetricsProcessor`, `MetricsSummaryBuilder`, `GeneralSuggestionBuilder`) para poder razonarlos y probarlos sin escena.
+- **Estrategias por interfaz:** las familias intercambiables se modelan con interfaces (`IMotionDetector`, `IGestureDetector`, `IRule`) y se componen/decoran al construirse (`TimedRule` envuelve un `IRule` añadiendo `triggerTime`/cooldown).
+- **Un único punto de contacto con el SDK:** solo la capa de captura (`LeapDataProvider`) conoce tipos de Ultraleap; todo el resto del juego consume `HandDataSnapshot` / `FrameMotionData`.
+
+### 2. Paradigma event-driven
+- **Eventos estáticos tipados con prefijo `On`:** `public static event Action<int, int> OnProgressChanged;`. El publicador nunca referencia a sus suscriptores.
+- **Disparo siempre nulo-seguro:** `OnEvent?.Invoke(args);`. Si un evento se dispara desde varios sitios, centralizar la invocación en métodos privados `Publish*` (ver `ExerciseProgressManager.PublishExerciseProgress`).
+- **Suscripción simétrica y garantizada:** `+=` en `OnEnable` y `-=` en `OnDisable` (o `Start`/`OnDestroy`); jamás dejar suscripciones vivas. Al heredar ciclos de vida (`ExerciseController`), llamar siempre a `base.OnEnable()` / `base.OnDisable()`.
+- **Handlers privados y descriptivos:** `private void OnFrameReceived(FrameMotionData frame)`; el handler extrae lo que necesita de los argumentos, sin encuestar al publicador.
+- **Buses estáticos reservados a difusión global:** `MotionEventBus` (frames procesados) y `SnackbarManager` (UI global). Un bus nuevo debe justificarse; por defecto, eventos estáticos del propio subsistema.
+- **Estado que emite, consumidores que reaccionan:** `GameManager.SetState` traduce cada transición a un evento (`OnCountdownStart`, `OnExcerciseStart`, `OnShowResults`); sistemas como `MetricsTrackingSystem` arrancan/paran su trabajo al recibirlos, sin que `GameManager` sepa de su existencia.
+
+### 3. Datos y configuración
+- **Datos planos cruzando límites:** estructuras serializables propias (`FrameMotionData`, `MotionData`, `GestureStateData`) en lugar de referencias a componentes o tipos de SDK.
+- **Contenido en ScriptableObjects:** perfiles (`ExerciseProfile`) y secuencias con fases (`OSUSequence`, `DuckSequence`) como assets en `Assets/Resources/...`; el código no hardcodea contenido.
+- **Composición declarativa en Inspector:** clases `[Serializable]` con campos `[SerializeField] private` y propiedades de solo lectura (`InsertPhaseDefinition.Prefab => prefab;`).
+- **Parámetros ajustables acotados:** `[SerializeField, Min(0f)] private float x = valorPorDefecto;` y `[Tooltip("...")]` en español cuando el campo no se explica solo.
+
+### 4. Convenciones Unity observadas
+- **Corutinas administradas:** guardar el handle (`private Coroutine phaseFadeCoroutine;`), cancelar antes de relanzar (`StopXxx()` + null) y limpiar en `OnDisable`/transiciones (`StopAllCoroutines()` + resetear flags de estado). Esperas con `WaitForSeconds` / `WaitUntil`.
+- **Guard clauses y salidas tempranas** en lugar de anidamiento (`if (!isTracking) return;`).
+- **Propiedades expresivas con cuerpo de expresión** (`=>`) para exponer estado interno de solo lectura.
+- **Cero presión de GC en caminos calientes:** arreglos cacheados, `Array.Empty<T>()`, snapshots por valor; nada de `new` recurrentes dentro de `Update()`.
+- **Validación explícita de configuración:** `Debug.LogError` si falta un prefab/asset obligatorio (marcando estado inválido), `Debug.LogWarning` ante desfases recuperables (p. ej. conteo de piezas ≠ esperado). Mensajes en español con prefijo del subsistema: `"[SuggestionSystem] ..."`, `"Insert: ..."`, `"OSU: ..."`.
+- **Identificadores en inglés; texto de usuario, logs y tooltips en español.**
+- **Comentarios escasos**, y solo para aclarar decisiones no obvias, redactados en español.
+- **`var` solo cuando el tipo es evidente** en la propia declaración (`new`, resultado inmediato); en el resto, tipo explícito.
+- **Clases auxiliares anidadas y `sealed`** cuando son detalle privado del archivo (ej. `RendererFadeData` dentro de `WallInsertExercise.cs`), evitando crear `.cs` nuevos hasta que Unity regenere los `.csproj`.
+
+### 5. Checklist rápido para código nuevo
+1. ¿El componente funciona sin conocer a quién le habla? Si no, mover la comunicación a un evento.
+2. ¿Toda suscripción tiene su `-=` garantizado en disable/destroy?
+3. ¿La lógica pura está fuera del MonoBehaviour?
+4. ¿Los datos que cruzan subsistemas son estructuras propias, no tipos del SDK?
+5. ¿Los valores ajustables están en el Inspector con `Min`/`Tooltip`, no hardcodeados?
+6. ¿Las corutinas y flags de estado se reinician bien ante disable/reinicio?
+7. ¿Compila con `dotnet build "Hands.sln" -m:1` sin errores ni advertencias nuevas?
