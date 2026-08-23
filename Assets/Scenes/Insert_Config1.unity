@@ -217,6 +217,7 @@ MonoBehaviour:
       type: 3}
     expectedPieces: 4
   phaseTransitionDelay: 0.75
+  phaseFadeDuration: 0.35
 --- !u!114 &14109558
 MonoBehaviour:
   m_ObjectHideFlags: 0

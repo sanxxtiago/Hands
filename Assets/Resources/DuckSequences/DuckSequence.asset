@@ -20,10 +20,18 @@ MonoBehaviour:
       movementDuration: 100
       delayBeforeSpawn: 0.3
     transitionDelay: 0.75
-  - phaseName: Fase 1
+  - phaseName: Fase 2
     steps:
     - spawnSide: 1
       requiredHand: 0
+      movementDuration: 5
+      delayBeforeSpawn: 0.3
+    - spawnSide: 1
+      requiredHand: 1
+      movementDuration: 5
+      delayBeforeSpawn: 0.3
+    - spawnSide: 2
+      requiredHand: 1
       movementDuration: 5
       delayBeforeSpawn: 0.3
     transitionDelay: 0.75
