@@ -4,8 +4,9 @@ public class BoundingBox : MonoBehaviour
 {
     public bool debugBox = false;
     private BoxCollider col;
-    public Vector3 min;
-    public Vector3 max;
+    //El min y el max se calculan según las dimensiones del collider
+    private Vector3 min;
+    private Vector3 max;
     public static BoundingBox Instance = null;
     void Awake()
     {
