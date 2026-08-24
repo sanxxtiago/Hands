@@ -59,7 +59,7 @@ public abstract class DotBehaviour : MonoBehaviour
 
     protected void Fail()
     {
-        Debug.Log($"{name} Failed");
+        Debug.Log("[ScoreSystem][OSU] Objetivo fallo: " + name);
         OnFailed?.Invoke(this);
     }
 
@@ -75,8 +75,7 @@ public abstract class DotBehaviour : MonoBehaviour
 
         if (!IsHitted)
         {
-            //Descomentar si se va a usar MissedObjectives
-            //OnMissed?.Invoke(this);
+            OnMissed?.Invoke(this);
         }
     }
 

@@ -3,6 +3,8 @@ using UnityEngine;
 public class HunterExercise : ExerciseController
 {
     [SerializeField] private DuckSequenceRunner sequenceRunner;
+    [SerializeField] private ScoreManager scoreManager;
+    [SerializeField] private DuckHunterScoreAdapter scoreAdapter;
     [SerializeField] private DuckSequence sequence;
 
     public int DucksHit => sequenceRunner.DucksHit;
@@ -35,17 +37,19 @@ public class HunterExercise : ExerciseController
 
     protected override void OnExerciseStart()
     {
+        scoreManager?.BeginExercise(ScoreExerciseType.DuckHunter);
+        scoreAdapter?.BeginExercise();
         sequenceRunner.StartSequence(sequence, this);
     }
 
-    private void HandleDuckHit()
+    private void HandleDuckHit(DuckScoreContext context)
     {
         // métricas
 
         progressManager.AddCompletedStep();
     }
 
-    private void HandleDuckMissed()
+    private void HandleDuckMissed(DuckScoreContext context)
     {
         progressManager.AddMissedStep();
 
@@ -58,6 +62,7 @@ public class HunterExercise : ExerciseController
 
     protected override void SetSpecificData()
     {
+        scoreAdapter?.CompleteExercise();
         sessionRecorder.SetDuckHunterData(
             DucksHit,
             DucksMissed

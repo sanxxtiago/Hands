@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,8 @@ public class TrackingDotBehaviour : DotBehaviour
     //public float followRadius = 0.05f;
     public bool IsFollowing { get; private set; }
     public float timeOutside = 0f;
+    public float TotalTimeOutside { get; private set; }
+    public event Action<bool, float> OnTrackingStateChanged;
 
     [SerializeField] private float pathZOffset = 0.005f;
     [SerializeField] private float trailDistance = 0.03f;
@@ -120,6 +123,9 @@ public class TrackingDotBehaviour : DotBehaviour
 
     public void SetTrackingState(bool isFollowing)
     {
+        if (IsFollowing != isFollowing)
+            OnTrackingStateChanged?.Invoke(isFollowing, TotalTimeOutside);
+
         IsFollowing = isFollowing;
 
         if (bg != null)
@@ -146,6 +152,7 @@ public class TrackingDotBehaviour : DotBehaviour
         else
         {
             timeOutside += Time.deltaTime;
+            TotalTimeOutside += Time.deltaTime;
 
             SetTrackingState(false);
 

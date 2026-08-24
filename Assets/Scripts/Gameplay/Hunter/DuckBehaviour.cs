@@ -13,8 +13,13 @@ public class DuckBehaviour : MonoBehaviour
     private float duration;
     private HandType requiredHand;
     private float elapsedTime;
+    private float spawnTime;
+    private float reactionTime;
+    private bool hasReactionTime;
     private bool isMoving;
     private bool isHit = false;
+    private bool isMissed;
+    private HandType hitHand;
     [SerializeField] private Renderer body;
     [SerializeField] private Renderer wings;
 
@@ -23,6 +28,15 @@ public class DuckBehaviour : MonoBehaviour
         if (body == null)
             body = GetComponent<Renderer>();
     }
+
+    public float SpawnTime => spawnTime;
+    public float ReactionTime => reactionTime;
+    public float AvailableTime => duration;
+    public bool IsHit => isHit;
+    public bool IsMissed => isMissed;
+    public HandType RequiredHand => requiredHand;
+    public HandType HitHand => hitHand;
+    public bool HasReactionTime => hasReactionTime;
 
     public void Initialize(SpawnSide side, HandType requiredHand, float duration, Vector3 leftWorldBound, Vector3 rightWorldBound)
     {
@@ -55,8 +69,12 @@ public class DuckBehaviour : MonoBehaviour
         transform.position = startPoint;
 
         elapsedTime = 0f;
+        spawnTime = Time.time;
+        reactionTime = 0f;
+        hasReactionTime = false;
         isMoving = true;
         isHit = false;
+        isMissed = false;
         switch (this.requiredHand)
         {
             case HandType.NONE:
@@ -85,6 +103,8 @@ public class DuckBehaviour : MonoBehaviour
         if (t >= 1f)
         {
             isMoving = false;
+            if (!isHit)
+                isMissed = true;
             OnReachedDestination?.Invoke(this);
         }
     }
@@ -98,8 +118,12 @@ public class DuckBehaviour : MonoBehaviour
             return;
 
         isHit = true;
+        hitHand = requiredHand;
+        reactionTime = Mathf.Max(0f, Time.time - spawnTime);
+        hasReactionTime = ScoreMath.IsFinite(reactionTime);
+        if (!hasReactionTime)
+            reactionTime = 0f;
         isMoving = false;
-        Debug.Log("¡PATO CAZADO!");
 
         OnHit?.Invoke(this);
     }

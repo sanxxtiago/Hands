@@ -1,5 +1,20 @@
+using System;
 using System.Collections;
 using UnityEngine;
+
+public struct OSUTargetScoreContext
+{
+    public int targetIndex;
+    public float spawnTime;
+    public bool hasPath;
+    public float reactionTime;
+    public float timeOutsidePath;
+    public bool wasTouched;
+    public bool wasCompleted;
+    public bool wasMissed;
+    public bool isFollowing;
+    public string failureReason;
+}
 
 public class OSUSequenceRunner : MonoBehaviour
 {
@@ -12,8 +27,17 @@ public class OSUSequenceRunner : MonoBehaviour
     private Coroutine phaseTransitionCoroutine;
 
     private DotBehaviour currentDot;
+    private int currentTargetIndex;
+    private int nextTargetIndex;
 
     private float _stepSpawnTime;
+    public event Action<int> OnSequenceStarted;
+    public event Action<OSUTargetScoreContext> OnTargetSpawned;
+    public event Action<OSUTargetScoreContext> OnTargetTouched;
+    public event Action<OSUTargetScoreContext> OnTargetCompleted;
+    public event Action<OSUTargetScoreContext> OnTargetMissed;
+    public event Action<OSUTargetScoreContext> OnTargetFailed;
+    public event Action<OSUTargetScoreContext> OnTargetTrackingStateChanged;
     public float TotalInteractionTime { get; private set; }
     public int InteractionCount { get; private set; }
 
@@ -26,15 +50,17 @@ public class OSUSequenceRunner : MonoBehaviour
         this.sequence = sequence;
         currentPhaseIndex = 0;
         currentStepIndex = 0;
+        nextTargetIndex = 0;
         TotalInteractionTime = 0f;
         InteractionCount = 0;
 
         if (this.sequence == null || this.sequence.PhaseCount == 0)
         {
-            Debug.LogError("OSU: no hay fases configuradas en la secuencia.");
+            Debug.LogError("[ScoreSystem][OSU] No hay fases configuradas en la secuencia.");
             return;
         }
 
+        OnSequenceStarted?.Invoke(CountTargets(this.sequence));
         BeginCurrentPhase();
     }
 
@@ -53,7 +79,7 @@ public class OSUSequenceRunner : MonoBehaviour
 
         if (!exerciseController.progressManager.BeginPhase(currentPhaseIndex))
         {
-            Debug.LogError($"OSU: no se pudo iniciar la fase {currentPhaseIndex + 1}.");
+            Debug.LogError($"[ScoreSystem][OSU] No se pudo iniciar la fase {currentPhaseIndex + 1}.");
             return;
         }
 
@@ -75,16 +101,16 @@ public class OSUSequenceRunner : MonoBehaviour
         if (step == null || step.prefab == null)
         {
             Debug.LogError(
-                $"OSU: la fase {currentPhaseIndex + 1}, paso {currentStepIndex + 1} " +
+                $"[ScoreSystem][OSU] La fase {currentPhaseIndex + 1}, paso {currentStepIndex + 1} " +
                 "no tiene un prefab valido.");
             return;
         }
 
-        _stepSpawnTime = Time.time;
-
         Vector3 spawnPosition = step.spawnPosition;
 
-        if (step.path != null)
+        if (step.path != null && step.path.curves != null && step.path.curves.Count > 0 &&
+            step.path.curves[0] != null && step.path.curves[0].controlPoints != null &&
+            step.path.curves[0].controlPoints.Length > 0)
         {
             spawnPosition =
                 step.path.curves[0].controlPoints[0];
@@ -100,10 +126,13 @@ public class OSUSequenceRunner : MonoBehaviour
         if (!instance.TryGetComponent(out currentDot))
         {
             Debug.LogError(
-                $"Prefab {step.prefab.name} no contiene DotBehaviour.");
+                $"[ScoreSystem][OSU] El prefab {step.prefab.name} no contiene DotBehaviour.");
             Destroy(instance);
             return;
         }
+
+        _stepSpawnTime = Time.time;
+        currentTargetIndex = nextTargetIndex++;
 
         currentDot.SetColor(step.requiredHand);
 
@@ -115,13 +144,31 @@ public class OSUSequenceRunner : MonoBehaviour
         currentDot.OnCompleted += HandleDotCompleted;
         currentDot.OnMissed += HandleDotMissed;
         currentDot.OnTouched += HandleDotTouched;
+        currentDot.OnFailed += HandleDotFailed;
+
+        if (currentDot is TrackingDotBehaviour trackingDotForEvents)
+        {
+            trackingDotForEvents.OnTrackingStateChanged += HandleTrackingStateChanged;
+            OnTargetSpawned?.Invoke(CreateContext(currentDot, true));
+        }
+        else
+        {
+            OnTargetSpawned?.Invoke(CreateContext(currentDot, false));
+        }
     }
 
     private void HandleDotTouched(DotBehaviour dot)
     {
+        if (dot != currentDot)
+            return;
+
         InteractionCount++;
-        TotalInteractionTime += Time.time - _stepSpawnTime;
-        Debug.Log($"TT: {TotalInteractionTime}");
+        float reactionTime = Mathf.Max(0f, Time.time - _stepSpawnTime);
+        TotalInteractionTime += reactionTime;
+        OSUTargetScoreContext context = CreateContext(dot, dot is TrackingDotBehaviour);
+        context.reactionTime = reactionTime;
+        context.wasTouched = true;
+        OnTargetTouched?.Invoke(context);
     }
 
     private void HandleDotCompleted(DotBehaviour dot)
@@ -130,6 +177,11 @@ public class OSUSequenceRunner : MonoBehaviour
             return;
 
         UnsubscribeDot(dot);
+        OSUTargetScoreContext context = CreateContext(dot, dot is TrackingDotBehaviour);
+        context.wasTouched = dot.IsHitted;
+        context.wasCompleted = true;
+        context.timeOutsidePath = GetTimeOutsidePath(dot);
+        OnTargetCompleted?.Invoke(context);
         currentDot = null;
         currentStepIndex++;
 
@@ -144,8 +196,11 @@ public class OSUSequenceRunner : MonoBehaviour
         if (dot != currentDot)
             return;
 
-        Debug.Log("Missed");
         UnsubscribeDot(dot);
+        OSUTargetScoreContext context = CreateContext(dot, dot is TrackingDotBehaviour);
+        context.wasMissed = true;
+        context.failureReason = "timeout";
+        OnTargetMissed?.Invoke(context);
         currentDot = null;
         currentStepIndex++;
 
@@ -153,6 +208,37 @@ public class OSUSequenceRunner : MonoBehaviour
 
         Destroy(dot.gameObject);
         AdvanceAfterStep();
+    }
+
+    private void HandleDotFailed(DotBehaviour dot)
+    {
+        if (dot != currentDot)
+            return;
+
+        UnsubscribeDot(dot);
+        OSUTargetScoreContext context = CreateContext(dot, dot is TrackingDotBehaviour);
+        context.wasTouched = dot.IsHitted;
+        context.wasMissed = true;
+        context.timeOutsidePath = GetTimeOutsidePath(dot);
+        context.failureReason = "trayectoria perdida";
+        OnTargetFailed?.Invoke(context);
+        currentDot = null;
+        currentStepIndex++;
+
+        exerciseController.progressManager.AddMissedStep();
+        Destroy(dot.gameObject);
+        AdvanceAfterStep();
+    }
+
+    private void HandleTrackingStateChanged(bool isFollowing, float timeOutsidePath)
+    {
+        if (currentDot == null)
+            return;
+
+        OSUTargetScoreContext context = CreateContext(currentDot, true);
+        context.isFollowing = isFollowing;
+        context.timeOutsidePath = timeOutsidePath;
+        OnTargetTrackingStateChanged?.Invoke(context);
     }
 
     private void AdvanceAfterStep()
@@ -206,6 +292,37 @@ public class OSUSequenceRunner : MonoBehaviour
         dot.OnCompleted -= HandleDotCompleted;
         dot.OnMissed -= HandleDotMissed;
         dot.OnTouched -= HandleDotTouched;
+        dot.OnFailed -= HandleDotFailed;
+
+        if (dot is TrackingDotBehaviour trackingDot)
+            trackingDot.OnTrackingStateChanged -= HandleTrackingStateChanged;
+    }
+
+    private OSUTargetScoreContext CreateContext(DotBehaviour dot, bool hasPath)
+    {
+        return new OSUTargetScoreContext
+        {
+            targetIndex = currentTargetIndex,
+            spawnTime = _stepSpawnTime,
+            hasPath = hasPath,
+            timeOutsidePath = GetTimeOutsidePath(dot)
+        };
+    }
+
+    private static float GetTimeOutsidePath(DotBehaviour dot)
+    {
+        return dot is TrackingDotBehaviour trackingDot
+            ? trackingDot.TotalTimeOutside
+            : 0f;
+    }
+
+    private static int CountTargets(OSUSequence targetSequence)
+    {
+        int count = 0;
+        for (int i = 0; i < targetSequence.PhaseCount; i++)
+            count += targetSequence.Phases[i]?.StepCount ?? 0;
+
+        return count;
     }
 
     private void StopPhaseTransition()

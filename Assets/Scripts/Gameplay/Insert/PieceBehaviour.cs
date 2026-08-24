@@ -18,9 +18,11 @@ public class PieceBehaviour : Interactable
     public HandType requiredHand = HandType.NONE;
     public SlotType pieceType;
     public PieceState state = PieceState.Idle;
+    private int scorePhaseIndex = -1;
 
     public bool requireRotation = false;
     public Color PieceColor => GetRequiredHandColor();
+    public int ScorePhaseIndex => scorePhaseIndex;
     [HideInInspector] public Rigidbody rb;
     private IgnorePhysicalHands ignoreHands;
     [SerializeField] private Renderer pieceRenderer;
@@ -188,5 +190,10 @@ public class PieceBehaviour : Interactable
     public void ApplyChirality()
     {
         SetPieceChirality();
+    }
+
+    public void SetScorePhaseIndex(int phaseIndex)
+    {
+        scorePhaseIndex = phaseIndex;
     }
 }

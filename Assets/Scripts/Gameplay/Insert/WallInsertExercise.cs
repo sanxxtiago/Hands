@@ -24,6 +24,8 @@ public class WallInsertExercise : ExerciseController
 
     [Tooltip("Duracion del fade al mostrar y retirar una fase.")]
     [SerializeField, Min(0f)] private float phaseFadeDuration = 0.35f;
+    [Tooltip("Adaptador opcional para el score de gamificacion de Insert.")]
+    [SerializeField] private InsertScoreAdapter scoreAdapter;
 
     private int currentPhaseIndex;
     private GameObject currentPhaseInstance;
@@ -61,10 +63,18 @@ public class WallInsertExercise : ExerciseController
 
     protected override void OnExerciseStart()
     {
+        scoreAdapter?.Reset();
+
         if (phases.Count == 0)
         {
             return;
         }
+
+        int totalPieces = 0;
+        for (int i = 0; i < phases.Count; i++)
+            totalPieces += Mathf.Max(0, phases[i]?.ExpectedPieces ?? 0);
+
+        scoreAdapter?.BeginExercise(totalPieces, phases.Count);
 
         currentPhaseIndex = -1;
         invalidConfiguration = false;
@@ -96,6 +106,8 @@ public class WallInsertExercise : ExerciseController
         if (!progressManager.IsCompleted())
             return;
 
+        scoreAdapter?.EndPhase();
+
         if (currentPhaseIndex >= phases.Count - 1)
             return;
 
@@ -104,6 +116,7 @@ public class WallInsertExercise : ExerciseController
 
     protected override void SetSpecificData()
     {
+        scoreAdapter?.CompleteExercise(CompletionTime);
         sessionRecorder.SetInsertPiecesData(CompletionTime);
     }
 
@@ -142,9 +155,13 @@ public class WallInsertExercise : ExerciseController
         }
 
         foreach (PieceBehaviour piece in phasePieces)
+        {
+            piece.SetScorePhaseIndex(currentPhaseIndex);
             piece.ApplyChirality();
+        }
 
         progressManager.BeginPhase(currentPhaseIndex);
+        scoreAdapter?.BeginPhase(currentPhaseIndex);
         StartPhaseFade(0f, 1f);
     }
 

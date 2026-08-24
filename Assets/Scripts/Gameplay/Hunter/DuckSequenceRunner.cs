@@ -2,12 +2,26 @@ using System;
 using System.Collections;
 using UnityEngine;
 
+public struct DuckScoreContext
+{
+    public int duckIndex;
+    public float spawnTime;
+    public float reactionTime;
+    public float availableTime;
+    public bool wasHit;
+    public bool wasMissed;
+    public HandType requiredHand;
+    public HandType hitHand;
+}
+
 public class DuckSequenceRunner : MonoBehaviour
 {
     // Eventos para que el HunterExercise registre los puntos y métricas.
     public event Action OnSequenceCompleted;
-    public event Action OnDuckHit;
-    public event Action OnDuckMissed;
+    public event Action<int> OnSequenceStarted;
+    public event Action<DuckScoreContext> OnDuckSpawned;
+    public event Action<DuckScoreContext> OnDuckHit;
+    public event Action<DuckScoreContext> OnDuckMissed;
 
     [Header("Referencias Espaciales")]
     [SerializeField] private Transform leftBoundary;
@@ -20,6 +34,8 @@ public class DuckSequenceRunner : MonoBehaviour
     private int currentStepIndex;
     private DuckBehaviour activeDuck;
     private Coroutine sequenceCoroutine;
+    private int nextDuckIndex;
+    private int activeDuckIndex;
 
     public int DucksHit { get; private set; }
     public int DucksMissed { get; private set; }
@@ -34,13 +50,15 @@ public class DuckSequenceRunner : MonoBehaviour
         currentStepIndex = 0;
         DucksHit = 0;
         DucksMissed = 0;
+        nextDuckIndex = 0;
 
         if (currentSequence == null || currentSequence.PhaseCount == 0)
         {
-            Debug.LogError("DuckHunter: no hay fases configuradas en la secuencia.");
+            Debug.LogError("[ScoreSystem][DuckHunter] No hay fases configuradas en la secuencia.");
             return;
         }
 
+        OnSequenceStarted?.Invoke(CountDucks(currentSequence));
         sequenceCoroutine = StartCoroutine(SequenceRoutine());
     }
 
@@ -71,7 +89,7 @@ public class DuckSequenceRunner : MonoBehaviour
             if (!exerciseController.progressManager.BeginPhase(currentPhaseIndex))
             {
                 Debug.LogError(
-                    $"DuckHunter: no se pudo iniciar la fase {currentPhaseIndex + 1}.");
+                    $"[ScoreSystem][DuckHunter] No se pudo iniciar la fase {currentPhaseIndex + 1}.");
                 yield break;
             }
 
@@ -112,11 +130,12 @@ public class DuckSequenceRunner : MonoBehaviour
     {
         if (duckPrefab == null)
         {
-            Debug.LogError("DuckHunter: no hay un prefab de pato asignado.");
+            Debug.LogError("[ScoreSystem][DuckHunter] No hay un prefab de pato asignado.");
             return;
         }
 
         activeDuck = Instantiate(duckPrefab);
+        activeDuckIndex = nextDuckIndex++;
 
         // Suscribimos los eventos del pato.
         activeDuck.OnHit += HandleDuckHit;
@@ -129,20 +148,30 @@ public class DuckSequenceRunner : MonoBehaviour
             step.movementDuration,
             leftBoundary.position,
             rightBoundary.position);
+
+        OnDuckSpawned?.Invoke(CreateContext(activeDuck));
     }
 
     private void HandleDuckHit(DuckBehaviour duck)
     {
+        if (duck != activeDuck || duck.IsMissed)
+            return;
+
+        DuckScoreContext context = CreateContext(duck);
         DucksHit++;
+        OnDuckHit?.Invoke(context);
         CleanUpDuck(duck);
-        OnDuckHit?.Invoke();
     }
 
     private void HandleDuckMissed(DuckBehaviour duck)
     {
+        if (duck != activeDuck || duck.IsHit)
+            return;
+
+        DuckScoreContext context = CreateContext(duck);
         DucksMissed++;
+        OnDuckMissed?.Invoke(context);
         CleanUpDuck(duck);
-        OnDuckMissed?.Invoke();
     }
 
     private void CleanUpDuck(DuckBehaviour duck)
@@ -155,5 +184,29 @@ public class DuckSequenceRunner : MonoBehaviour
         // Liberamos la referencia para que la coroutine siga su curso.
         if (activeDuck == duck)
             activeDuck = null;
+    }
+
+    private DuckScoreContext CreateContext(DuckBehaviour duck)
+    {
+        return new DuckScoreContext
+        {
+            duckIndex = activeDuckIndex,
+            spawnTime = duck.SpawnTime,
+            reactionTime = duck.HasReactionTime ? duck.ReactionTime : 0f,
+            availableTime = duck.AvailableTime,
+            wasHit = duck.IsHit,
+            wasMissed = duck.IsMissed,
+            requiredHand = duck.RequiredHand,
+            hitHand = duck.HitHand
+        };
+    }
+
+    private static int CountDucks(DuckSequence sequence)
+    {
+        int count = 0;
+        for (int i = 0; i < sequence.PhaseCount; i++)
+            count += sequence.Phases[i]?.StepCount ?? 0;
+
+        return count;
     }
 }
