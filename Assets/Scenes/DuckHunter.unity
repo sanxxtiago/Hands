@@ -5395,6 +5395,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: PhaseIndicatorContainer
       objectReference: {fileID: 0}
+    - target: {fileID: 3517510408029229659, guid: be0f1042a40fe474f83657cd650f4733,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 28.799988
+      objectReference: {fileID: 0}
+    - target: {fileID: 3722143725481129648, guid: be0f1042a40fe474f83657cd650f4733,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 28.799988
+      objectReference: {fileID: 0}
     - target: {fileID: 8806547860555040713, guid: be0f1042a40fe474f83657cd650f4733,
         type: 3}
       propertyPath: m_Pivot.x
@@ -8086,7 +8096,7 @@ PrefabInstance:
     - target: {fileID: 2652770533903320806, guid: 01099db6b5106c14eba4aa9fd3736bbb,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3361768566985514305, guid: 01099db6b5106c14eba4aa9fd3736bbb,
         type: 3}
@@ -8441,8 +8451,8 @@ Transform:
   m_GameObject: {fileID: 1309833411}
   serializedVersion: 2
   m_LocalRotation: {x: 0.17364816, y: 0, z: 0, w: 0.9848078}
-  m_LocalPosition: {x: 0, y: 0.234, z: 0.7037}
-  m_LocalScale: {x: 0.8257253, y: 0.40401626, z: 0.054814786}
+  m_LocalPosition: {x: 0, y: 0.2644, z: 0.7148}
+  m_LocalScale: {x: 0.8257253, y: 0.33946723, z: 0.054814786}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
