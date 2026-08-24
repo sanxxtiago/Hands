@@ -15,6 +15,7 @@ public class ExerciseProgressManager : MonoBehaviour
     public static event Action<int, int> OnProgressChanged;
     public static event Action<int> OnManagerInitialized;
     public static event Action<int, int> OnPhaseChanged;
+    public static event Action<int, int> OnPhaseCompleted;
     public static event Action<int> OnExerciseInitialized;
     public static event Action<int, int> OnExerciseProgressChanged;
     public static event Action<int, int> OnExerciseProcessedChanged;
@@ -59,6 +60,10 @@ public class ExerciseProgressManager : MonoBehaviour
         OnManagerInitialized?.Invoke(CurrentPhaseTarget);
         OnPhaseChanged?.Invoke(currentPhaseIndex, PhaseCount);
         OnProgressChanged?.Invoke(CurrentPhaseCompletedSteps, CurrentPhaseTarget);
+
+        if (CurrentPhaseTarget == 0)
+            PublishPhaseCompleted();
+
         return true;
     }
 
@@ -78,6 +83,7 @@ public class ExerciseProgressManager : MonoBehaviour
         exerciseProcessedSteps++;
 
         PublishCurrentPhaseProgress();
+        PublishPhaseCompletedIfNeeded();
         PublishExerciseProgress();
     }
 
@@ -90,6 +96,7 @@ public class ExerciseProgressManager : MonoBehaviour
         exerciseProcessedSteps++;
 
         PublishCurrentPhaseProgress();
+        PublishPhaseCompletedIfNeeded();
         PublishExerciseProgress();
     }
 
@@ -147,6 +154,17 @@ public class ExerciseProgressManager : MonoBehaviour
     private void PublishCurrentPhaseProgress()
     {
         OnProgressChanged?.Invoke(CurrentPhaseCompletedSteps, CurrentPhaseTarget);
+    }
+
+    private void PublishPhaseCompletedIfNeeded()
+    {
+        if (IsPhaseCompleted())
+            PublishPhaseCompleted();
+    }
+
+    private void PublishPhaseCompleted()
+    {
+        OnPhaseCompleted?.Invoke(currentPhaseIndex, PhaseCount);
     }
 
     private void PublishExerciseProgress()
