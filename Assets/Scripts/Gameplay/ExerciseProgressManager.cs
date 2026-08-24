@@ -1,6 +1,22 @@
 using System;
 using UnityEngine;
 
+// Identidad opcional del paso completado: permite a la UI encender el elemento
+// correspondiente en lugar de avanzar de forma secuencial.
+public readonly struct PieceStepDescriptor
+{
+    public readonly SlotType PieceType;
+    public readonly HandType RequiredHand;
+    public readonly bool IsValid;
+
+    public PieceStepDescriptor(SlotType pieceType, HandType requiredHand)
+    {
+        PieceType = pieceType;
+        RequiredHand = requiredHand;
+        IsValid = true;
+    }
+}
+
 public class ExerciseProgressManager : MonoBehaviour
 {
     private int[] phaseTargets = Array.Empty<int>();
@@ -19,6 +35,8 @@ public class ExerciseProgressManager : MonoBehaviour
     public static event Action<int> OnExerciseInitialized;
     public static event Action<int, int> OnExerciseProgressChanged;
     public static event Action<int, int> OnExerciseProcessedChanged;
+    // Paso completado con identidad de pieza; sin descriptor (default) la UI aplica fallback secuencial.
+    public static event Action<int, PieceStepDescriptor> OnStepCompleted;
 
     public int CurrentPhaseIndex => currentPhaseIndex;
     public int PhaseCount => phaseTargets.Length;
@@ -74,6 +92,11 @@ public class ExerciseProgressManager : MonoBehaviour
 
     public void AddCompletedStep()
     {
+        AddCompletedStep(default);
+    }
+
+    public void AddCompletedStep(PieceStepDescriptor descriptor)
+    {
         if (!CanProcessCurrentPhase())
             return;
 
@@ -82,6 +105,7 @@ public class ExerciseProgressManager : MonoBehaviour
         exerciseCompletedSteps++;
         exerciseProcessedSteps++;
 
+        OnStepCompleted?.Invoke(currentPhaseIndex, descriptor);
         PublishCurrentPhaseProgress();
         PublishPhaseCompletedIfNeeded();
         PublishExerciseProgress();

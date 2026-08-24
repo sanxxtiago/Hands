@@ -16,6 +16,9 @@ public class InsertPhaseDefinition
 
 public class WallInsertExercise : ExerciseController
 {
+    // Composición de piezas de la fase que comienza; la UI de progreso la consume para pintar los iconos.
+    public static event Action<int, PieceStepDescriptor[]> OnPhaseCompositionChanged;
+
     [Tooltip("Fases ordenadas de menor a mayor dificultad.")]
     [SerializeField] private List<InsertPhaseDefinition> phases = new();
 
@@ -101,7 +104,8 @@ public class WallInsertExercise : ExerciseController
             return;
         }
 
-        progressManager.AddCompletedStep();
+        progressManager.AddCompletedStep(
+            new PieceStepDescriptor(piece.pieceType, piece.requiredHand));
 
         if (!progressManager.IsCompleted())
             return;
@@ -162,7 +166,25 @@ public class WallInsertExercise : ExerciseController
 
         progressManager.BeginPhase(currentPhaseIndex);
         scoreAdapter?.BeginPhase(currentPhaseIndex);
+        OnPhaseCompositionChanged?.Invoke(
+            currentPhaseIndex,
+            BuildComposition(phasePieces));
         StartPhaseFade(0f, 1f);
+    }
+
+    private static PieceStepDescriptor[] BuildComposition(PieceBehaviour[] pieces)
+    {
+        PieceStepDescriptor[] composition = new PieceStepDescriptor[pieces.Length];
+
+        for (int i = 0; i < pieces.Length; i++)
+        {
+            PieceBehaviour piece = pieces[i];
+            composition[i] = piece != null
+                ? new PieceStepDescriptor(piece.pieceType, piece.requiredHand)
+                : default;
+        }
+
+        return composition;
     }
 
     private IEnumerator AdvanceToNextPhaseAfterDelay()

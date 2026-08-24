@@ -1,5 +1,4 @@
 using DG.Tweening;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,10 +6,6 @@ public class ProgressionUI : MonoBehaviour
 {
     private const int ExpectedPhaseCount = 3;
 
-    [SerializeField] private Slider progressBar;
-    [SerializeField] private float animationDuration = 0.35f;
-
-    [SerializeField] private TMP_Text progressionText;
     // Se conserva para no romper las referencias existentes en las escenas.
     [SerializeField] private Image phasePoint1;
     [SerializeField] private Image phasePoint2;
@@ -19,7 +14,6 @@ public class ProgressionUI : MonoBehaviour
     [SerializeField] private Sprite filledPhasePointSprite;
     [SerializeField, Min(0f)] private float phasePointAnimationDuration = 0.2f;
 
-    private Tween progressTween;
     private Image[] phasePoints;
     private Tween[] phasePointTweens;
     private Vector3[] phasePointScales;
@@ -49,41 +43,16 @@ public class ProgressionUI : MonoBehaviour
 
     private void OnEnable()
     {
-        ExerciseProgressManager.OnProgressChanged += UpdateProgressBar;
-        ExerciseProgressManager.OnManagerInitialized += InitializeUI;
         ExerciseProgressManager.OnPhaseChanged += UpdatePhase;
         ExerciseProgressManager.OnPhaseCompleted += CompletePhase;
     }
 
     private void OnDisable()
     {
-        ExerciseProgressManager.OnProgressChanged -= UpdateProgressBar;
-        ExerciseProgressManager.OnManagerInitialized -= InitializeUI;
         ExerciseProgressManager.OnPhaseChanged -= UpdatePhase;
         ExerciseProgressManager.OnPhaseCompleted -= CompletePhase;
 
-        progressTween?.Kill();
         KillPhasePointTweens(true);
-    }
-
-    private void UpdateProgressBar(int _completedObjectives, int objectivesToComplete)
-    {
-        progressionText.text = $"{_completedObjectives}/{objectivesToComplete}";
-        float progress =
-            objectivesToComplete == 0
-            ? 0
-            : _completedObjectives;
-        progressTween?.Kill();
-
-        progressTween = progressBar
-            .DOValue(progress, animationDuration)
-            .SetEase(Ease.OutCubic);
-    }
-
-    private void InitializeUI(int targetCount)
-    {
-        progressionText.text = $"0/{targetCount}";
-        progressBar.maxValue = targetCount;
     }
 
     private void UpdatePhase(int phaseIndex, int phaseCount)
