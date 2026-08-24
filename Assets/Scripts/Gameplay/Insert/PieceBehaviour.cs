@@ -11,7 +11,7 @@ public enum PieceState
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(IgnorePhysicalHands))]
 
-[RequireComponent(typeof(Renderer))]
+//[RequireComponent(typeof(Renderer))]
 public class PieceBehaviour : Interactable
 {
     public static event Action<PieceBehaviour> OnPieceSnapped;
