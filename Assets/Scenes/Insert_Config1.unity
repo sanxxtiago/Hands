@@ -169,6 +169,8 @@ GameObject:
   - component: {fileID: 14109556}
   - component: {fileID: 14109557}
   - component: {fileID: 14109558}
+  - component: {fileID: 14109560}
+  - component: {fileID: 14109559}
   m_Layer: 0
   m_Name: <======Excersice_insert======>
   m_TagString: Untagged
@@ -233,6 +235,40 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   exerciseType: 0
+--- !u!114 &14109559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 14109555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0511fb5ba9da0e04096c4b5f8ddbf41e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pieceSnapEffectPrefab: {fileID: 2930418776905330800, guid: f578da4c282c53c4da1cc719fedb1165,
+    type: 3}
+  punchDuration: 0.25
+  punchScale: {x: 0.12, y: 0.12, z: 0.12}
+  punchVibrato: 1
+  punchElasticity: 0.5
+  playParticles: 1
+  playPunch: 1
+--- !u!114 &14109560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 14109555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd84d055c0ac5d04e88bbb721d8a6b9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playAsChild: 0
+  fallbackDuration: 2
 --- !u!1 &41947975
 GameObject:
   m_ObjectHideFlags: 0
@@ -958,6 +994,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bebb43af51ce16340be9766dfa5fa56e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &189214896 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7021203819902697896, guid: be0f1042a40fe474f83657cd650f4733,
+    type: 3}
+  m_PrefabInstance: {fileID: 1649418156418570369}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &196572912
 GameObject:
   m_ObjectHideFlags: 0
@@ -4412,6 +4454,12 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 41.514, y: -74.66, z: 9.086}
+--- !u!1 &1028712492 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 881856104623370398, guid: be0f1042a40fe474f83657cd650f4733,
+    type: 3}
+  m_PrefabInstance: {fileID: 1649418156418570369}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1043562665
 GameObject:
   m_ObjectHideFlags: 0
@@ -4560,6 +4608,41 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1649418156418570369}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1080557904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1028712492}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a73055c4dce77e84290154994a7493d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  phaseCompleteEffectPrefab: {fileID: 2442581995994366611, guid: 27465c7cb736dde49bf283aa9a7a5375,
+    type: 3}
+  phasePoint1: {fileID: 189214896}
+  phasePoint2: {fileID: 1968147692}
+  phasePoint3: {fileID: 1470381963}
+  punchDuration: 0.3
+  punchScale: {x: 0.18, y: 0.18, z: 0.18}
+  punchVibrato: 1
+  punchElasticity: 0.6
+--- !u!114 &1080557905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1028712492}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd84d055c0ac5d04e88bbb721d8a6b9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playAsChild: 1
+  fallbackDuration: 2
 --- !u!1 &1088397366
 GameObject:
   m_ObjectHideFlags: 0
@@ -5127,6 +5210,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!134 &1217006458
+PhysicMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  dynamicFriction: 0.6
+  staticFriction: 0.6
+  bounciness: 0
+  frictionCombine: 0
+  bounceCombine: 0
 --- !u!1 &1255968223
 GameObject:
   m_ObjectHideFlags: 0
@@ -6035,6 +6130,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &1470381963 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 3517510408029229659, guid: be0f1042a40fe474f83657cd650f4733,
+    type: 3}
+  m_PrefabInstance: {fileID: 1649418156418570369}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1481692994
 GameObject:
   m_ObjectHideFlags: 0
@@ -7290,6 +7391,12 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 20, y: 0, z: 0}
+--- !u!224 &1968147692 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 3722143725481129648, guid: be0f1042a40fe474f83657cd650f4733,
+    type: 3}
+  m_PrefabInstance: {fileID: 1649418156418570369}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1968670756
 GameObject:
   m_ObjectHideFlags: 0
@@ -8537,7 +8644,15 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 881856104623370398, guid: be0f1042a40fe474f83657cd650f4733,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1080557905}
+    - targetCorrespondingSourceObject: {fileID: 881856104623370398, guid: be0f1042a40fe474f83657cd650f4733,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1080557904}
   m_SourcePrefab: {fileID: 100100000, guid: be0f1042a40fe474f83657cd650f4733, type: 3}
 --- !u!1 &1869699507458009193
 GameObject:
@@ -8822,6 +8937,11 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3303694339822778560, guid: 80f35a05224101b4d8b20feede3767ec,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 1217006458}
     - target: {fileID: 9009010936707122560, guid: 80f35a05224101b4d8b20feede3767ec,
         type: 3}
       propertyPath: m_LocalPosition.x
