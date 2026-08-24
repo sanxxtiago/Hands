@@ -43,6 +43,7 @@ public class ResultsUI : MonoBehaviour
     public TMP_Text generalSuggestionText;
 
     public CanvasGroup group;
+    [SerializeField] private float fadeInTime = .5f;
 
     void Start()
     {
@@ -52,7 +53,7 @@ public class ResultsUI : MonoBehaviour
     {
         group.DOKill();
         group.alpha = 0;
-        group.DOFade(1, 0.3f);
+        group.DOFade(1, fadeInTime);
     }
 
     public void SetResults(float duration, HandUsageSummary left, HandUsageSummary right)

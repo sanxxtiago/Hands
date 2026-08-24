@@ -1,3 +1,4 @@
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,15 +12,23 @@ public sealed class ScoresUI : MonoBehaviour
     [SerializeField] private TMP_Text breakdownText;
     [SerializeField] private Slider scoreSlider;
     [SerializeField] private Transform breakdownContainer;
-
+    [SerializeField] private CanvasGroup group;
+    [SerializeField] private float fadeInTime = .5f;
     private void OnEnable()
     {
+        GameManager.OnShowResults += HandleShowScore;
         ScoreEventBus.OnScoreCompleted += HandleScoreCompleted;
     }
 
     private void OnDisable()
     {
+        GameManager.OnShowResults -= HandleShowScore;
         ScoreEventBus.OnScoreCompleted -= HandleScoreCompleted;
+    }
+
+    void Start()
+    {
+        group.alpha = 0f;
     }
 
     private void HandleScoreCompleted(ExerciseScore score)
@@ -65,4 +74,18 @@ public sealed class ScoresUI : MonoBehaviour
 
         text.text = value ?? string.Empty;
     }
+
+
+    private void HandleShowScore()
+    {
+        Display();
+    }
+
+    public void Display()
+    {
+        group.DOKill();
+        group.alpha = 0;
+        group.DOFade(1, fadeInTime);
+    }
+
 }
