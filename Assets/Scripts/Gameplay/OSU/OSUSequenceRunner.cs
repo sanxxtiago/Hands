@@ -32,6 +32,8 @@ public class OSUSequenceRunner : MonoBehaviour
 
     private float _stepSpawnTime;
     public event Action<int> OnSequenceStarted;
+    public event Action<int, OSUStep[]> OnPhaseCompositionChanged;
+    public event Action<int, int, bool> OnTargetProcessed;
     public event Action<OSUTargetScoreContext> OnTargetSpawned;
     public event Action<OSUTargetScoreContext> OnTargetTouched;
     public event Action<OSUTargetScoreContext> OnTargetCompleted;
@@ -82,6 +84,10 @@ public class OSUSequenceRunner : MonoBehaviour
             Debug.LogError($"[ScoreSystem][OSU] No se pudo iniciar la fase {currentPhaseIndex + 1}.");
             return;
         }
+
+        OnPhaseCompositionChanged?.Invoke(
+            currentPhaseIndex,
+            BuildPhaseComposition(sequence.Phases[currentPhaseIndex]));
 
         SpawnCurrentStep();
     }
@@ -182,6 +188,7 @@ public class OSUSequenceRunner : MonoBehaviour
         context.wasCompleted = true;
         context.timeOutsidePath = GetTimeOutsidePath(dot);
         OnTargetCompleted?.Invoke(context);
+        OnTargetProcessed?.Invoke(currentPhaseIndex, currentStepIndex, true);
         currentDot = null;
         currentStepIndex++;
 
@@ -201,6 +208,7 @@ public class OSUSequenceRunner : MonoBehaviour
         context.wasMissed = true;
         context.failureReason = "timeout";
         OnTargetMissed?.Invoke(context);
+        OnTargetProcessed?.Invoke(currentPhaseIndex, currentStepIndex, false);
         currentDot = null;
         currentStepIndex++;
 
@@ -222,6 +230,7 @@ public class OSUSequenceRunner : MonoBehaviour
         context.timeOutsidePath = GetTimeOutsidePath(dot);
         context.failureReason = "trayectoria perdida";
         OnTargetFailed?.Invoke(context);
+        OnTargetProcessed?.Invoke(currentPhaseIndex, currentStepIndex, false);
         currentDot = null;
         currentStepIndex++;
 
@@ -323,6 +332,20 @@ public class OSUSequenceRunner : MonoBehaviour
             count += targetSequence.Phases[i]?.StepCount ?? 0;
 
         return count;
+    }
+
+    private static OSUStep[] BuildPhaseComposition(OSUPhaseDefinition phase)
+    {
+        int count = phase?.StepCount ?? 0;
+        OSUStep[] composition = new OSUStep[count];
+
+        if (phase == null || phase.Steps == null)
+            return composition;
+
+        for (int i = 0; i < count; i++)
+            composition[i] = phase.Steps[i];
+
+        return composition;
     }
 
     private void StopPhaseTransition()

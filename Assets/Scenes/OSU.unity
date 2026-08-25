@@ -1,5 +1,20 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-2174589001234567890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 41947975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b9d7e1a6c3f42b8a5d0e9f214c7b683, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sequenceRunner: {fileID: 43925656}
+  impulseSource: {fileID: 41947981}
+  shakeForce: 5
 --- !u!29 &1
 OcclusionCullingSettings:
   m_ObjectHideFlags: 0
@@ -255,6 +270,8 @@ GameObject:
   - component: {fileID: 41947976}
   - component: {fileID: 41947979}
   - component: {fileID: 41947980}
+  - component: {fileID: -2174589001234567890}
+  - component: {fileID: 41947981}
   m_Layer: 0
   m_Name: Camera
   m_TagString: MainCamera
@@ -398,6 +415,59 @@ MonoBehaviour:
     mipBias: 0
     varianceClampScale: 0.9
     contrastAdaptiveSharpening: 0
+--- !u!114 &41947981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 41947975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 180ecf9b41d478f468eb3e9083753217, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ImpulseDefinition:
+    m_ImpulseChannel: 1
+    m_ImpulseShape: 2
+    m_CustomImpulseShape:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_ImpulseDuration: 0.2
+    m_ImpulseType: 0
+    m_DissipationRate: 0.25
+    m_RawSignal: {fileID: 0}
+    m_AmplitudeGain: 1
+    m_FrequencyGain: 1
+    m_RepeatMode: 0
+    m_Randomize: 1
+    m_TimeEnvelope:
+      m_AttackShape:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      m_DecayShape:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      m_AttackTime: 0
+      m_SustainTime: 0.2
+      m_DecayTime: 0.7
+      m_ScaleWithImpact: 1
+      m_HoldForever: 0
+    m_ImpactRadius: 100
+    m_DirectionMode: 0
+    m_DissipationMode: 2
+    m_DissipationDistance: 100
+    m_PropagationSpeed: 343
+  m_DefaultVelocity: {x: 0, y: -1, z: 0}
 --- !u!1 &43925653
 GameObject:
   m_ObjectHideFlags: 0
@@ -3688,7 +3758,7 @@ GameObject:
   - component: {fileID: 818178894}
   - component: {fileID: 818178893}
   m_Layer: 5
-  m_Name: PiecesContainer
+  m_Name: TargetsContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6657,7 +6727,7 @@ GameObject:
   - component: {fileID: 1574715748}
   - component: {fileID: 1574715749}
   m_Layer: 5
-  m_Name: PhasePiecesProgress
+  m_Name: PhaseTargetsProgress
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6692,19 +6762,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 1574715747}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 191a2d3d21c29b34c8503b097da08de6, type: 3}
+  m_Script: {fileID: 11500000, guid: 7e6a2c8d5f194e8f9b7d1a4c6e0f2b35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  piecesContainer: {fileID: 818178892}
-  iconCatalog: {fileID: 11400000, guid: e02357ea98062a44eb0ed6ec3849d060, type: 2}
-  fallbackSprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  sequenceRunner: {fileID: 43925656}
+  targetsContainer: {fileID: 818178892}
+  fixedTargetSprite: {fileID: 69089859, guid: 8e52e82ee78bbb746a202a96c4bf8902, type: 3}
+  trackingTargetSprite: {fileID: 773433985, guid: 8e52e82ee78bbb746a202a96c4bf8902,
+    type: 3}
+  fallbackSprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b,
+    type: 3}
+  failureSprite: {fileID: 150179842, guid: 8e52e82ee78bbb746a202a96c4bf8902, type: 3}
   fadeInDuration: 0.35
   fadeOutDuration: 0.35
-  disableFadeDuration: 0.35
-  disabledColor: {r: 0.49096656, g: 0.5092839, b: 0.5566038, a: 0.34117648}
-  snapPunchDuration: 0.15
-  snapPunchScale: {x: 0.15, y: 0.15, z: 0.15}
-  pieceSize: 20
+  completedFadeDuration: 0.35
+  completedColor: {r: 0.49096656, g: 0.5092839, b: 0.5566038, a: 0.34117648}
+  failureColor: {r: 1, g: 1, b: 1, a: 1}
+  failureFallbackColor: {r: 1, g: 0.25, b: 0.25, a: 0.8}
+  failureFadeDuration: 0.12
+  completionPunchDuration: 0.15
+  completionPunchScale: {x: 0.15, y: 0.15, z: 0.15}
+  targetSize: 20
   containerGroup: {fileID: 818178893}
 --- !u!1 &1586273181
 GameObject:
