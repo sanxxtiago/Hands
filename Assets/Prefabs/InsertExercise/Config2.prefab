@@ -793,7 +793,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredHand: 1
-  pieceType: 0
+  pieceType: 4
   state: 0
   requireRotation: 1
   rb: {fileID: 0}

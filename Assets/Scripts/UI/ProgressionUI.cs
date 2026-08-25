@@ -181,6 +181,4 @@ public class ProgressionUI : MonoBehaviour
         if (resetScale && phasePoints[index] != null)
             phasePoints[index].transform.localScale = phasePointScales[index];
     }
-
-   
 }

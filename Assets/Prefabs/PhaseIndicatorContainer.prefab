@@ -9,6 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8806547860555040713}
+  - component: {fileID: 579894530568408911}
+  - component: {fileID: 7333674945316013450}
+  - component: {fileID: 3766127555150256766}
   m_Layer: 5
   m_Name: PhaseIndicatorContainer
   m_TagString: Untagged
@@ -39,6 +42,60 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &579894530568408911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 881856104623370398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd84d055c0ac5d04e88bbb721d8a6b9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playAsChild: 1
+  fallbackDuration: 2
+--- !u!114 &7333674945316013450
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 881856104623370398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a73055c4dce77e84290154994a7493d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  phaseCompleteEffectPrefab: {fileID: 2442581995994366611, guid: 27465c7cb736dde49bf283aa9a7a5375,
+    type: 3}
+  phasePoint1: {fileID: 7021203819902697896}
+  phasePoint2: {fileID: 3722143725481129648}
+  phasePoint3: {fileID: 3517510408029229659}
+  punchDuration: 0.3
+  punchScale: {x: 0.18, y: 0.18, z: 0.18}
+  punchVibrato: 1
+  punchElasticity: 0.6
+--- !u!114 &3766127555150256766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 881856104623370398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 608c09b3491f677448715da6b45352d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  phasePoint1: {fileID: 5374218089912742362}
+  phasePoint2: {fileID: 2991174296733540186}
+  phasePoint3: {fileID: 5444270939292548147}
+  emptyPhasePointSprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  filledPhasePointSprite: {fileID: -941837179, guid: 8e52e82ee78bbb746a202a96c4bf8902,
+    type: 3}
+  phasePointAnimationDuration: 0.75
 --- !u!1 &927997707562567269
 GameObject:
   m_ObjectHideFlags: 0
@@ -73,7 +130,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 70, y: 28.800018}
+  m_AnchoredPosition: {x: 70, y: 28.799988}
   m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &6304738480538815834
@@ -148,7 +205,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 28.800018}
+  m_AnchoredPosition: {x: 0, y: 28.799988}
   m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &5517266314231842942
@@ -357,7 +414,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -70, y: 28.8}
+  m_AnchoredPosition: {x: -70, y: 28.799988}
   m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &2024100854014657885
