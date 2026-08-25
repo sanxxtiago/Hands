@@ -146,6 +146,7 @@ public class WallInsertExercise : ExerciseController
         }
 
         currentPhaseInstance = Instantiate(phase.Prefab);
+        currentPhaseInstance.SetActive(true);
         currentPhaseFadeData = PreparePhaseFade(currentPhaseInstance);
 
         PieceBehaviour[] phasePieces =

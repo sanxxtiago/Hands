@@ -21,16 +21,17 @@ public sealed class InsertPhaseProgressUI : MonoBehaviour
     [Tooltip("Micro-punch al encajar una pieza; en 0 lo desactiva.")]
     [SerializeField, Min(0f)] private float snapPunchDuration = 0.15f;
     [SerializeField] private Vector3 snapPunchScale = new Vector3(0.15f, 0.15f, 0.15f);
-    [SerializeField, Min(1f)] private float pieceSize = 16f;
+    [SerializeField, Min(1f)] private float pieceSize = 50f;
 
     private readonly List<Image> pieceImages = new List<Image>();
     private readonly List<bool> completedFlags = new List<bool>();
     private readonly List<PieceStepDescriptor> currentComposition = new List<PieceStepDescriptor>();
-    private CanvasGroup containerGroup;
+    [SerializeField] private CanvasGroup containerGroup;
     private Tween fadeTween;
     private int currentPhaseIndex = -1;
 
-    // Resolucion perezosa: sobrevive recargas de dominio durante play (el cache muere, el componente no).
+    // Resolucion perezosa: permite usar la referencia del Inspector o recuperar el
+    // CanvasGroup del contenedor cuando la escena aun no lo ha serializado.
     private CanvasGroup ContainerGroup
     {
         get
@@ -40,8 +41,6 @@ public sealed class InsertPhaseProgressUI : MonoBehaviour
                 containerGroup = piecesContainer.GetComponent<CanvasGroup>();
                 if (containerGroup == null)
                     containerGroup = piecesContainer.gameObject.AddComponent<CanvasGroup>();
-                containerGroup.blocksRaycasts = false;
-                containerGroup.interactable = false;
             }
 
             return containerGroup;
@@ -57,15 +56,25 @@ public sealed class InsertPhaseProgressUI : MonoBehaviour
             return;
         }
 
-        ContainerGroup.alpha = 0f;
+        CanvasGroup group = ContainerGroup;
+        if (group == null)
+        {
+            Debug.LogError("[InsertProgress] Falta el CanvasGroup del contenedor.", this);
+            enabled = false;
+            return;
+        }
+
+        group.blocksRaycasts = false;
+        group.interactable = false;
+        group.alpha = 0f;
     }
 
     private void OnEnable()
     {
+        // La composicion reinicia la UI; evitar OnExcerciseStart impide borrar el primer FadeIn.
         WallInsertExercise.OnPhaseCompositionChanged += HandlePhaseComposition;
         ExerciseProgressManager.OnStepCompleted += HandleStepCompleted;
         ExerciseProgressManager.OnPhaseCompleted += HandlePhaseCompleted;
-        GameManager.OnExcerciseStart += HandleExerciseStart;
     }
 
     private void OnDisable()
@@ -73,13 +82,13 @@ public sealed class InsertPhaseProgressUI : MonoBehaviour
         WallInsertExercise.OnPhaseCompositionChanged -= HandlePhaseComposition;
         ExerciseProgressManager.OnStepCompleted -= HandleStepCompleted;
         ExerciseProgressManager.OnPhaseCompleted -= HandlePhaseCompleted;
-        GameManager.OnExcerciseStart -= HandleExerciseStart;
 
         ResetState();
     }
 
     private void HandlePhaseComposition(int phaseIndex, PieceStepDescriptor[] composition)
     {
+        Debug.Log($"HPC {phaseIndex} + {composition.Length}");
         currentPhaseIndex = phaseIndex;
         RebuildPieces(composition);
         FadeIn();
@@ -103,16 +112,12 @@ public sealed class InsertPhaseProgressUI : MonoBehaviour
         FadeOut();
     }
 
-    private void HandleExerciseStart()
-    {
-        ResetState();
-    }
-
     private void RebuildPieces(PieceStepDescriptor[] composition)
     {
         ClearPieces();
 
         int count = composition != null ? composition.Length : 0;
+
         for (int i = 0; i < count; i++)
         {
             PieceStepDescriptor descriptor = composition[i];
@@ -194,16 +199,20 @@ public sealed class InsertPhaseProgressUI : MonoBehaviour
     private void FadeIn()
     {
         fadeTween?.Kill();
-        ContainerGroup.alpha = 0f;
+        CanvasGroup group = ContainerGroup;
+        if (group == null)
+            return;
+
+        group.alpha = 0f;
 
         if (fadeInDuration <= 0f)
         {
-            ContainerGroup.alpha = 1f;
+            group.alpha = 1f;
             fadeTween = null;
             return;
         }
 
-        fadeTween = ContainerGroup
+        fadeTween = group
             .DOFade(1f, fadeInDuration)
             .SetEase(Ease.OutCubic);
     }
@@ -211,15 +220,18 @@ public sealed class InsertPhaseProgressUI : MonoBehaviour
     private void FadeOut()
     {
         fadeTween?.Kill();
+        CanvasGroup group = ContainerGroup;
+        if (group == null)
+            return;
 
         if (fadeOutDuration <= 0f)
         {
-            ContainerGroup.alpha = 0f;
+            group.alpha = 0f;
             fadeTween = null;
             return;
         }
 
-        fadeTween = ContainerGroup
+        fadeTween = group
             .DOFade(0f, fadeOutDuration)
             .SetEase(Ease.OutCubic);
     }
@@ -230,8 +242,9 @@ public sealed class InsertPhaseProgressUI : MonoBehaviour
         fadeTween = null;
         currentPhaseIndex = -1;
 
-        if (piecesContainer != null)
-            ContainerGroup.alpha = 0f;
+        CanvasGroup group = ContainerGroup;
+        if (group != null)
+            group.alpha = 0f;
 
         ClearPieces();
     }

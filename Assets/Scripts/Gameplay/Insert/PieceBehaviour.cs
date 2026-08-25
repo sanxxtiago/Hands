@@ -168,6 +168,18 @@ public class PieceBehaviour : Interactable
 
     private void SetPieceChirality()
     {
+        if (ignoreHands == null)
+            ignoreHands = GetComponent<IgnorePhysicalHands>();
+
+        if (ignoreHands == null)
+        {
+            Debug.LogError(
+                $"[Insert] La pieza '{name}' requiere el componente " +
+                "IgnorePhysicalHands para configurar la mano permitida.",
+                this);
+            return;
+        }
+
         switch (requiredHand)
         {
             case HandType.NONE:

@@ -35,7 +35,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 46}
+  m_SizeDelta: {x: 0, y: 51}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &8789035612420589707
 CanvasRenderer:
@@ -110,7 +110,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 92}
+  m_SizeDelta: {x: 0, y: 102}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &451111689238245577
 CanvasRenderer:
@@ -737,10 +737,10 @@ RectTransform:
   - {fileID: 2020661322903589541}
   m_Father: {fileID: 4914193893776521898}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 552, y: -60}
-  m_SizeDelta: {x: 96, y: 120}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 104, y: 130}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &5418938832809726322
 MonoBehaviour:
@@ -757,8 +757,8 @@ MonoBehaviour:
   m_IgnoreLayout: 0
   m_MinWidth: -1
   m_MinHeight: -1
-  m_PreferredWidth: 96
-  m_PreferredHeight: 120
+  m_PreferredWidth: 104
+  m_PreferredHeight: 130
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
@@ -779,7 +779,7 @@ MonoBehaviour:
   outline: {fileID: 2427646228706702018}
   glow: {fileID: 8484929131548029426}
   emptyOutlineColor: {r: 0.2, g: 0.25490198, b: 0.33333334, a: 1}
-  fullOutlineColor: {r: 0.14509805, g: 0.3882353, b: 0.92156863, a: 1}
+  fullOutlineColor: {r: 0.79607844, g: 0.8352941, b: 0.88235295, a: 1}
   glowMaxAlpha: 0.35
 --- !u!1 &865611190750885989
 GameObject:
@@ -859,7 +859,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 865611190750885989}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -895,10 +895,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: -1
+  m_MinWidth: 0
+  m_MinHeight: 130
   m_PreferredWidth: 640
-  m_PreferredHeight: 280
+  m_PreferredHeight: 130
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
@@ -973,10 +973,10 @@ RectTransform:
   - {fileID: 1923699713950508164}
   m_Father: {fileID: 4914193893776521898}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 312, y: -60}
-  m_SizeDelta: {x: 96, y: 120}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 104, y: 130}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &3405085110713237250
 MonoBehaviour:
@@ -993,8 +993,8 @@ MonoBehaviour:
   m_IgnoreLayout: 0
   m_MinWidth: -1
   m_MinHeight: -1
-  m_PreferredWidth: 96
-  m_PreferredHeight: 120
+  m_PreferredWidth: 104
+  m_PreferredHeight: 130
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
@@ -1015,7 +1015,7 @@ MonoBehaviour:
   outline: {fileID: 2386508699905933287}
   glow: {fileID: 703743010175407698}
   emptyOutlineColor: {r: 0.2, g: 0.25490198, b: 0.33333334, a: 1}
-  fullOutlineColor: {r: 0.14509805, g: 0.3882353, b: 0.92156863, a: 1}
+  fullOutlineColor: {r: 0.79607844, g: 0.8352941, b: 0.88235295, a: 1}
   glowMaxAlpha: 0.35
 --- !u!1 &1137081422173005155
 GameObject:
@@ -1644,10 +1644,10 @@ RectTransform:
   - {fileID: 6952646721483241849}
   m_Father: {fileID: 4914193893776521898}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 192, y: -60}
-  m_SizeDelta: {x: 96, y: 120}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 104, y: 130}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8009822776262138543
 MonoBehaviour:
@@ -1664,8 +1664,8 @@ MonoBehaviour:
   m_IgnoreLayout: 0
   m_MinWidth: -1
   m_MinHeight: -1
-  m_PreferredWidth: 96
-  m_PreferredHeight: 120
+  m_PreferredWidth: 104
+  m_PreferredHeight: 130
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
@@ -1686,7 +1686,7 @@ MonoBehaviour:
   outline: {fileID: 4514280537334012559}
   glow: {fileID: 602506013675695879}
   emptyOutlineColor: {r: 0.2, g: 0.25490198, b: 0.33333334, a: 1}
-  fullOutlineColor: {r: 0.14509805, g: 0.3882353, b: 0.92156863, a: 1}
+  fullOutlineColor: {r: 0.79607844, g: 0.8352941, b: 0.88235295, a: 1}
   glowMaxAlpha: 0.35
 --- !u!1 &1836185427060275149
 GameObject:
@@ -1801,7 +1801,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -24}
-  m_SizeDelta: {x: 0, y: 96}
+  m_SizeDelta: {x: 0, y: 80}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &2086307532013317747
 GameObject:
@@ -1838,7 +1838,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 92}
+  m_SizeDelta: {x: 0, y: 102}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &7063672039061327310
 CanvasRenderer:
@@ -2338,10 +2338,10 @@ RectTransform:
   - {fileID: 60194502126655088}
   m_Father: {fileID: 4914193893776521898}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 72, y: -60}
-  m_SizeDelta: {x: 96, y: 120}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 104, y: 130}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2473981434022962481
 MonoBehaviour:
@@ -2358,8 +2358,8 @@ MonoBehaviour:
   m_IgnoreLayout: 0
   m_MinWidth: -1
   m_MinHeight: -1
-  m_PreferredWidth: 96
-  m_PreferredHeight: 120
+  m_PreferredWidth: 104
+  m_PreferredHeight: 130
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
@@ -2380,7 +2380,7 @@ MonoBehaviour:
   outline: {fileID: 3013822234308386107}
   glow: {fileID: 4003374596246127225}
   emptyOutlineColor: {r: 0.2, g: 0.25490198, b: 0.33333334, a: 1}
-  fullOutlineColor: {r: 0.14509805, g: 0.3882353, b: 0.92156863, a: 1}
+  fullOutlineColor: {r: 0.79607844, g: 0.8352941, b: 0.88235295, a: 1}
   glowMaxAlpha: 0.35
 --- !u!1 &2568757609250716272
 GameObject:
@@ -3356,7 +3356,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 400, y: 56}
+  m_SizeDelta: {x: 400, y: 44}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &4961241644026807073
 CanvasRenderer:
@@ -4227,7 +4227,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 92}
+  m_SizeDelta: {x: 0, y: 102}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &4400153352290054618
 CanvasRenderer:
@@ -4305,8 +4305,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 32}
-  m_SizeDelta: {x: 0, y: 120}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 130}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &7940532273986468028
 MonoBehaviour:
@@ -5247,7 +5247,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5928131379468107724}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -5963,7 +5963,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -2}
-  m_SizeDelta: {x: 400, y: 20}
+  m_SizeDelta: {x: 400, y: 28}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &3171785594818182952
 CanvasRenderer:
@@ -6020,8 +6020,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 12
-  m_fontSizeBase: 12
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -6343,7 +6343,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7297999580851807074}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -6624,10 +6624,10 @@ RectTransform:
   - {fileID: 3862634432818748262}
   m_Father: {fileID: 4914193893776521898}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 432, y: -60}
-  m_SizeDelta: {x: 96, y: 120}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 104, y: 130}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &5629599862380247547
 MonoBehaviour:
@@ -6644,8 +6644,8 @@ MonoBehaviour:
   m_IgnoreLayout: 0
   m_MinWidth: -1
   m_MinHeight: -1
-  m_PreferredWidth: 96
-  m_PreferredHeight: 120
+  m_PreferredWidth: 104
+  m_PreferredHeight: 130
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
@@ -6666,7 +6666,7 @@ MonoBehaviour:
   outline: {fileID: 1442834969820281924}
   glow: {fileID: 7583984287699587382}
   emptyOutlineColor: {r: 0.2, g: 0.25490198, b: 0.33333334, a: 1}
-  fullOutlineColor: {r: 0.14509805, g: 0.3882353, b: 0.92156863, a: 1}
+  fullOutlineColor: {r: 0.79607844, g: 0.8352941, b: 0.88235295, a: 1}
   glowMaxAlpha: 0.35
 --- !u!1 &8141417517660836621
 GameObject:
