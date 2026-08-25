@@ -19,6 +19,8 @@ public class DuckSequenceRunner : MonoBehaviour
     // Eventos para que el HunterExercise registre los puntos y métricas.
     public event Action OnSequenceCompleted;
     public event Action<int> OnSequenceStarted;
+    public event Action<int, DuckSequenceStep[]> OnPhaseCompositionChanged;
+    public event Action<int, int, bool> OnDuckProcessed;
     public event Action<DuckScoreContext> OnDuckSpawned;
     public event Action<DuckScoreContext> OnDuckHit;
     public event Action<DuckScoreContext> OnDuckMissed;
@@ -86,6 +88,13 @@ public class DuckSequenceRunner : MonoBehaviour
             DuckPhaseDefinition currentPhase =
                 currentSequence.Phases[currentPhaseIndex];
 
+            if (currentPhase == null)
+            {
+                Debug.LogError(
+                    $"[ScoreSystem][DuckHunter] La fase {currentPhaseIndex + 1} es nula.");
+                yield break;
+            }
+
             if (!exerciseController.progressManager.BeginPhase(currentPhaseIndex))
             {
                 Debug.LogError(
@@ -94,6 +103,10 @@ public class DuckSequenceRunner : MonoBehaviour
             }
 
             currentStepIndex = 0;
+
+            OnPhaseCompositionChanged?.Invoke(
+                currentPhaseIndex,
+                BuildPhaseComposition(currentPhase));
 
             while (currentStepIndex < currentPhase.StepCount)
             {
@@ -159,6 +172,7 @@ public class DuckSequenceRunner : MonoBehaviour
 
         DuckScoreContext context = CreateContext(duck);
         DucksHit++;
+        OnDuckProcessed?.Invoke(currentPhaseIndex, currentStepIndex, true);
         OnDuckHit?.Invoke(context);
         CleanUpDuck(duck);
     }
@@ -170,6 +184,7 @@ public class DuckSequenceRunner : MonoBehaviour
 
         DuckScoreContext context = CreateContext(duck);
         DucksMissed++;
+        OnDuckProcessed?.Invoke(currentPhaseIndex, currentStepIndex, false);
         OnDuckMissed?.Invoke(context);
         CleanUpDuck(duck);
     }
@@ -208,5 +223,19 @@ public class DuckSequenceRunner : MonoBehaviour
             count += sequence.Phases[i]?.StepCount ?? 0;
 
         return count;
+    }
+
+    private static DuckSequenceStep[] BuildPhaseComposition(DuckPhaseDefinition phase)
+    {
+        int count = phase?.StepCount ?? 0;
+        DuckSequenceStep[] composition = new DuckSequenceStep[count];
+
+        if (phase == null || phase.Steps == null)
+            return composition;
+
+        for (int i = 0; i < count; i++)
+            composition[i] = phase.Steps[i];
+
+        return composition;
     }
 }

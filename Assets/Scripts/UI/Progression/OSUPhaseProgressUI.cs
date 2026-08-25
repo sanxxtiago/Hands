@@ -79,7 +79,7 @@ public sealed class OSUPhaseProgressUI : MonoBehaviour
     private void OnEnable()
     {
         if (sequenceRunner == null)
-            sequenceRunner = FindObjectOfType<OSUSequenceRunner>();
+            sequenceRunner = FindFirstObjectByType<OSUSequenceRunner>();
 
         if (sequenceRunner == null)
         {
