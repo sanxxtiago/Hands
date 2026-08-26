@@ -7,6 +7,8 @@ public class AudioLibrary : ScriptableObject
 {
     [SerializeField] private List<AudioDefinition> sounds = new();
 
+    public IReadOnlyList<AudioDefinition> Sounds => sounds;
+
     public bool TryGet(AudioType type, out AudioDefinition definition)
     {
         foreach (AudioDefinition sound in sounds)
@@ -30,7 +32,7 @@ public class AudioLibrary : ScriptableObject
         {
             if (sound.Type == AudioType.None)
             {
-                Debug.LogWarning($"{name}: AudioType.None no debe configurarse en la librerÃ­a.", this);
+                Debug.LogWarning($"{name}: AudioType.None no debe configurarse en la librería.", this);
                 continue;
             }
 

@@ -9022,6 +9022,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1825811534}
   - component: {fileID: 1825811533}
+  - component: {fileID: 2725811532}
+  - component: {fileID: 2725811533}
   m_Layer: 0
   m_Name: AudioManager
   m_TagString: Untagged
@@ -11076,3 +11078,28 @@ SceneRoots:
   - {fileID: 917498137}
   - {fileID: 89368435}
   - {fileID: 207765332}
+--- !u!114 &2725811532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1825811532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20a86d1dfa3c4f2fba061d7ce0672dda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2725811533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1825811532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18d401fd29c34b09bd320ad34ba264b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sequenceRunner: {fileID: 43925656}

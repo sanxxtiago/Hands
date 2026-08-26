@@ -1,4 +1,4 @@
-﻿%YAML 1.1
+%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!114 &-2174589001234567891
 MonoBehaviour:
@@ -1724,6 +1724,8 @@ GameObject:
   m_Component:
   - component: {fileID: 313147683}
   - component: {fileID: 313147682}
+  - component: {fileID: 1213147681}
+  - component: {fileID: 1213147682}
   m_Layer: 0
   m_Name: AudioManager
   m_TagString: Untagged
@@ -11118,3 +11120,30 @@ MonoBehaviour:
   minCompensationDistance: 0.3
   surfaceOffset: 0.01
   reticleSprite: {fileID: 21300000, guid: b9f2d86e6e0a45989e42a31d12329cca, type: 3}
+--- !u!114 &1213147681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 313147681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20a86d1dfa3c4f2fba061d7ce0672dda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1213147682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 313147681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c98e91c93e1492888cdc58cecebd625, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sequenceRunner: {fileID: 43925661}
+  poseListeners:
+  - {fileID: 43925657}
