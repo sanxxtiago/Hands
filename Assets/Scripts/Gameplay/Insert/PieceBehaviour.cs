@@ -69,6 +69,15 @@ public class PieceBehaviour : Interactable
     {
         baseScale = transform.localScale;
 
+        int grabbableLayer = LayerMask.NameToLayer("GrabbableLayer");
+        if (grabbableLayer >= 0 && gameObject.layer != grabbableLayer)
+        {
+            Debug.LogWarning(
+                $"[Insert] La pieza '{name}' no esta en la capa 'GrabbableLayer'; " +
+                "el sistema de interaccion no detectara el agarre.",
+                this);
+        }
+
         rb = GetComponent<Rigidbody>();
         ignoreHands = GetComponent<IgnorePhysicalHands>();
         if (pieceRenderer == null)
