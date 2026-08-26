@@ -73,7 +73,7 @@ public class DuckSequenceRunner : MonoBehaviour
         }
 
         if (activeDuck != null)
-            CleanUpDuck(activeDuck);
+            CleanUpDuck(activeDuck, false);
     }
 
     private void OnDisable()
@@ -174,7 +174,7 @@ public class DuckSequenceRunner : MonoBehaviour
         DucksHit++;
         OnDuckProcessed?.Invoke(currentPhaseIndex, currentStepIndex, true);
         OnDuckHit?.Invoke(context);
-        CleanUpDuck(duck);
+        CleanUpDuck(duck, true);
     }
 
     private void HandleDuckMissed(DuckBehaviour duck)
@@ -186,17 +186,18 @@ public class DuckSequenceRunner : MonoBehaviour
         DucksMissed++;
         OnDuckProcessed?.Invoke(currentPhaseIndex, currentStepIndex, false);
         OnDuckMissed?.Invoke(context);
-        CleanUpDuck(duck);
+        CleanUpDuck(duck, true);
     }
 
-    private void CleanUpDuck(DuckBehaviour duck)
+    private void CleanUpDuck(DuckBehaviour duck, bool animateDespawn)
     {
         duck.OnHit -= HandleDuckHit;
         duck.OnReachedDestination -= HandleDuckMissed;
 
-        Destroy(duck.gameObject);
+        // El pato gestiona su propia salida; la referencia se libera igual
+        // para que la coroutine avance sin esperar la animación.
+        duck.BeginDespawn(animateDespawn);
 
-        // Liberamos la referencia para que la coroutine siga su curso.
         if (activeDuck == duck)
             activeDuck = null;
     }

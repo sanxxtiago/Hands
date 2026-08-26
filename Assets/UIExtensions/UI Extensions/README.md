@@ -159,7 +159,7 @@ There are 100+ extension controls / effects and other utilities in the project w
 |Best Fit Outline|Curved Text|Gradient|Gradient2|Letter Spacing|
 |-|-|-|-|-|
 |NicerOutline|RaycastMask|UIFlippable|UIImageCrop|SoftAlphaMask|
-|CylinderText|UIParticleSystem|CurlyUI|Shine Effect|Shader Effects|
+|CylinderText|CurlyUI|Shine Effect|Shader Effects||
 
 > Text Effects are not supported with TextMeshPro due to its architecture, try using the native TextMeshPro effects instead.
 

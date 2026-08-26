@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8806547860555040713}
-  - component: {fileID: 579894530568408911}
   - component: {fileID: 7333674945316013450}
   - component: {fileID: 3766127555150256766}
   m_Layer: 5
@@ -42,20 +41,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &579894530568408911
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 881856104623370398}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd84d055c0ac5d04e88bbb721d8a6b9f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playAsChild: 1
-  fallbackDuration: 2
 --- !u!114 &7333674945316013450
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -68,8 +53,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a73055c4dce77e84290154994a7493d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  phaseCompleteEffectPrefab: {fileID: 2442581995994366611, guid: 27465c7cb736dde49bf283aa9a7a5375,
-    type: 3}
   phasePoint1: {fileID: 7021203819902697896}
   phasePoint2: {fileID: 3722143725481129648}
   phasePoint3: {fileID: 3517510408029229659}

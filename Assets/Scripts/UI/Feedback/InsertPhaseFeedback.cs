@@ -2,10 +2,8 @@ using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
-[RequireComponent(typeof(ParticleEffectPlayer))]
 public class InsertPhaseFeedback : MonoBehaviour
 {
-    [SerializeField] private ParticleSystem phaseCompleteEffectPrefab;
     [SerializeField] private RectTransform phasePoint1;
     [SerializeField] private RectTransform phasePoint2;
     [SerializeField] private RectTransform phasePoint3;
@@ -14,7 +12,6 @@ public class InsertPhaseFeedback : MonoBehaviour
     [SerializeField, Min(0)] private int punchVibrato = 1;
     [SerializeField, Range(0f, 1f)] private float punchElasticity = 0.6f;
 
-    private ParticleEffectPlayer particleEffectPlayer;
     private RectTransform[] phasePoints;
     private readonly HashSet<int> completedPhases = new HashSet<int>();
     private readonly Dictionary<Transform, Vector3> originalScales =
@@ -22,27 +19,12 @@ public class InsertPhaseFeedback : MonoBehaviour
 
     private void Awake()
     {
-        TryGetComponent<ParticleEffectPlayer>(out particleEffectPlayer);
         phasePoints = new[] { phasePoint1, phasePoint2, phasePoint3 };
 
         for (int i = 0; i < phasePoints.Length; i++)
         {
             if (phasePoints[i] != null)
                 originalScales[phasePoints[i]] = phasePoints[i].localScale;
-        }
-
-        if (particleEffectPlayer == null)
-        {
-            Debug.LogError(
-                "[InsertFeedback] Falta ParticleEffectPlayer en el feedback de fases.",
-                this);
-        }
-
-        if (phaseCompleteEffectPrefab == null)
-        {
-            Debug.LogWarning(
-                "[InsertFeedback] El prefab de partículas de finalización de fase no está asignado.",
-                this);
         }
     }
 
@@ -83,11 +65,6 @@ public class InsertPhaseFeedback : MonoBehaviour
             return;
         }
 
-        Vector3 pointPosition = phasePoint.position;
-        particleEffectPlayer?.Play(
-            phaseCompleteEffectPrefab,
-            pointPosition,
-            phasePoint);
         Punch(phasePoint);
     }
 
@@ -100,7 +77,6 @@ public class InsertPhaseFeedback : MonoBehaviour
     {
         completedPhases.Clear();
         RestoreScales();
-        particleEffectPlayer?.ClearEffects();
     }
 
     private void Punch(RectTransform target)

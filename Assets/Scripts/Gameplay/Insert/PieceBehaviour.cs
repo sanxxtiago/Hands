@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using Leap;
 using Leap.PhysicalHands;
 using UnityEngine;
@@ -26,6 +27,24 @@ public class PieceBehaviour : Interactable
     [HideInInspector] public Rigidbody rb;
     private IgnorePhysicalHands ignoreHands;
     [SerializeField] private Renderer pieceRenderer;
+
+    [Header("Feedback de agarre")]
+    [Tooltip("Incremento proporcional de la escala mientras la pieza esta agarrada.")]
+    [SerializeField, Range(0f, 0.25f)] private float grabScaleIncrease = 0.1f;
+
+    [Tooltip("Duracion del tween de escala al agarrar o soltar la pieza.")]
+    [SerializeField, Min(0f)] private float grabScaleDuration = 0.12f;
+
+    [Tooltip("Color del destello de emision al agarrar la pieza.")]
+    [SerializeField] private Color grabGlowColor = new(0.85f, 0.93f, 1f, 1f);
+
+    [Tooltip("Duracion del decaimiento del destello de emision al agarrar.")]
+    [SerializeField, Min(0f)] private float grabGlowDuration = 0.25f;
+
+    private Vector3 baseScale;
+    private Material pieceMaterial;
+    private Color baseEmission;
+    private static readonly int emissionColorId = Shader.PropertyToID("_EmissionColor");
     void OnEnable()
     {
         CountdownUI.OnCountdownFinished += SetPieceChirality;
@@ -34,18 +53,36 @@ public class PieceBehaviour : Interactable
     {
         SlotBehaviour.ClearHighlightFor(this);
         CountdownUI.OnCountdownFinished -= SetPieceChirality;
+
+        transform.DOKill();
+        transform.localScale = baseScale;
+
+        if (pieceMaterial != null)
+        {
+            pieceMaterial.DOKill();
+            if (pieceMaterial.HasProperty(emissionColorId))
+                pieceMaterial.SetColor(emissionColorId, baseEmission);
+        }
     }
 
     void Awake()
     {
+        baseScale = transform.localScale;
 
         rb = GetComponent<Rigidbody>();
         ignoreHands = GetComponent<IgnorePhysicalHands>();
         if (pieceRenderer == null)
             pieceRenderer = GetComponent<Renderer>();
 
-        SetPieceColor(PieceColor);
+        if (pieceRenderer != null)
+        {
+            pieceMaterial = pieceRenderer.material;
+            baseEmission = pieceMaterial.HasProperty(emissionColorId)
+                ? pieceMaterial.GetColor(emissionColorId)
+                : Color.black;
+        }
 
+        SetPieceColor(PieceColor);
     }
     void Update()
     {
@@ -82,6 +119,16 @@ public class PieceBehaviour : Interactable
 
         state = PieceState.Grabbed;
 
+        transform.DOKill();
+        if (grabScaleIncrease > 0f && grabScaleDuration > 0f)
+        {
+            transform
+                .DOScale(baseScale * (1f + grabScaleIncrease), grabScaleDuration)
+                .SetEase(Ease.OutQuad);
+        }
+
+        PlayGrabGlow();
+
         SlotBehaviour.ClearHighlightedSlot();
         SlotBehaviour correspondingSlot =
             SlotBehaviour.FindCorrespondingSlot(this);
@@ -102,6 +149,19 @@ public class PieceBehaviour : Interactable
         base.OnGrabEnd();
         state = PieceState.Idle;
         SlotBehaviour.ClearHighlightFor(this);
+
+        transform.DOKill();
+        if (grabScaleDuration > 0f)
+        {
+            transform
+                .DOScale(baseScale, grabScaleDuration)
+                .SetEase(Ease.OutQuad)
+                .OnComplete(() => transform.localScale = baseScale);
+        }
+        else
+        {
+            transform.localScale = baseScale;
+        }
     }
 
     public void LockPhysics()
@@ -148,9 +208,26 @@ public class PieceBehaviour : Interactable
         OnPieceSnapped?.Invoke(this);
     }
 
+    private void PlayGrabGlow()
+    {
+        if (pieceMaterial == null || !pieceMaterial.HasProperty(emissionColorId))
+            return;
+
+        if (grabGlowDuration <= 0f)
+            return;
+
+        pieceMaterial.EnableKeyword("_EMISSION");
+        pieceMaterial.DOKill();
+        pieceMaterial.SetColor(emissionColorId, grabGlowColor);
+        pieceMaterial
+            .DOColor(baseEmission, emissionColorId, grabGlowDuration)
+            .SetEase(Ease.OutQuad);
+    }
+
     private void SetPieceColor(Color color)
     {
-        pieceRenderer.material.color = color;
+        if (pieceMaterial != null)
+            pieceMaterial.color = color;
     }
 
     private Color GetRequiredHandColor()

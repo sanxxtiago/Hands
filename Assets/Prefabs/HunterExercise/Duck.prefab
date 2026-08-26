@@ -238,6 +238,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   body: {fileID: 2577527278766498775}
   wings: {fileID: 9167147236588648791}
+  spawnFadeDuration: 0.25
+  escapeFadeDuration: 0.35
+  squashDuration: 0.15
+  stretchDuration: 0.25
+  vanishDuration: 0.6
+  squashScale: {x: 1.3, y: 0.55, z: 1.3}
+  stretchScale: {x: 0.85, y: 1.2, z: 0.85}
+  vanishedScale: 0.05
+  deathEffectPrefab: {fileID: 2930418776905330800, guid: a473ea2ef5464115a83d11f65cc981fb, type: 3}
+  deathEffectLifetime: 2
 --- !u!1 &5125578299137808199
 GameObject:
   m_ObjectHideFlags: 0

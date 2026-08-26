@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class SlotBehaviour : MonoBehaviour
@@ -40,6 +41,25 @@ public class SlotBehaviour : MonoBehaviour
     [Tooltip("Escala maxima adicional del destello de encaje.")]
     [SerializeField, Range(0f, 0.35f)] private float snapFlashScale = 0.18f;
 
+    [Header("Feedback de pieza incorrecta")]
+    [Tooltip("Color del pulso cuando una pieza de otro tipo se acerca al slot.")]
+    [SerializeField] private Color wrongPulseColor = new(1f, 0.15f, 0.08f, 1f);
+
+    [Tooltip("Duracion del pulso al acercar una pieza incorrecta.")]
+    [SerializeField, Min(0f)] private float wrongPulseDuration = 0.55f;
+
+    [Tooltip("Intensidad maxima del color del pulso.")]
+    [SerializeField, Range(0f, 1f)] private float wrongPulsePeakIntensity = 0.85f;
+
+    [Tooltip("Escala maxima adicional del slot durante el pulso.")]
+    [SerializeField, Range(0f, 0.2f)] private float wrongPulseScale = 0.04f;
+
+    [Tooltip("Distancia maxima entre pieza incorrecta y slot para disparar el pulso.")]
+    [SerializeField, Min(0f)] private float wrongProximityRadius = 0.15f;
+
+    [Tooltip("Tiempo minimo entre pulsos del mismo slot.")]
+    [SerializeField, Min(0f)] private float wrongPulseCooldown = 0.6f;
+
     private Renderer[] visualRenderers;
     private Transform[] visualTransforms;
     private Material[][] visualMaterials;
@@ -52,6 +72,8 @@ public class SlotBehaviour : MonoBehaviour
     private bool isHighlighted;
     private bool isFlashing;
     private PieceBehaviour currentPiece;
+    private Tween wrongPulseTween;
+    private float lastWrongPulseTime = -Mathf.Infinity;
 
     public static SlotBehaviour FindCorrespondingSlot(PieceBehaviour piece)
     {
@@ -159,6 +181,10 @@ public class SlotBehaviour : MonoBehaviour
         if (currentPiece != null)
             return;
 
+        // El rojo solo aplica a slots que no corresponden a la pieza; un slot
+        // resaltado es destino valido y tiene prioridad sobre el pulso.
+        HandleWrongProximity(piece);
+
         if (!piece.CanSnap(slotType, transform.position, snapDistance))
             return;
 
@@ -166,6 +192,56 @@ public class SlotBehaviour : MonoBehaviour
         currentPiece = piece;
 
         alignAndSnapCoroutine = StartCoroutine(AlignAndSnap(piece));
+    }
+
+    private void HandleWrongProximity(PieceBehaviour piece)
+    {
+        if (piece.state == PieceState.Snapped)
+            return;
+
+        if (isHighlighted || isFilled || isSnapping)
+            return;
+
+        if (piece.pieceType == slotType)
+            return;
+
+        if (Time.time - lastWrongPulseTime < wrongPulseCooldown)
+            return;
+
+        Vector3 offset = piece.transform.position - transform.position;
+        if (offset.sqrMagnitude > wrongProximityRadius * wrongProximityRadius)
+            return;
+
+        PlayWrongPulse();
+    }
+
+    private void PlayWrongPulse()
+    {
+        lastWrongPulseTime = Time.time;
+        KillWrongPulse();
+
+        if (wrongPulseDuration <= 0f || wrongPulsePeakIntensity <= 0f)
+            return;
+
+        wrongPulseTween = DOVirtual.Float(
+                wrongPulsePeakIntensity,
+                0f,
+                wrongPulseDuration,
+                intensity => ApplyVisualFeedback(wrongPulseColor, intensity, wrongPulseScale))
+            .OnComplete(() =>
+            {
+                wrongPulseTween = null;
+                ResetVisualFeedback();
+            });
+    }
+
+    private void KillWrongPulse()
+    {
+        if (wrongPulseTween == null)
+            return;
+
+        wrongPulseTween.Kill();
+        wrongPulseTween = null;
     }
 
     private void Update()
@@ -266,6 +342,8 @@ public class SlotBehaviour : MonoBehaviour
         if (highlightedSlot != null && highlightedSlot != this)
             highlightedSlot.ClearHighlightVisual();
 
+        KillWrongPulse();
+
         highlightedSlot = this;
         highlightedPiece = piece;
         highlightColor = piece.PieceColor;
@@ -303,6 +381,7 @@ public class SlotBehaviour : MonoBehaviour
             highlightedPiece = null;
         }
 
+        KillWrongPulse();
         isHighlighted = false;
         isFlashing = false;
         feedbackElapsed = 0f;

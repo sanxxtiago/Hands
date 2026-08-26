@@ -13,6 +13,10 @@ public class HandLaserPointer : MonoBehaviour
     [SerializeField] private float laserOriginOffset = 0.02f;
     [SerializeField] private LayerMask hitMask;
 
+    [Header("Retícula")]
+    [Tooltip("Retícula de mundo que se ancla al punto final del láser.")]
+    [SerializeField] private HandLaserReticle reticle;
+
     private LineRenderer lineRenderer;
 
     // Variable para recordar a qué pato le estamos apuntando en el frame actual
@@ -58,6 +62,9 @@ public class HandLaserPointer : MonoBehaviour
         Vector3 origin = hand.Value.position + direction * laserOriginOffset;
 
         Vector3 endPoint = Vector3.zero;
+        Vector3 facing = direction;
+        bool alignToSurface = false;
+        float traveledDistance = laserLength;
 
         // Resetear el objetivo en cada frame antes de volver a comprobar
         currentTarget = null;
@@ -65,6 +72,9 @@ public class HandLaserPointer : MonoBehaviour
         if (Physics.Raycast(origin, direction, out RaycastHit hit, laserLength, hitMask))
         {
             endPoint = hit.point;
+            facing = hit.normal;
+            alignToSurface = true;
+            traveledDistance = hit.distance;
 
             // SOLO se identifica el objetivo
             if (hit.collider.TryGetComponent(out DuckBehaviour duck))
@@ -81,6 +91,8 @@ public class HandLaserPointer : MonoBehaviour
 
         lineRenderer.SetPosition(0, origin);
         lineRenderer.SetPosition(1, endPoint);
+
+        reticle?.UpdatePose(endPoint, facing, traveledDistance, alignToSurface);
 
         Debug.DrawRay(origin, direction * laserLength, Color.red);
     }
@@ -101,12 +113,14 @@ public class HandLaserPointer : MonoBehaviour
     private void EnableLaser()
     {
         lineRenderer.enabled = true;
+        reticle?.Show();
     }
 
     private void DisableLaser()
     {
         lineRenderer.enabled = false;
         currentTarget = null; // Limpiamos la mira al bajar la mano
+        reticle?.Hide();
     }
 
     private void HandleAimStarted()
@@ -143,9 +157,9 @@ public class HandLaserPointer : MonoBehaviour
     {
         bool enabled = isAiming || isShooting;
 
-        lineRenderer.enabled = enabled;
-
-        if (!enabled)
-            currentTarget = null;
+        if (enabled)
+            EnableLaser();
+        else
+            DisableLaser();
     }
 }

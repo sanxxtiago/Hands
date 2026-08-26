@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(ParticleEffectPlayer))]
 public abstract class ExerciseController : MonoBehaviour
 {
     public GameManager gameManager;
@@ -9,20 +11,60 @@ public abstract class ExerciseController : MonoBehaviour
     public ExerciseFeedbackSystem feedbackSystem;
     public SessionRecorder sessionRecorder;
 
+    [Header("Feedback espacial de fase")]
+    [Tooltip("Prefab de particulas 3D que se muestra al completar una fase.")]
+    [SerializeField] private ParticleSystem phaseCompleteEffectPrefab;
+    [Tooltip("Punto estable del escenario donde aparece el efecto de fase.")]
+    [SerializeField] private Transform phaseFeedbackAnchor;
+
     protected float elapsedTime = 0;
+    private ParticleEffectPlayer particleEffectPlayer;
+    private readonly HashSet<int> completedPhases = new HashSet<int>();
+
+    protected virtual void Awake()
+    {
+        particleEffectPlayer = GetComponent<ParticleEffectPlayer>();
+    }
+
     protected virtual void OnEnable()
     {
         GameManager.OnExcerciseStart += HandleStartExercise;
+        ExerciseProgressManager.OnPhaseCompleted += HandlePhaseCompleted;
     }
 
     protected virtual void OnDisable()
     {
         GameManager.OnExcerciseStart -= HandleStartExercise;
+        ExerciseProgressManager.OnPhaseCompleted -= HandlePhaseCompleted;
+        particleEffectPlayer?.ClearEffects();
     }
 
     public void HandleStartExercise()
     {
+        ResetPhaseFeedback();
         StartCoroutine(ExerciseRoutine());
+    }
+
+    private void HandlePhaseCompleted(int phaseIndex, int phaseCount)
+    {
+        if (phaseIndex < 0 || phaseIndex >= phaseCount ||
+            !completedPhases.Add(phaseIndex))
+        {
+            return;
+        }
+
+        if (phaseCompleteEffectPrefab == null || phaseFeedbackAnchor == null)
+            return;
+
+        particleEffectPlayer?.Play(
+            phaseCompleteEffectPrefab,
+            phaseFeedbackAnchor.position);
+    }
+
+    private void ResetPhaseFeedback()
+    {
+        completedPhases.Clear();
+        particleEffectPlayer?.ClearEffects();
     }
 
     IEnumerator ExerciseRoutine()

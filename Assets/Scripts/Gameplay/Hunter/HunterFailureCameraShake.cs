@@ -1,10 +1,10 @@
 using Cinemachine;
 using UnityEngine;
 
-// Adaptador de fallos OSU hacia el sistema de impulsos de Cinemachine.
-public sealed class OSUFailureCameraShake : MonoBehaviour
+// Adaptador de patos que llegan al destino sin ser cazados hacia Cinemachine.
+public sealed class HunterFailureCameraShake : MonoBehaviour
 {
-    [SerializeField] private OSUSequenceRunner sequenceRunner;
+    [SerializeField] private DuckSequenceRunner sequenceRunner;
     [Tooltip("Fuente de impulso de Cinemachine asignada a esta camara o a otro objeto.")]
     [SerializeField] private CinemachineImpulseSource impulseSource;
     [SerializeField, Min(0f)] private float shakeForce = 1f;
@@ -20,30 +20,31 @@ public sealed class OSUFailureCameraShake : MonoBehaviour
     private void OnEnable()
     {
         if (sequenceRunner == null)
-            sequenceRunner = FindFirstObjectByType<OSUSequenceRunner>();
-
-        if (sequenceRunner != null)
-        {
-            sequenceRunner.OnTargetMissed += HandleTargetFailure;
-            sequenceRunner.OnTargetFailed += HandleTargetFailure;
-        }
+            sequenceRunner = FindFirstObjectByType<DuckSequenceRunner>();
 
         if (sequenceRunner == null)
-            Debug.LogWarning("[OSUCameraShake] No se encontro un OSUSequenceRunner.", this);
+        {
+            Debug.LogWarning("[HunterCameraShake] No se encontro un DuckSequenceRunner.", this);
+            return;
+        }
+
+        // Un disparo incorrecto no genera shake; solo se procesa la llegada del pato.
+        sequenceRunner.OnDuckMissed += HandleDuckMissed;
     }
 
     private void OnDisable()
     {
-        if (sequenceRunner != null)
-        {
-            sequenceRunner.OnTargetMissed -= HandleTargetFailure;
-            sequenceRunner.OnTargetFailed -= HandleTargetFailure;
-        }
+        if (sequenceRunner == null)
+            return;
 
+        sequenceRunner.OnDuckMissed -= HandleDuckMissed;
     }
 
-    private void HandleTargetFailure(OSUTargetScoreContext context)
+    private void HandleDuckMissed(DuckScoreContext context)
     {
+        if (!context.wasMissed || context.wasHit)
+            return;
+
         TriggerShake();
     }
 
@@ -54,7 +55,7 @@ public sealed class OSUFailureCameraShake : MonoBehaviour
             if (!warnedMissingImpulseSource)
             {
                 Debug.LogWarning(
-                    "[OSUCameraShake] Falta un CinemachineImpulseSource para reproducir el shake.",
+                    "[HunterCameraShake] Falta un CinemachineImpulseSource para reproducir el shake.",
                     this);
                 warnedMissingImpulseSource = true;
             }
