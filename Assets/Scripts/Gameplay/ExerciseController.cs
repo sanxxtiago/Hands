@@ -11,11 +11,15 @@ public abstract class ExerciseController : MonoBehaviour
     public ExerciseFeedbackSystem feedbackSystem;
     public SessionRecorder sessionRecorder;
 
-    [Header("Feedback espacial de fase")]
+[Header("Feedback espacial de fase")]
     [Tooltip("Prefab de particulas 3D que se muestra al completar una fase.")]
     [SerializeField] private ParticleSystem phaseCompleteEffectPrefab;
     [Tooltip("Punto estable del escenario donde aparece el efecto de fase.")]
     [SerializeField] private Transform phaseFeedbackAnchor;
+
+    [Header("Pacing")]
+    [Tooltip("Espera tras completar el ejercicio antes de pasar a resultados, para apreciar los efectos finales (muerte del último pato, partículas, etc.).")]
+    [SerializeField, Min(0f)] private float exerciseEndDelay = 3f;
 
     protected float elapsedTime = 0;
     private ParticleEffectPlayer particleEffectPlayer;
@@ -47,8 +51,15 @@ public abstract class ExerciseController : MonoBehaviour
 
     private void HandlePhaseCompleted(int phaseIndex, int phaseCount)
     {
-        if (phaseIndex < 0 || phaseIndex >= phaseCount ||
+if (phaseIndex < 0 || phaseIndex >= phaseCount ||
             !completedPhases.Add(phaseIndex))
+        {
+            return;
+        }
+
+        if (progressManager == null ||
+            progressManager.CurrentPhaseIndex != phaseIndex ||
+            progressManager.CurrentPhaseCompletedSteps < progressManager.CurrentPhaseTarget)
         {
             return;
         }
@@ -87,6 +98,12 @@ public abstract class ExerciseController : MonoBehaviour
             feedbackSystem?.Evaluate(elapsedTime, Time.deltaTime);
             yield return null;
         }
+
+        // Pausa opcional para que el paciente vea los efectos finales
+        // (muerte del último objetivo, partículas, etc.) antes de pasar a resultados.
+        if (exerciseEndDelay > 0f)
+            yield return new WaitForSeconds(exerciseEndDelay);
+
         OnExerciseEnd(elapsedTime);
         if (SessionManager.Instance.CurrentSession != null)
         {
