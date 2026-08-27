@@ -62,7 +62,7 @@ public class HunterExercise : ExerciseController
 
     protected override void SetSpecificData()
     {
-        scoreAdapter?.CompleteExercise();
+        scoreAdapter?.CompleteExercise(elapsedTime);
         sessionRecorder.SetDuckHunterData(
             DucksHit,
             DucksMissed

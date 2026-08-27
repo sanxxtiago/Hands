@@ -32,6 +32,7 @@ public struct OSUTargetScoreData
 [Serializable]
 public sealed class OSUScoreData
 {
+    public float exerciseDuration;
     public int totalTargets;
     public int completedTargets;
     public int missedTargets;
@@ -53,6 +54,7 @@ public struct DuckScoreData
 [Serializable]
 public sealed class DuckHunterScoreData
 {
+    public float exerciseDuration;
     public int totalDucks;
     public int ducksHit;
     public int ducksMissed;

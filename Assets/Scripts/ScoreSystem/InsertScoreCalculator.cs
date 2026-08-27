@@ -67,7 +67,14 @@ public sealed class InsertScoreCalculator : IScoreCalculator<InsertScoreData>
                 config.completionWeight)
         };
 
-        return ScoreResultFactory.Create(ScoreExerciseType.Insert, breakdown, true);
+        ScoreStatsData statsData = new ScoreStatsData
+        {
+            exerciseDuration = input.completionTime,
+            hits = completedPieces,
+            misses = 0
+        };
+
+        return ScoreResultFactory.Create(ScoreExerciseType.Insert, breakdown, statsData, true);
     }
 
     public float CalculateExpectedTime(InsertScoreData input)

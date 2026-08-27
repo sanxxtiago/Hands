@@ -81,7 +81,7 @@ public sealed class OSUScoreAdapter : MonoBehaviour
         Log("Inicio de sesion OSU.");
     }
 
-    public ExerciseScore CompleteExercise()
+    public ExerciseScore CompleteExercise(float exerciseDuration)
     {
         if (exerciseCompleted || !exerciseActive)
         {
@@ -98,6 +98,7 @@ public sealed class OSUScoreAdapter : MonoBehaviour
 
         OSUScoreData data = new OSUScoreData
         {
+            exerciseDuration = exerciseDuration,
             totalTargets = expectedTargetCount,
             completedTargets = completedTargets,
             missedTargets = missedTargets,

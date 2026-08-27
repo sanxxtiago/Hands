@@ -71,7 +71,7 @@ public sealed class DuckHunterScoreAdapter : MonoBehaviour
         Log("Inicio de sesion de score de DuckHunter.");
     }
 
-    public DuckHunterScoreData BuildData()
+    public DuckHunterScoreData BuildData(float exerciseDuration)
     {
         DuckScoreData[] duckData = new DuckScoreData[duckOrder.Count];
         for (int i = 0; i < duckOrder.Count; i++)
@@ -79,6 +79,7 @@ public sealed class DuckHunterScoreAdapter : MonoBehaviour
 
         return new DuckHunterScoreData
         {
+            exerciseDuration = exerciseDuration,
             totalDucks = ducksHit + ducksMissed,
             ducksHit = ducksHit,
             ducksMissed = ducksMissed,
@@ -87,7 +88,7 @@ public sealed class DuckHunterScoreAdapter : MonoBehaviour
         };
     }
 
-    public ExerciseScore CompleteExercise()
+    public ExerciseScore CompleteExercise(float exerciseDuration)
     {
         if (exerciseCompleted || !exerciseActive)
         {
@@ -97,7 +98,7 @@ public sealed class DuckHunterScoreAdapter : MonoBehaviour
 
         exerciseCompleted = true;
         exerciseActive = false;
-        DuckHunterScoreData data = BuildData();
+        DuckHunterScoreData data = BuildData(exerciseDuration);
         if (expectedDuckCount != data.totalDucks)
             LogWarning($"La secuencia esperaba {expectedDuckCount} patos, pero se procesaron {data.totalDucks}.");
         Log(

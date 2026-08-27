@@ -9,12 +9,22 @@ public sealed class ExerciseScore
     public ScoreBreakdown[] breakdown;
     public string motivationalMessage;
     public bool isValid;
+    public ScoreStatsData statsData;
 
     public ExerciseScore()
     {
         scoreGrade = "Invalid";
         breakdown = Array.Empty<ScoreBreakdown>();
+        statsData = new ScoreStatsData();
     }
+}
+
+[Serializable]
+public struct ScoreStatsData
+{
+    public float exerciseDuration;
+    public int hits;
+    public int misses;
 }
 
 internal static class ScoreResultFactory
@@ -22,6 +32,7 @@ internal static class ScoreResultFactory
     public static ExerciseScore Create(
         ScoreExerciseType exerciseType,
         ScoreBreakdown[] breakdown,
+        ScoreStatsData statsData,
         bool isValid)
     {
         ScoreBreakdown[] normalizedBreakdown = NormalizeBreakdown(breakdown);
@@ -43,7 +54,8 @@ internal static class ScoreResultFactory
             scoreGrade = GetGrade(finalIsValid, totalScore),
             breakdown = normalizedBreakdown,
             motivationalMessage = GetMotivationalMessage(finalIsValid, totalScore),
-            isValid = finalIsValid
+            isValid = finalIsValid,
+            statsData = statsData
         };
     }
 

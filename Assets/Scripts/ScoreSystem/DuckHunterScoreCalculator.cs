@@ -58,7 +58,14 @@ public sealed class DuckHunterScoreCalculator : IScoreCalculator<DuckHunterScore
                 config.accuracyWeight)
         };
 
-        return ScoreResultFactory.Create(ScoreExerciseType.DuckHunter, breakdown, true);
+        ScoreStatsData statsData = new ScoreStatsData
+        {
+            exerciseDuration = input.exerciseDuration,
+            hits = aggregates.ducksHit,
+            misses = aggregates.ducksMissed
+        };
+
+        return ScoreResultFactory.Create(ScoreExerciseType.DuckHunter, breakdown, statsData, true);
     }
 
     public float CalculateAccuracy(DuckHunterScoreData input)

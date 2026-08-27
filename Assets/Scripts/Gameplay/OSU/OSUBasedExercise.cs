@@ -33,7 +33,7 @@ public class OSUBasedExercise : ExerciseController
 
     protected override void SetSpecificData()
     {
-        scoreAdapter?.CompleteExercise();
+        scoreAdapter?.CompleteExercise(elapsedTime);
         sessionRecorder.SetOsuData(
             TotalInteractionTime,
             InteractionCount

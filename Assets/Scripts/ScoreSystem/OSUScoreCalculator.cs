@@ -77,7 +77,14 @@ public sealed class OSUScoreCalculator : IScoreCalculator<OSUScoreData>
                 config.completionWeight)
         };
 
-        return ScoreResultFactory.Create(ScoreExerciseType.OSU, breakdown, true);
+        ScoreStatsData statsData = new ScoreStatsData
+        {
+            exerciseDuration = input.exerciseDuration,
+            hits = aggregates.completedTargets,
+            misses = aggregates.missedTargets
+        };
+
+        return ScoreResultFactory.Create(ScoreExerciseType.OSU, breakdown, statsData, true);
     }
 
     public float CalculateEffectiveTime(OSUScoreData input)

@@ -14,6 +14,15 @@ public sealed class ScoresUI : MonoBehaviour
     [SerializeField] private Transform breakdownContainer;
     [SerializeField] private CanvasGroup group;
     [SerializeField] private float fadeInTime = .5f;
+
+    [Header("Stat Cards (Scores panel)")]
+    [SerializeField] private GameObject statCardDuration;
+    [SerializeField] private GameObject statCardHits;
+    [SerializeField] private GameObject statCardMisses;
+    [SerializeField] private TMP_Text statDurationValue;
+    [SerializeField] private TMP_Text statHitsValue;
+    [SerializeField] private TMP_Text statMissesValue;
+
     private void OnEnable()
     {
         GameManager.OnShowResults += HandleShowScore;
@@ -48,6 +57,8 @@ public sealed class ScoresUI : MonoBehaviour
             ScoreDisplayFormatter.FormatBreakdown(score.breakdown),
             "breakdownText");
 
+        ApplyStatCards(score.statsData);
+
         if (scoreSlider != null)
         {
             scoreSlider.value = Mathf.Clamp(score.totalScore, 0f, 100f);
@@ -61,6 +72,38 @@ public sealed class ScoresUI : MonoBehaviour
         {
             Debug.LogWarning("[ScoreSystem][ScoresUI] Falta la referencia opcional breakdownContainer.");
         }
+    }
+
+    private void ApplyStatCards(ScoreStatsData stats)
+    {
+        bool hasMisses = stats.misses > 0;
+        SetGameObjectActive(statCardMisses, hasMisses);
+        SetGameObjectActive(statCardDuration, statCardDuration != null);
+        SetGameObjectActive(statCardHits, statCardHits != null);
+
+        SetText(statDurationValue, FormatDuration(stats.exerciseDuration), "statDurationValue");
+        SetText(statHitsValue, stats.hits.ToString(), "statHitsValue");
+        SetText(statMissesValue, stats.misses.ToString(), "statMissesValue");
+    }
+
+    private static void SetGameObjectActive(GameObject target, bool active)
+    {
+        if (target == null)
+            return;
+
+        if (target.activeSelf != active)
+            target.SetActive(active);
+    }
+
+    private static string FormatDuration(float seconds)
+    {
+        if (!ScoreMath.IsFinite(seconds) || seconds < 0f)
+            seconds = 0f;
+
+        int totalSeconds = Mathf.FloorToInt(seconds);
+        int minutes = totalSeconds / 60;
+        int remainingSeconds = totalSeconds % 60;
+        return $"{minutes:D2}:{remainingSeconds:D2}";
     }
 
     private static void SetText(TMP_Text text, string value, string referenceName)
