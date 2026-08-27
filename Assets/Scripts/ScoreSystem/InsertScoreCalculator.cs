@@ -70,7 +70,7 @@ public sealed class InsertScoreCalculator : IScoreCalculator<InsertScoreData>
         ScoreStatsData statsData = new ScoreStatsData
         {
             exerciseDuration = input.completionTime,
-            hits = completedPieces,
+            hits = input.totalPieces,
             misses = 0
         };
 
