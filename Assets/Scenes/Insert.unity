@@ -212,6 +212,7 @@ MonoBehaviour:
   phaseCompleteEffectPrefab: {fileID: 2442581995994366611, guid: 27465c7cb736dde49bf283aa9a7a5375,
     type: 3}
   phaseFeedbackAnchor: {fileID: 765432109876543211}
+  exerciseEndDelay: 3
   phases:
   - prefab: {fileID: 472284928914777599, guid: 80f35a05224101b4d8b20feede3767ec, type: 3}
     expectedPieces: 1
@@ -7353,9 +7354,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16c6f6f21a2c4ebf8c0c51e58ab5ede6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioLibrary: {fileID: 0}
-  masterVolume: 1
-  audioSource: {fileID: 0}
 --- !u!1 &765432109876543210
 GameObject:
   m_ObjectHideFlags: 0
@@ -8740,11 +8738,6 @@ PrefabInstance:
     - target: {fileID: 6882796806427698123, guid: 39a5a08e669c09042abf53b4b39c2d9d,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7113228099216054980, guid: 39a5a08e669c09042abf53b4b39c2d9d,
-        type: 3}
-      propertyPath: m_Alpha
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8072334621542151579, guid: 39a5a08e669c09042abf53b4b39c2d9d,
