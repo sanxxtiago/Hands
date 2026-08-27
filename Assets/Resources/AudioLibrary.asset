@@ -13,6 +13,24 @@ MonoBehaviour:
   m_Name: AudioLibrary
   m_EditorClassIdentifier: 
   sounds:
-  - type: 0
-    clip: {fileID: 0}
+  - type: 1
+    clip: {fileID: 8300000, guid: 4c2d50e865ad68944821c2e748e4f377, type: 3}
+    volume: 0
+  - type: 2
+    clip: {fileID: 8300000, guid: ac9c172c4b4976249924c21b8fc42344, type: 3}
+    volume: 0
+  - type: 11
+    clip: {fileID: 8300000, guid: 74c34dc1e8e8ab74189b7b1a6f9763d5, type: 3}
+    volume: 0
+  - type: 13
+    clip: {fileID: 8300000, guid: 550d56b0fc933f6468ae8c8e9f490daf, type: 3}
+    volume: 0
+  - type: 14
+    clip: {fileID: 8300000, guid: e4a681fac47dd654f9ed38fb74d42ebd, type: 3}
+    volume: 0
+  - type: 5
+    clip: {fileID: 8300000, guid: a4b22ac165811f74ca09919a57536538, type: 3}
+    volume: 0
+  - type: 12
+    clip: {fileID: 8300000, guid: 9f8b68cdb3e979b409aa839393e520f0, type: 3}
     volume: 0

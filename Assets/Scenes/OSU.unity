@@ -15,6 +15,23 @@ MonoBehaviour:
   sequenceRunner: {fileID: 43925656}
   impulseSource: {fileID: 41947981}
   shakeForce: 0.01
+--- !u!114 &-730000000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 41947975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7e2c9a4f6314085ad90e2f7c5b81634, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  osuSequenceRunner: {fileID: 43925656}
+  duckSequenceRunner: {fileID: 0}
+  slowedTimeScale: 0.25
+  slowDuration: 0.08
+  restoreDuration: 0.06
 --- !u!114 &-710000000000000005
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31,6 +48,7 @@ MonoBehaviour:
   successImage: {fileID: -710000000000000004}
   osuSequenceRunner: {fileID: 43925656}
   duckSequenceRunner: {fileID: 0}
+  progressManager: {fileID: 1956825095}
   failurePeakAlpha: 0.22
   successPeakAlpha: 0.12
   fadeInDuration: 0.06
@@ -447,6 +465,7 @@ GameObject:
   - component: {fileID: 41947981}
   - component: {fileID: 41947982}
   - component: {fileID: 41947983}
+  - component: {fileID: -730000000000000001}
   m_Layer: 0
   m_Name: Camera
   m_TagString: MainCamera
@@ -11087,7 +11106,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1825811532}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 20a86d1dfa3c4f2fba061d7ce0672dda, type: 3}
+  m_Script: {fileID: 11500000, guid: 16c6f6f21a2c4ebf8c0c51e58ab5ede6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &2725811533

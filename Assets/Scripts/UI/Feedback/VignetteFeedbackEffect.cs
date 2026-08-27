@@ -11,6 +11,7 @@ public sealed class VignetteFeedbackEffect : MonoBehaviour
     [SerializeField] private Image successImage;
     [SerializeField] private OSUSequenceRunner osuSequenceRunner;
     [SerializeField] private DuckSequenceRunner duckSequenceRunner;
+    [SerializeField] private ExerciseProgressManager progressManager;
     [SerializeField, Range(0f, 1f)] private float failurePeakAlpha = 0.22f;
     [SerializeField, Range(0f, 1f)] private float successPeakAlpha = 0.12f;
     [SerializeField, Min(0f)] private float fadeInDuration = 0.06f;
@@ -44,6 +45,9 @@ public sealed class VignetteFeedbackEffect : MonoBehaviour
 
         if (duckSequenceRunner == null)
             duckSequenceRunner = FindFirstObjectByType<DuckSequenceRunner>();
+
+        if (progressManager == null)
+            progressManager = FindFirstObjectByType<ExerciseProgressManager>();
 
         if (osuSequenceRunner != null)
         {
@@ -87,6 +91,13 @@ public sealed class VignetteFeedbackEffect : MonoBehaviour
 
     private void HandlePhaseCompleted(int phaseIndex, int phaseCount)
     {
+        if (progressManager == null ||
+            phaseIndex != progressManager.CurrentPhaseIndex ||
+            progressManager.CurrentPhaseCompletedSteps < progressManager.CurrentPhaseTarget)
+        {
+            return;
+        }
+
         PlaySuccess();
     }
 
