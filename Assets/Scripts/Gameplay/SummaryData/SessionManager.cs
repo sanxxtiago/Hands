@@ -23,7 +23,10 @@ public class SessionManager : MonoBehaviour
     public void BeginSession()
     {
         Debug.Log("Sesion iniciada");
-        currentSession = new SessionSummary();
+        currentSession = new SessionSummary
+        {
+            SessionId = PersistenceManager.Instance.SessionService.PeekNextSessionId()
+        };
     }
 
     public void AddExerciseSummary(ExerciseSummary summary)

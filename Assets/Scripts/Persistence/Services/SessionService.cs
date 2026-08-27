@@ -26,12 +26,8 @@ public class SessionService
 
     public SessionSummary AddSession(SessionSummary summary)
     {
-        summary.SessionId = GetNextSessionId();
-
         sessionsData.Sessions.Add(summary);
-
         Save();
-
         return summary;
     }
 
@@ -49,6 +45,8 @@ public class SessionService
         SaveSystem.Delete(SaveFiles.Sessions);
         sessionsData = new SessionsData();
     }
+
+    public int PeekNextSessionId() => GetNextSessionId();
 
     private int GetNextSessionId()
     {

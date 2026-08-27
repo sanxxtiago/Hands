@@ -7,6 +7,7 @@ public class PersistenceManager : MonoBehaviour
 
     public UserService UserService { get; private set; }
     public SessionService SessionService { get; private set; }
+    public ScoreService ScoreService { get; private set; }
     //public SettingsService SettingsService { get; private set; }
 
     private void Awake()
@@ -27,10 +28,12 @@ public class PersistenceManager : MonoBehaviour
     {
         UserService = new UserService();
         SessionService = new SessionService();
+        ScoreService = new ScoreService();
         //SettingsService = new SettingsService();
 
         UserService.Load();
         SessionService.Load();
+        ScoreService.Load();
         //SettingsService.Load();
     }
 }
