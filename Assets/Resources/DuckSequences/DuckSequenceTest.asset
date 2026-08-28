@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b018c86fa4b208d42bc6ffdf0c705b96, type: 3}
+  m_Name: DuckSequenceTest
+  m_EditorClassIdentifier: 
+  phases:
+  - phaseName: Fase 1
+    steps:
+    - spawnSide: 0
+      requiredHand: 0
+      movementDuration: 1000
+      delayBeforeSpawn: 0.5
+    transitionDelay: 2
+  - phaseName: Fase 2
+    steps:
+    - spawnSide: 0
+      requiredHand: 1
+      movementDuration: 1000
+      delayBeforeSpawn: 0.5
+    transitionDelay: 2
+  - phaseName: Fase 3
+    steps:
+    - spawnSide: 0
+      requiredHand: 2
+      movementDuration: 1000
+      delayBeforeSpawn: 0.5
+    transitionDelay: 2

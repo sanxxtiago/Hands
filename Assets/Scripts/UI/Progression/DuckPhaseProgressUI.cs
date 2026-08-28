@@ -28,9 +28,11 @@ public sealed class DuckPhaseProgressUI : MonoBehaviour
     [SerializeField, Min(0f)] private float hitPunchDuration = 0.15f;
     [SerializeField] private Vector3 hitPunchScale = new Vector3(0.15f, 0.15f, 0.15f);
     [SerializeField, Min(1f)] private float duckSize = 24f;
+    [SerializeField, Min(1)] private int ducksPerRow = 4;
     [SerializeField] private CanvasGroup containerGroup;
 
     private readonly List<DuckVisual> duckVisuals = new List<DuckVisual>();
+    private readonly List<RectTransform> rowContainers = new List<RectTransform>(2);
     private Tween fadeTween;
     private int currentPhaseIndex = -1;
 
@@ -144,12 +146,55 @@ public sealed class DuckPhaseProgressUI : MonoBehaviour
     {
         ClearDucks();
 
-        int count = composition != null ? composition.Length : 0;
+        int maxSupportedDucks = 2 * ducksPerRow; // 2 rows × 4 ducks = 8 max
+        int count = composition != null ? Mathf.Min(composition.Length, maxSupportedDucks) : 0;
         for (int i = 0; i < count; i++)
-            duckVisuals.Add(CreateDuckVisual(i, composition[i]));
+        {
+            int rowIndex = i / ducksPerRow;
+            if (rowIndex >= rowContainers.Count)
+                rowContainers.Add(CreateRowContainer(rowIndex));
+
+            duckVisuals.Add(CreateDuckVisual(i, composition[i], rowContainers[rowIndex]));
+        }
+
+        PositionRows(rowContainers.Count);
     }
 
-    private DuckVisual CreateDuckVisual(int index, DuckSequenceStep step)
+    private RectTransform CreateRowContainer(int rowIndex)
+    {
+        GameObject rowObject = new GameObject("DuckRow_" + (rowIndex + 1), typeof(RectTransform), typeof(HorizontalLayoutGroup));
+        RectTransform rowRect = (RectTransform)rowObject.transform;
+        rowRect.SetParent(ducksContainer, false);
+        rowRect.anchorMin = new Vector2(0f, 0.5f);
+        rowRect.anchorMax = new Vector2(1f, 0.5f);
+        rowRect.pivot = new Vector2(0.5f, 0.5f);
+        rowRect.sizeDelta = new Vector2(0f, duckSize);
+
+        HorizontalLayoutGroup layout = rowObject.GetComponent<HorizontalLayoutGroup>();
+        layout.spacing = 4f;
+        layout.childAlignment = TextAnchor.MiddleCenter;
+        layout.childControlWidth = false;
+        layout.childControlHeight = false;
+        layout.childForceExpandWidth = false;
+        layout.childForceExpandHeight = false;
+        layout.childScaleWidth = false;
+        layout.childScaleHeight = false;
+        return rowRect;
+    }
+
+    private void PositionRows(int rowCount)
+    {
+        float rowSpacing = 4f;
+        float offset = rowCount > 1 ? (duckSize + rowSpacing) * 0.5f : 0f;
+
+        for (int i = 0; i < rowCount; i++)
+        {
+            RectTransform row = rowContainers[i];
+            row.anchoredPosition = new Vector2(0f, offset - i * (duckSize + rowSpacing));
+        }
+    }
+
+    private DuckVisual CreateDuckVisual(int index, DuckSequenceStep step, RectTransform rowContainer)
     {
         GameObject duckObject = new GameObject(
             "DuckIcon_" + (index + 1),
@@ -157,7 +202,7 @@ public sealed class DuckPhaseProgressUI : MonoBehaviour
             typeof(CanvasGroup));
 
         RectTransform duckRect = (RectTransform)duckObject.transform;
-        duckRect.SetParent(ducksContainer, false);
+        duckRect.SetParent(rowContainer, false);
         duckRect.sizeDelta = new Vector2(duckSize, duckSize);
 
         CanvasGroup duckGroup = duckObject.GetComponent<CanvasGroup>();
@@ -315,7 +360,7 @@ public sealed class DuckPhaseProgressUI : MonoBehaviour
 
     private void ClearDucks()
     {
-        for (int i = 0; i < duckVisuals.Count; i++)
+        for (int i = duckVisuals.Count - 1; i >= 0; i--)
         {
             DuckVisual duck = duckVisuals[i];
             if (duck == null || duck.RootTransform == null)
@@ -326,6 +371,14 @@ public sealed class DuckPhaseProgressUI : MonoBehaviour
         }
 
         duckVisuals.Clear();
+
+        for (int i = rowContainers.Count - 1; i >= 0; i--)
+        {
+            if (rowContainers[i] != null)
+                Destroy(rowContainers[i].gameObject);
+        }
+
+        rowContainers.Clear();
     }
 
     private static void KillDuckTweens(DuckVisual duck)

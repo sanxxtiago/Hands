@@ -740,7 +740,7 @@ MonoBehaviour:
   sequenceRunner: {fileID: 43925661}
   scoreManager: {fileID: 381754428}
   scoreAdapter: {fileID: 381754427}
-  sequence: {fileID: 11400000, guid: 3dc2402c24778ae439b651d3b5df45b9, type: 2}
+  sequence: {fileID: 11400000, guid: fea462375d2db0c49bd9d45da942aadb, type: 2}
 --- !u!114 &43925657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2897,7 +2897,8 @@ MonoBehaviour:
   failureFadeDuration: 0.12
   hitPunchDuration: 0.15
   hitPunchScale: {x: 0.15, y: 0.15, z: 0.15}
-  duckSize: 24
+  duckSize: 20
+  ducksPerRow: 4
   containerGroup: {fileID: 1682047898}
 --- !u!1 &470512232
 GameObject:
@@ -3409,7 +3410,7 @@ GameObject:
   - component: {fileID: 556073337}
   - component: {fileID: 556073338}
   m_Layer: 0
-  m_Name: SceneManager
+  m_Name: ScoresManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3442,9 +3443,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ebb9360e91c43a4396d70df11c93ba2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextSceneName: SessionSummary
+  nextSceneName: ScoresSummary
   transition: {fileID: 2055526640}
-  transitionMessage: "Cargando resumen de la sesi\xF3n..."
+  transitionMessage: "Cargando puntajes de la sesi\xF3n..."
 --- !u!1 &569803554
 GameObject:
   m_ObjectHideFlags: 0
@@ -10493,7 +10494,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1682047897}
-  - component: {fileID: 1682047899}
   - component: {fileID: 1682047898}
   m_Layer: 5
   m_Name: TargetsContainer
@@ -10533,32 +10533,6 @@ CanvasGroup:
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
---- !u!114 &1682047899
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1682047896}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 4
-  m_Spacing: 0
-  m_ChildForceExpandWidth: 0
-  m_ChildForceExpandHeight: 0
-  m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
-  m_ChildScaleWidth: 0
-  m_ChildScaleHeight: 0
-  m_ReverseArrangement: 0
 --- !u!1 &1688268274
 GameObject:
   m_ObjectHideFlags: 0

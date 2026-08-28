@@ -51,7 +51,7 @@ public class ScoreService
             .ToList();
     }
 
-    public IReadOnlyList<ScoreRecord> GetLastScores(int count = 7)
+    public IReadOnlyList<ScoreRecord> GetLastScores(int count)
     {
         return scoresData.Records
             .OrderByDescending(r => r.recordedAt)

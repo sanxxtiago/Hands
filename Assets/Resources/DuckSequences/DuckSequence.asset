@@ -13,6 +13,33 @@ MonoBehaviour:
   m_Name: DuckSequence
   m_EditorClassIdentifier: 
   phases:
+  - phaseName: Fase 3
+    steps:
+    - spawnSide: 1
+      requiredHand: 2
+      movementDuration: 7
+      delayBeforeSpawn: 0.5
+    - spawnSide: 2
+      requiredHand: 2
+      movementDuration: 7
+      delayBeforeSpawn: 0.5
+    - spawnSide: 2
+      requiredHand: 1
+      movementDuration: 7
+      delayBeforeSpawn: 0.5
+    - spawnSide: 1
+      requiredHand: 1
+      movementDuration: 7
+      delayBeforeSpawn: 0.5
+    - spawnSide: 1
+      requiredHand: 1
+      movementDuration: 7
+      delayBeforeSpawn: 0.5
+    - spawnSide: 1
+      requiredHand: 1
+      movementDuration: 7
+      delayBeforeSpawn: 0.5
+    transitionDelay: 2
   - phaseName: Fase 1
     steps:
     - spawnSide: 0
@@ -36,25 +63,6 @@ MonoBehaviour:
       delayBeforeSpawn: 0.5
     - spawnSide: 2
       requiredHand: 2
-      movementDuration: 7
-      delayBeforeSpawn: 0.5
-    transitionDelay: 2
-  - phaseName: Fase 3
-    steps:
-    - spawnSide: 1
-      requiredHand: 2
-      movementDuration: 7
-      delayBeforeSpawn: 0.5
-    - spawnSide: 2
-      requiredHand: 2
-      movementDuration: 7
-      delayBeforeSpawn: 0.5
-    - spawnSide: 2
-      requiredHand: 1
-      movementDuration: 7
-      delayBeforeSpawn: 0.5
-    - spawnSide: 1
-      requiredHand: 1
       movementDuration: 7
       delayBeforeSpawn: 0.5
     transitionDelay: 2

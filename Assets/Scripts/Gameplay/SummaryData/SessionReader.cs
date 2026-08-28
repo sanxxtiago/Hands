@@ -101,7 +101,7 @@ public class SessionReader : MonoBehaviour
             options.Add(summary.exerciseType switch
             {
                 ExerciseType.Insert => "Inserción de piezas",
-                ExerciseType.Duck => "Cazador de patos",
+                ExerciseType.DuckHunter => "Cazador de patos",
                 ExerciseType.OSU => "Precisión",
                 _ => summary.exerciseType.ToString()
             });

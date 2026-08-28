@@ -11,6 +11,7 @@ public class ScoreRecord
 
     public float totalScore;
     public string scoreGrade;
+    public TrophyTier trophyTier;
     public string motivationalMessage;
     public bool isValid;
 
@@ -23,6 +24,7 @@ public class ScoreRecord
         breakdown = Array.Empty<ScoreBreakdown>();
         statsData = new ScoreStatsData();
         scoreGrade = "Invalid";
+        trophyTier = TrophyTier.Bronze;
         isValid = false;
     }
 }

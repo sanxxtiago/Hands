@@ -91,7 +91,7 @@ public static class GeneralSuggestionBuilder
         {
             ExerciseType.Insert => BuildInsert(completionTime),
             ExerciseType.OSU => BuildOsu(totalInteractionTime),
-            ExerciseType.Duck => BuildDuckHunter(ducksHit, ducksMissed),
+            ExerciseType.DuckHunter => BuildDuckHunter(ducksHit, ducksMissed),
             _ => "Continúa practicando para mejorar tu desempeño."
         };
     }

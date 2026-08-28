@@ -54,6 +54,7 @@ public class ScorePersistenceListener : MonoBehaviour
             exerciseType = score.exerciseType,
             totalScore = score.totalScore,
             scoreGrade = score.scoreGrade,
+            trophyTier = ScoreTierResolver.GetTier(score),
             motivationalMessage = score.motivationalMessage,
             isValid = score.isValid,
             statsData = score.statsData,

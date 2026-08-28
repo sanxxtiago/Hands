@@ -216,12 +216,10 @@ MonoBehaviour:
   phases:
   - prefab: {fileID: 472284928914777599, guid: 80f35a05224101b4d8b20feede3767ec, type: 3}
     expectedPieces: 1
-  - prefab: {fileID: 7725013552508954380, guid: 06f75f31820c33f4589520e69d51f5db,
-      type: 3}
-    expectedPieces: 2
-  - prefab: {fileID: 4139748908326186920, guid: 801a3c97402c19b4f8d2179defc9e703,
-      type: 3}
-    expectedPieces: 4
+  - prefab: {fileID: 472284928914777599, guid: 80f35a05224101b4d8b20feede3767ec, type: 3}
+    expectedPieces: 1
+  - prefab: {fileID: 472284928914777599, guid: 80f35a05224101b4d8b20feede3767ec, type: 3}
+    expectedPieces: 1
   phaseTransitionDelay: 0.75
   phaseFadeDuration: 0.35
   scoreAdapter: {fileID: 453338201}
@@ -5760,7 +5758,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioLibrary: {fileID: 11400000, guid: b4107ada21369a3438a4a2f47d1d6aaf, type: 2}
-  masterVolume: 1
+  masterVolume: 0
   audioSource: {fileID: 0}
 --- !u!4 &1359865953
 Transform:
@@ -8424,6 +8422,38 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 25, y: 0, z: 0}
+--- !u!1 &2042212044 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5148457302172341610, guid: 1fab2ecc7f755f746873cca3878dcd49,
+    type: 3}
+  m_PrefabInstance: {fileID: 5363067692019261980}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2042212047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2042212044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afce21ea0754886438e9ea77e1c0ad2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  goldTrophy: {fileID: 0}
+  silverTrophy: {fileID: 0}
+  bronzeTrophy: {fileID: 0}
+  trophyCamera: {fileID: 0}
+  renderTexture: {fileID: 0}
+  trophyImage: {fileID: 0}
+  scoreAnchorTarget: {fileID: 0}
+  scoreManager: {fileID: 0}
+  animationDuration: 0.6
+  anchorYOffset: -80
+  goldEmission: {r: 1, g: 0.85, b: 0.3, a: 1}
+  silverEmission: {r: 0.75, g: 0.78, b: 0.85, a: 1}
+  bronzeEmission: {r: 0.8, g: 0.5, b: 0.2, a: 1}
+  emissionDuration: 0.4
 --- !u!1 &2055526639
 GameObject:
   m_ObjectHideFlags: 0
@@ -10644,10 +10674,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5211578114219861515, guid: 1fab2ecc7f755f746873cca3878dcd49, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5148457302172341610, guid: 1fab2ecc7f755f746873cca3878dcd49,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2042212047}
   m_SourcePrefab: {fileID: 100100000, guid: 1fab2ecc7f755f746873cca3878dcd49, type: 3}
 --- !u!4 &5879262599337542989
 Transform:

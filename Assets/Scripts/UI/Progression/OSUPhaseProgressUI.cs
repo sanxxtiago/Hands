@@ -33,9 +33,11 @@ public sealed class OSUPhaseProgressUI : MonoBehaviour
     [SerializeField, Min(0f)] private float completionPunchDuration = 0.15f;
     [SerializeField] private Vector3 completionPunchScale = new Vector3(0.15f, 0.15f, 0.15f);
     [SerializeField, Min(1f)] private float targetSize = 20f;
+    [SerializeField, Min(1)] private int targetsPerRow = 4;
     [SerializeField] private CanvasGroup containerGroup;
 
     private readonly List<TargetVisual> targetVisuals = new List<TargetVisual>();
+    private readonly List<RectTransform> rowContainers = new List<RectTransform>(2);
     private Tween fadeTween;
     private int currentPhaseIndex = -1;
 
@@ -142,12 +144,50 @@ public sealed class OSUPhaseProgressUI : MonoBehaviour
     {
         ClearTargets();
 
-        int count = composition != null ? composition.Length : 0;
+        int count = composition != null ? Mathf.Min(composition.Length, 2 * targetsPerRow) : 0;
         for (int i = 0; i < count; i++)
-            targetVisuals.Add(CreateTargetVisual(i, composition[i]));
+        {
+            int rowIndex = i / targetsPerRow;
+            if (rowIndex >= rowContainers.Count)
+                rowContainers.Add(CreateRowContainer(rowIndex));
+
+            targetVisuals.Add(CreateTargetVisual(i, composition[i], rowContainers[rowIndex]));
+        }
+
+        PositionRows(rowContainers.Count);
     }
 
-    private TargetVisual CreateTargetVisual(int index, OSUStep step)
+    private RectTransform CreateRowContainer(int rowIndex)
+    {
+        GameObject rowObject = new GameObject("TargetRow_" + (rowIndex + 1), typeof(RectTransform), typeof(HorizontalLayoutGroup));
+        RectTransform rowRect = (RectTransform)rowObject.transform;
+        rowRect.SetParent(targetsContainer, false);
+        rowRect.anchorMin = new Vector2(0f, 0.5f);
+        rowRect.anchorMax = new Vector2(1f, 0.5f);
+        rowRect.pivot = new Vector2(0.5f, 0.5f);
+        rowRect.sizeDelta = new Vector2(0f, targetSize);
+
+        HorizontalLayoutGroup layout = rowObject.GetComponent<HorizontalLayoutGroup>();
+        layout.spacing = 4f;
+        layout.childAlignment = TextAnchor.MiddleCenter;
+        layout.childControlWidth = false;
+        layout.childControlHeight = false;
+        layout.childForceExpandWidth = false;
+        layout.childForceExpandHeight = false;
+        layout.childScaleWidth = false;
+        layout.childScaleHeight = false;
+        return rowRect;
+    }
+
+    private void PositionRows(int rowCount)
+    {
+        float rowSpacing = 4f;
+        float offset = rowCount > 1 ? (targetSize + rowSpacing) * 0.5f : 0f;
+        for (int i = 0; i < rowCount; i++)
+            rowContainers[i].anchoredPosition = new Vector2(0f, offset - i * (targetSize + rowSpacing));
+    }
+
+    private TargetVisual CreateTargetVisual(int index, OSUStep step, RectTransform rowContainer)
     {
         GameObject targetObject = new GameObject(
             "TargetIcon_" + (index + 1),
@@ -156,7 +196,7 @@ public sealed class OSUPhaseProgressUI : MonoBehaviour
             typeof(Image));
 
         RectTransform targetRect = (RectTransform)targetObject.transform;
-        targetRect.SetParent(targetsContainer, false);
+        targetRect.SetParent(rowContainer, false);
         targetRect.sizeDelta = new Vector2(targetSize, targetSize);
 
         Image targetImage = targetObject.GetComponent<Image>();
@@ -329,6 +369,14 @@ public sealed class OSUPhaseProgressUI : MonoBehaviour
         }
 
         targetVisuals.Clear();
+
+        for (int i = rowContainers.Count - 1; i >= 0; i--)
+        {
+            if (rowContainers[i] != null)
+                Destroy(rowContainers[i].gameObject);
+        }
+
+        rowContainers.Clear();
     }
 
     private static void KillTargetTweens(TargetVisual target)

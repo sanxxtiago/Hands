@@ -2,7 +2,7 @@ public enum ExerciseType
 {
     Insert,
     OSU,
-    Duck
+    DuckHunter
 }
 
 public enum HandType
