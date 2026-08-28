@@ -1,20 +1,26 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 public class OrientationPieceBehaviour : Interactable
 {
+    public event Action OnGrabbed;
+    public event Action OnReleased;
+
     public bool isFitted;
-    public bool IsGrabbed = false;
+    public bool IsGrabbed { get; private set; }
     private Rigidbody rb;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
     }
+
     void Update()
     {
-        //Clase base
         transform.position = ClampPosition(transform.position);
     }
+
     public override bool CanInteract(InteractionType interactionType)
     {
         return !isFitted;
@@ -28,13 +34,14 @@ public class OrientationPieceBehaviour : Interactable
     public override void OnGrabStart()
     {
         base.OnGrabStart();
-        //Debug.Log("GRABBING FROM ORI");
         IsGrabbed = true;
+        OnGrabbed?.Invoke();
     }
 
     public override void OnGrabEnd()
     {
         base.OnGrabEnd();
         IsGrabbed = false;
+        OnReleased?.Invoke();
     }
 }

@@ -3,25 +3,47 @@ using UnityEngine;
 public class ResultsManager : MonoBehaviour
 {
     public ResultsUI resultsUI;
-    void OnEnable()
+
+    private void OnEnable()
     {
-        GameManager.OnShowResults += HandleShowResults;
         MetricsTrackingSystem.OnTrackingStop += HandleSetResults;
     }
-    void OnDisable()
+
+    private void OnDisable()
     {
-        GameManager.OnShowResults -= HandleShowResults;
         MetricsTrackingSystem.OnTrackingStop -= HandleSetResults;
     }
 
-    private void HandleShowResults()
+    public void OpenResults()
     {
-        //Debug.Log("RESULTSSSSS");
+        if (resultsUI == null)
+        {
+            Debug.LogWarning("[ResultsSystem][ResultsManager] Falta la referencia a ResultsUI.");
+            return;
+        }
+
         resultsUI.Display();
+    }
+
+    public void CloseResults()
+    {
+        if (resultsUI == null)
+        {
+            Debug.LogWarning("[ResultsSystem][ResultsManager] Falta la referencia a ResultsUI.");
+            return;
+        }
+
+        resultsUI.Hide();
     }
 
     private void HandleSetResults(float duration, HandUsageSummary leftSummary, HandUsageSummary rightSummary)
     {
+        if (resultsUI == null)
+        {
+            Debug.LogWarning("[ResultsSystem][ResultsManager] No se pueden cargar resultados sin ResultsUI.");
+            return;
+        }
+
         resultsUI.SetResults(duration, leftSummary, rightSummary);
     }
 }

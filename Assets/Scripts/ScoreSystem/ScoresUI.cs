@@ -13,6 +13,7 @@ public sealed class ScoresUI : MonoBehaviour
     [SerializeField] private Slider scoreSlider;
     [SerializeField] private Transform breakdownContainer;
     [SerializeField] private CanvasGroup group;
+    [SerializeField] private Button metricsButton;
     [SerializeField] private float fadeInTime = .5f;
 
     [Header("Stat Cards (Scores panel)")]
@@ -27,17 +28,32 @@ public sealed class ScoresUI : MonoBehaviour
     {
         GameManager.OnShowResults += HandleShowScore;
         ScoreEventBus.OnScoreCompleted += HandleScoreCompleted;
+
+        if (metricsButton != null)
+        {
+            metricsButton.onClick.AddListener(OpenMetrics);
+        }
     }
 
     private void OnDisable()
     {
         GameManager.OnShowResults -= HandleShowScore;
         ScoreEventBus.OnScoreCompleted -= HandleScoreCompleted;
+
+        if (metricsButton != null)
+        {
+            metricsButton.onClick.RemoveListener(OpenMetrics);
+        }
     }
 
-    void Start()
+    private void Start()
     {
+        if (group == null)
+            return;
+
         group.alpha = 0f;
+        group.interactable = false;
+        group.blocksRaycasts = false;
     }
 
     private void HandleScoreCompleted(ExerciseScore score)
@@ -124,11 +140,28 @@ public sealed class ScoresUI : MonoBehaviour
         Display();
     }
 
+    private void OpenMetrics()
+    {
+        ResultsManager resultsManager = FindFirstObjectByType<ResultsManager>();
+        if (resultsManager == null)
+        {
+            Debug.LogWarning("[ScoreSystem][ScoresUI] No se encontró ResultsManager para abrir las métricas.");
+            return;
+        }
+
+        resultsManager.OpenResults();
+    }
+
     public void Display()
     {
+        if (group == null)
+            return;
+
         group.DOKill();
-        group.alpha = 0;
-        group.DOFade(1, fadeInTime);
+        group.alpha = 0f;
+        group.interactable = true;
+        group.blocksRaycasts = true;
+        group.DOFade(1f, fadeInTime);
     }
 
 }

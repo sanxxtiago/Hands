@@ -19,5 +19,10 @@ public enum AudioType
     PhaseCompleted = 12,
     ExerciseAmbience = 13,
     MenuTheme = 14,
-    DuckHit = 15
+    DuckHit = 15,
+
+    // Trofeo
+    TrophyGold = 16,
+    TrophySilver = 17,
+    TrophyBronze = 18
 }

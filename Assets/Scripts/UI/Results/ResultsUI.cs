@@ -2,6 +2,7 @@ using System;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ResultsUI : MonoBehaviour
 {
@@ -43,17 +44,51 @@ public class ResultsUI : MonoBehaviour
     public TMP_Text generalSuggestionText;
 
     public CanvasGroup group;
+    [SerializeField] private Button closeButton;
     [SerializeField] private float fadeInTime = .5f;
 
-    void Start()
+    private void OnEnable()
     {
-        group.alpha = 0f;
+        if (closeButton != null)
+        {
+            closeButton.onClick.AddListener(Hide);
+        }
     }
+
+    private void OnDisable()
+    {
+        if (closeButton != null)
+        {
+            closeButton.onClick.RemoveListener(Hide);
+        }
+    }
+
+    private void Start()
+    {
+        Hide();
+    }
+
     public void Display()
     {
+        if (group == null)
+            return;
+
         group.DOKill();
-        group.alpha = 0;
-        group.DOFade(1, fadeInTime);
+        group.alpha = 0f;
+        group.interactable = true;
+        group.blocksRaycasts = true;
+        group.DOFade(1f, fadeInTime);
+    }
+
+    public void Hide()
+    {
+        if (group == null)
+            return;
+
+        group.DOKill();
+        group.alpha = 0f;
+        group.interactable = false;
+        group.blocksRaycasts = false;
     }
 
     public void SetResults(float duration, HandUsageSummary left, HandUsageSummary right)
