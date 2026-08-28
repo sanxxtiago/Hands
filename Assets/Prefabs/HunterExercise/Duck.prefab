@@ -175,7 +175,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2829531013624671764}
-  - component: {fileID: 6962836770149414674}
+  - component: {fileID: 5824876087782385115}
   - component: {fileID: 6491033308110631231}
   m_Layer: 10
   m_Name: Duck
@@ -203,8 +203,8 @@ Transform:
   - {fileID: 6020676445896560616}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
---- !u!65 &6962836770149414674
-BoxCollider:
+--- !u!135 &5824876087782385115
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -222,8 +222,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.04, y: 0.05, z: 0.06}
-  m_Center: {x: 0, y: 0.017, z: 0}
+  m_Radius: 0.025
+  m_Center: {x: 0, y: 0.018, z: 0}
 --- !u!114 &6491033308110631231
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -246,7 +246,8 @@ MonoBehaviour:
   squashScale: {x: 1.3, y: 0.55, z: 1.3}
   stretchScale: {x: 0.85, y: 1.2, z: 0.85}
   vanishedScale: 0.05
-  deathEffectPrefab: {fileID: 2930418776905330800, guid: a473ea2ef5464115a83d11f65cc981fb, type: 3}
+  deathEffectPrefab: {fileID: 2930418776905330800, guid: a473ea2ef5464115a83d11f65cc981fb,
+    type: 3}
   deathEffectLifetime: 2
 --- !u!1 &5125578299137808199
 GameObject:

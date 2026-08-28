@@ -1435,7 +1435,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &222757517
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11591,6 +11591,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: TrophySystem
       objectReference: {fileID: 0}
+    - target: {fileID: 5211578114219861515, guid: 1fab2ecc7f755f746873cca3878dcd49,
+        type: 3}
+      propertyPath: trophyImage
+      value: 
+      objectReference: {fileID: 856445535}
+    - target: {fileID: 5211578114219861515, guid: 1fab2ecc7f755f746873cca3878dcd49,
+        type: 3}
+      propertyPath: scoreManager
+      value: 
+      objectReference: {fileID: 381754428}
+    - target: {fileID: 5211578114219861515, guid: 1fab2ecc7f755f746873cca3878dcd49,
+        type: 3}
+      propertyPath: scoreAnchorTarget
+      value: 
+      objectReference: {fileID: 997372119}
     - target: {fileID: 5511115594226299081, guid: 1fab2ecc7f755f746873cca3878dcd49,
         type: 3}
       propertyPath: m_IsActive
@@ -14792,11 +14807,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Duck
-      objectReference: {fileID: 0}
-    - target: {fileID: 4665875476290237885, guid: aac52138f916de84082373b998bb73af,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
