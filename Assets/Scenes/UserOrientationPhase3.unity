@@ -1535,7 +1535,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isFitted: 0
-  IsGrabbed: 0
 --- !u!1 &437054171
 GameObject:
   m_ObjectHideFlags: 0
@@ -3045,8 +3044,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugBox: 0
-  min: {x: 0, y: 0, z: 0}
-  max: {x: 0, y: 0, z: 0}
 --- !u!65 &1092255327
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3306,6 +3303,8 @@ MonoBehaviour:
   maxAttempts: 50
   message: {fileID: 407914338}
   transition: {fileID: 698804774}
+  completedMessageDuration: 1
+  modalDelay: 2
 --- !u!1 &1122035073
 GameObject:
   m_ObjectHideFlags: 0
@@ -3474,7 +3473,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3723bb218496db747955385bd17a5cea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  handType: 0
+  handType: 2
   grabRadius: 0.06
   grabOffset: {x: 0, y: -0.05, z: 0.04}
   interactableLayer:
@@ -3727,7 +3726,7 @@ MonoBehaviour:
   orientationManager: {fileID: 1117960206}
   transition: {fileID: 698804774}
   fadeDuration: 0.5
-  sceneName: Insert_Config1
+  sceneName: Insert
 --- !u!225 &1254524233
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -4566,6 +4565,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 654796432}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1650015542
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 750015542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6badae77472b4bb79ce4fe31b7717201, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  phaseManager: {fileID: 1117960206}
+  orientationSlot: {fileID: 0}
 --- !u!1 &1664485543
 GameObject:
   m_ObjectHideFlags: 0
@@ -5587,8 +5600,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugBox: 1
-  min: {x: 0, y: 0, z: 0}
-  max: {x: 0, y: 0, z: 0}
 --- !u!65 &1978792806
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6019,17 +6030,3 @@ SceneRoots:
   - {fileID: 1697546847}
   - {fileID: 288711627}
   - {fileID: 750015544}
---- !u!114 &1650015542
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 750015542}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6badae77472b4bb79ce4fe31b7717201, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  phaseManager: {fileID: 1117960206}
-  orientationSlot: {fileID: 0}
