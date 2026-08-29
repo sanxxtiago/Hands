@@ -115,7 +115,12 @@ public sealed class LeaderboardDataController : MonoBehaviour
                 ? topEntries[i]
                 : null;
 
-            rows.Add(LeaderboardRowData.FromEntry(entry, i + 1, false));
+            bool isCurrentUser = result != null
+                && result.CurrentUserEntry != null
+                && entry != null
+                && entry.UserId == result.CurrentUserEntry.UserId;
+
+            rows.Add(LeaderboardRowData.FromEntry(entry, i + 1, isCurrentUser));
         }
 
         bool showCurrentUserRow = result != null

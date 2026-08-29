@@ -11,8 +11,8 @@ public sealed class LeaderboardView : MonoBehaviour
 
     [Header("Visual")]
     [SerializeField] private TMP_Text statusText;
-    [SerializeField] private Color currentUserAccentColor = new Color(0.9456509f, 0.9811321f, 0.6618013f, 1f);
     [SerializeField] private Color currentUserTextColor = new Color(0.9456509f, 0.9811321f, 0.6618013f, 1f);
+    [SerializeField, Min(0f)] private float currentUserRankFontSizeIncrease = 2f;
 
     private RowView[] rows = Array.Empty<RowView>();
     private string defaultStatusText = string.Empty;
@@ -34,7 +34,7 @@ public sealed class LeaderboardView : MonoBehaviour
                 ? data.Rows[i]
                 : null;
 
-            rows[i].Render(rowData, currentUserAccentColor, currentUserTextColor);
+            rows[i].Render(rowData, currentUserTextColor, currentUserRankFontSizeIncrease);
         }
 
         if (statusText != null)
@@ -104,11 +104,12 @@ public sealed class LeaderboardView : MonoBehaviour
         private readonly Color defaultUserNameColor;
         private readonly Color defaultScoreColor;
         private readonly FontStyles defaultUserNameFontStyle;
+        private readonly float defaultPositionFontSize;
 
         public RowView(Transform rowRoot)
         {
             root = rowRoot.gameObject;
-            positionText = FindText(rowRoot, "Rank", "Position", "Subtitle (1)");
+            positionText = FindText(rowRoot, "Rank");
             initialsText = FindText(rowRoot, "Initials");
             userNameText = FindText(rowRoot, "UserName");
             scoreText = FindText(rowRoot, "Score");
@@ -122,12 +123,15 @@ public sealed class LeaderboardView : MonoBehaviour
             defaultUserNameFontStyle = userNameText != null
                 ? userNameText.fontStyle
                 : FontStyles.Normal;
+            defaultPositionFontSize = positionText != null
+                ? positionText.fontSize
+                : 0f;
         }
 
         public void Render(
             LeaderboardRowData data,
-            Color currentAccentColor,
-            Color currentTextColor)
+            Color currentTextColor,
+            float rankFontSizeIncrease)
         {
             bool isVisible = data != null && data.IsVisible;
             root.SetActive(isVisible);
@@ -142,12 +146,15 @@ public sealed class LeaderboardView : MonoBehaviour
             {
                 positionText.text = $"#{data.Position}";
                 positionText.color = isCurrentUser ? currentTextColor : defaultPositionColor;
+                positionText.fontSize = isCurrentUser
+                    ? defaultPositionFontSize + rankFontSizeIncrease
+                    : defaultPositionFontSize;
             }
 
             if (initialsText != null)
             {
                 initialsText.text = BuildInitials(data.UserName);
-                initialsText.color = isCurrentUser ? currentTextColor : defaultInitialsColor;
+                initialsText.color = defaultInitialsColor;
             }
 
             if (userNameText != null)
@@ -166,7 +173,7 @@ public sealed class LeaderboardView : MonoBehaviour
             }
 
             if (topAccent != null)
-                topAccent.color = isCurrentUser ? currentAccentColor : defaultAccentColor;
+                topAccent.color = defaultAccentColor;
         }
 
         private static TMP_Text FindText(Transform root, params string[] names)
