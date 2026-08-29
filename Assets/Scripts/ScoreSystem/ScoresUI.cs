@@ -73,7 +73,7 @@ public sealed class ScoresUI : MonoBehaviour
             ScoreDisplayFormatter.FormatBreakdown(score.breakdown),
             "breakdownText");
 
-        ApplyStatCards(score.statsData);
+        ApplyStatCards(score.statsData, score.exerciseType);
 
         if (scoreSlider != null)
         {
@@ -90,10 +90,10 @@ public sealed class ScoresUI : MonoBehaviour
         }
     }
 
-    private void ApplyStatCards(ScoreStatsData stats)
+    private void ApplyStatCards(ScoreStatsData stats, ScoreExerciseType exerciseType)
     {
-        bool hasMisses = stats.misses > 0;
-        SetGameObjectActive(statCardMisses, hasMisses);
+        bool showMisses = exerciseType != ScoreExerciseType.Insert;
+        SetGameObjectActive(statCardMisses, showMisses);
         SetGameObjectActive(statCardDuration, statCardDuration != null);
         SetGameObjectActive(statCardHits, statCardHits != null);
 

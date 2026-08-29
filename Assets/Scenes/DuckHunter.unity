@@ -690,7 +690,6 @@ GameObject:
   m_Component:
   - component: {fileID: 43925655}
   - component: {fileID: 43925656}
-  - component: {fileID: 43925657}
   - component: {fileID: 43925659}
   - component: {fileID: 43925661}
   - component: {fileID: 43925662}
@@ -741,19 +740,6 @@ MonoBehaviour:
   scoreManager: {fileID: 381754428}
   scoreAdapter: {fileID: 381754427}
   sequence: {fileID: 11400000, guid: fea462375d2db0c49bd9d45da942aadb, type: 2}
---- !u!114 &43925657
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 43925653}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00594f6072eb79440841d5e0ff1a41ae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DebugEvents: 1
 --- !u!114 &43925659
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -931,6 +917,91 @@ RectTransform:
   m_AnchoredPosition: {x: -5, y: 0}
   m_SizeDelta: {x: -20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &91134414
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 91134416}
+  - component: {fileID: 91134415}
+  m_Layer: 0
+  m_Name: RightSHOTDetector
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &91134415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 91134414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5937b8bac5cfe9342b3bca39ce6b5b3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  checkBothHands: 0
+  bothHandsMustMatchPose: 0
+  chiralityToCheck: 1
+  poseToDetect: {fileID: 11400000, guid: 9929a0f861dcc7c4b8316ac26204db02, type: 2}
+  posesToDetect: []
+  leapProvider: {fileID: 0}
+  OnPoseDetected:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1875341538}
+        m_TargetAssemblyTypeName: HandPoseListener, Assembly-CSharp
+        m_MethodName: OnShootPoseBegin
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  WhilePoseDetected:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPoseLost:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1875341538}
+        m_TargetAssemblyTypeName: HandPoseListener, Assembly-CSharp
+        m_MethodName: OnShootPoseEnd
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  poseRules: []
+  poseProximityRules: []
+--- !u!4 &91134416
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 91134414}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 377.20673, y: 54.40052, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &101544655
 GameObject:
   m_ObjectHideFlags: 0
@@ -2215,7 +2286,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   handInput: {fileID: 43925659}
-  poseListener: {fileID: 43925657}
+  poseListener: {fileID: 367788028}
   handType: 1
   laserLength: 0.25
   laserOriginOffset: 0.1
@@ -2230,6 +2301,51 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 338621363}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &367788027
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 367788029}
+  - component: {fileID: 367788028}
+  m_Layer: 0
+  m_Name: LeftHandPoseListener
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &367788028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 367788027}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00594f6072eb79440841d5e0ff1a41ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DebugEvents: 0
+--- !u!4 &367788029
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 367788027}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -3581,7 +3697,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   handInput: {fileID: 43925659}
-  poseListener: {fileID: 43925657}
+  poseListener: {fileID: 1875341538}
   handType: 2
   laserLength: 0.25
   laserOriginOffset: 0.1
@@ -5322,6 +5438,100 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
+--- !u!1 &864902678
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 864902680}
+  - component: {fileID: 864902679}
+  m_Layer: 0
+  m_Name: RightAIMDetector
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &864902679
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 864902678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5937b8bac5cfe9342b3bca39ce6b5b3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  checkBothHands: 1
+  bothHandsMustMatchPose: 0
+  chiralityToCheck: 0
+  poseToDetect: {fileID: 11400000, guid: d785cafce41c86b4995ccd6967337e83, type: 2}
+  posesToDetect:
+  - {fileID: 11400000, guid: 1955f79e8b3f2074b9970fdb7f3a21d3, type: 2}
+  - {fileID: 11400000, guid: 6770d915b0e377d429f9a14afa2c5d16, type: 2}
+  - {fileID: 11400000, guid: c8f8b17b102dfb24a946101bce91e047, type: 2}
+  - {fileID: 11400000, guid: 26ace1b456f94ff4eb17c496ee34299f, type: 2}
+  - {fileID: 11400000, guid: bfa93758bfc9daa4db50bcf616b4baf2, type: 2}
+  - {fileID: 11400000, guid: 269cf905fb31cc447a2c51e3ff952a4f, type: 2}
+  - {fileID: 11400000, guid: 9386a51228a596b4c8a35945429ffe14, type: 2}
+  - {fileID: 11400000, guid: 81a6e66f2cf514147aafabf2d1064203, type: 2}
+  - {fileID: 11400000, guid: ab8a881f3774d89488ef180113f7281a, type: 2}
+  leapProvider: {fileID: 0}
+  OnPoseDetected:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1875341538}
+        m_TargetAssemblyTypeName: HandPoseListener, Assembly-CSharp
+        m_MethodName: OnAimPoseBegin
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  WhilePoseDetected:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPoseLost:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1875341538}
+        m_TargetAssemblyTypeName: HandPoseListener, Assembly-CSharp
+        m_MethodName: OnShootPoseEnd
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  poseRules: []
+  poseProximityRules: []
+--- !u!4 &864902680
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 864902678}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 377.20673, y: 54.40052, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &875843277
 GameObject:
   m_ObjectHideFlags: 0
@@ -6616,6 +6826,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5854433975003434741, guid: 39a5a08e669c09042abf53b4b39c2d9d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5928131379468107724, guid: 39a5a08e669c09042abf53b4b39c2d9d,
         type: 3}
@@ -8092,7 +8307,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sequenceRunner: {fileID: 43925661}
   poseListeners:
-  - {fileID: 43925657}
+  - {fileID: 0}
 --- !u!1 &1232738117
 GameObject:
   m_ObjectHideFlags: 0
@@ -10328,7 +10543,7 @@ GameObject:
   - component: {fileID: 1602851556}
   - component: {fileID: 1602851555}
   m_Layer: 0
-  m_Name: SHOTDetector
+  m_Name: LeftSHOTDetector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10346,7 +10561,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5937b8bac5cfe9342b3bca39ce6b5b3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  checkBothHands: 1
+  checkBothHands: 0
   bothHandsMustMatchPose: 0
   chiralityToCheck: 0
   poseToDetect: {fileID: 11400000, guid: 9929a0f861dcc7c4b8316ac26204db02, type: 2}
@@ -10355,7 +10570,7 @@ MonoBehaviour:
   OnPoseDetected:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 43925657}
+      - m_Target: {fileID: 367788028}
         m_TargetAssemblyTypeName: HandPoseListener, Assembly-CSharp
         m_MethodName: OnShootPoseBegin
         m_Mode: 1
@@ -10373,7 +10588,7 @@ MonoBehaviour:
   OnPoseLost:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 43925657}
+      - m_Target: {fileID: 367788028}
         m_TargetAssemblyTypeName: HandPoseListener, Assembly-CSharp
         m_MethodName: OnShootPoseEnd
         m_Mode: 1
@@ -11780,6 +11995,51 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1875341537
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1875341539}
+  - component: {fileID: 1875341538}
+  m_Layer: 0
+  m_Name: RightHandPoseListener
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1875341538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1875341537}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00594f6072eb79440841d5e0ff1a41ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DebugEvents: 0
+--- !u!4 &1875341539
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1875341537}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1877227173
 GameObject:
   m_ObjectHideFlags: 0
@@ -13449,7 +13709,7 @@ GameObject:
   - component: {fileID: 5571620627936939128}
   - component: {fileID: 5571620627936939131}
   m_Layer: 0
-  m_Name: AIMDetector
+  m_Name: LeftAIMDetector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13485,7 +13745,7 @@ MonoBehaviour:
   OnPoseDetected:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 43925657}
+      - m_Target: {fileID: 367788028}
         m_TargetAssemblyTypeName: HandPoseListener, Assembly-CSharp
         m_MethodName: OnAimPoseBegin
         m_Mode: 1
@@ -13503,7 +13763,7 @@ MonoBehaviour:
   OnPoseLost:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 43925657}
+      - m_Target: {fileID: 367788028}
         m_TargetAssemblyTypeName: HandPoseListener, Assembly-CSharp
         m_MethodName: OnAimPoseEnd
         m_Mode: 1
@@ -13911,7 +14171,9 @@ SceneRoots:
   - {fileID: 1573140588}
   - {fileID: 1763604296}
   - {fileID: 5571620627936939128}
+  - {fileID: 864902680}
   - {fileID: 1602851556}
+  - {fileID: 91134416}
   - {fileID: 1452746534}
   - {fileID: 540416930}
   - {fileID: 1903367412}
@@ -13926,6 +14188,8 @@ SceneRoots:
   - {fileID: 637544038}
   - {fileID: 338621366}
   - {fileID: 569803557}
+  - {fileID: 367788029}
+  - {fileID: 1875341539}
   - {fileID: 43925655}
   - {fileID: 1309833412}
   - {fileID: 700332710}
