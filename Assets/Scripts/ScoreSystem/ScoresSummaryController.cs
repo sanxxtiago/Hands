@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using TMPro;
@@ -7,6 +8,8 @@ using UnityEngine.Events;
 
 public sealed class ScoresSummaryController : MonoBehaviour
 {
+    public event Action<ScoreExerciseType> OnExerciseSelected;
+
     [Header("Session Source")]
     [SerializeField] private bool useLastSession = true;
     [SerializeField] private string explicitSessionGuid;
@@ -99,6 +102,7 @@ public sealed class ScoresSummaryController : MonoBehaviour
     {
         SetSelectedTab(insertButton);
         SetSelectedCard(insertCard);
+        PublishExerciseSelected(ScoreExerciseType.Insert);
         SelectExercise(insertRecord);
     }
 
@@ -106,6 +110,7 @@ public sealed class ScoresSummaryController : MonoBehaviour
     {
         SetSelectedTab(osuButton);
         SetSelectedCard(osuCard);
+        PublishExerciseSelected(ScoreExerciseType.OSU);
         SelectExercise(osuRecord);
     }
 
@@ -113,7 +118,13 @@ public sealed class ScoresSummaryController : MonoBehaviour
     {
         SetSelectedTab(duckHunterButton);
         SetSelectedCard(duckHunterCard);
+        PublishExerciseSelected(ScoreExerciseType.DuckHunter);
         SelectExercise(duckRecord);
+    }
+
+    private void PublishExerciseSelected(ScoreExerciseType exerciseType)
+    {
+        OnExerciseSelected?.Invoke(exerciseType);
     }
 
     private void SelectExercise(ScoreRecord record)

@@ -33,7 +33,9 @@ public class ScorePersistenceListener : MonoBehaviour
         if (score == null || !score.isValid)
             return;
 
-        if (PersistenceManager.Instance == null)
+        PersistenceManager persistenceManager = PersistenceManager.Instance;
+
+        if (persistenceManager == null)
         {
             Debug.LogWarning("[ScorePersistenceListener] PersistenceManager no disponible.");
             return;
@@ -63,7 +65,13 @@ public class ScorePersistenceListener : MonoBehaviour
             breakdown = score.breakdown
         };
 
-        PersistenceManager.Instance.ScoreService.AddScore(record);
+        persistenceManager.ScoreService.AddScore(record);
+
+        UserData currentUser = persistenceManager.UserService?.CurrentUser;
+        persistenceManager.LeaderboardService?.UpdateHighscore(
+            record,
+            currentUser?.UserId,
+            currentUser?.Name);
 
         Debug.Log($"[ScorePersistenceListener] Score persistido: ejercicio={score.exerciseType}, " +
             $"score={score.totalScore:F2}, grado={score.scoreGrade}, " +

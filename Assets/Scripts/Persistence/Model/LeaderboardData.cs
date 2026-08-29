@@ -17,3 +17,21 @@ public class LeaderboardEntry
     public string ScoreGrade;
     public TrophyTier TrophyTier;
 }
+
+public sealed class LeaderboardQueryResult
+{
+    public IReadOnlyList<LeaderboardEntry> TopEntries { get; }
+    public LeaderboardEntry CurrentUserEntry { get; }
+    public int CurrentUserPosition { get; }
+    public bool HasCurrentUserEntry => CurrentUserEntry != null;
+
+    public LeaderboardQueryResult(
+        IReadOnlyList<LeaderboardEntry> topEntries,
+        LeaderboardEntry currentUserEntry,
+        int currentUserPosition)
+    {
+        TopEntries = topEntries ?? Array.Empty<LeaderboardEntry>();
+        CurrentUserEntry = currentUserEntry;
+        CurrentUserPosition = currentUserPosition;
+    }
+}
