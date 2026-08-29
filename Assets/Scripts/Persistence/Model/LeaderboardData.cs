@@ -12,6 +12,7 @@ public class LeaderboardEntry
     public string UserId;
     public string UserName;
     public float Score;
+    public float? DurationSeconds;
     public DateTime RecordedAt;
     public string SessionGuid;
     public string ScoreGrade;

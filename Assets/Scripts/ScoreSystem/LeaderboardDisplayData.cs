@@ -21,6 +21,7 @@ public sealed class LeaderboardRowData
     public int Position { get; }
     public string UserName { get; }
     public float Score { get; }
+    public float? DurationSeconds { get; }
     public bool IsCurrentUser { get; }
 
     private LeaderboardRowData(
@@ -28,12 +29,14 @@ public sealed class LeaderboardRowData
         int position,
         string userName,
         float score,
+        float? durationSeconds,
         bool isCurrentUser)
     {
         IsVisible = isVisible;
         Position = position;
         UserName = userName ?? string.Empty;
         Score = score;
+        DurationSeconds = durationSeconds;
         IsCurrentUser = isCurrentUser;
     }
 
@@ -54,11 +57,12 @@ public sealed class LeaderboardRowData
             position,
             userName,
             entry.Score,
+            entry.DurationSeconds,
             isCurrentUser);
     }
 
     public static LeaderboardRowData Hidden()
     {
-        return new LeaderboardRowData(false, 0, string.Empty, 0f, false);
+        return new LeaderboardRowData(false, 0, string.Empty, 0f, null, false);
     }
 }

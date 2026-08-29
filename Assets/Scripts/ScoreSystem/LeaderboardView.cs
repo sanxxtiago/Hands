@@ -97,6 +97,7 @@ public sealed class LeaderboardView : MonoBehaviour
         private readonly TMP_Text initialsText;
         private readonly TMP_Text userNameText;
         private readonly TMP_Text scoreText;
+        private readonly TMP_Text durationText;
         private readonly Image topAccent;
         private readonly Color defaultAccentColor;
         private readonly Color defaultPositionColor;
@@ -113,6 +114,7 @@ public sealed class LeaderboardView : MonoBehaviour
             initialsText = FindText(rowRoot, "Initials");
             userNameText = FindText(rowRoot, "UserName");
             scoreText = FindText(rowRoot, "Score");
+            durationText = FindText(rowRoot, "Duration");
             topAccent = FindImage(rowRoot, "TopAccent");
 
             defaultAccentColor = topAccent != null ? topAccent.color : Color.white;
@@ -172,6 +174,9 @@ public sealed class LeaderboardView : MonoBehaviour
                 scoreText.color = isCurrentUser ? currentTextColor : defaultScoreColor;
             }
 
+            if (durationText != null)
+                durationText.text = FormatDuration(data.DurationSeconds);
+
             if (topAccent != null)
                 topAccent.color = defaultAccentColor;
         }
@@ -202,6 +207,23 @@ public sealed class LeaderboardView : MonoBehaviour
             }
 
             return null;
+        }
+
+        private static string FormatDuration(float? durationSeconds)
+        {
+            if (!durationSeconds.HasValue
+                || !ScoreMath.IsFinite(durationSeconds.Value)
+                || durationSeconds.Value < 0f)
+            {
+                return "---";
+            }
+
+            int totalSeconds = Mathf.FloorToInt(durationSeconds.Value);
+            int minutes = totalSeconds / 60;
+            int remainingSeconds = totalSeconds % 60;
+            string unit = minutes > 0 ? "mins" : "seg";
+
+            return $"{minutes:D2}:{remainingSeconds:D2} {unit}";
         }
 
         private static string BuildInitials(string userName)

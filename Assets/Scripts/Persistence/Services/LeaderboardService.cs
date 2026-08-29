@@ -71,6 +71,7 @@ public class LeaderboardService
             UserId = userId,
             UserName = userName ?? string.Empty,
             Score = record.totalScore,
+            DurationSeconds = GetValidDuration(record.statsData.exerciseDuration),
             RecordedAt = record.recordedAt == default
                 ? DateTime.Now
                 : record.recordedAt,
@@ -316,5 +317,12 @@ public class LeaderboardService
         return !float.IsNaN(value)
             && !float.IsInfinity(value)
             && value >= 0f;
+    }
+
+    private static float? GetValidDuration(float value)
+    {
+        return ScoreMath.IsFinite(value) && value >= 0f
+            ? value
+            : (float?)null;
     }
 }
