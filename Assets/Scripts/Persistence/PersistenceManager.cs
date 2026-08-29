@@ -27,13 +27,52 @@ public class PersistenceManager : MonoBehaviour
     private void InitializeServices()
     {
         UserService = new UserService();
-        SessionService = new SessionService();
-        ScoreService = new ScoreService();
-        //SettingsService = new SettingsService();
-
         UserService.Load();
+
+        string userId = UserService.CurrentUser?.UserId;
+
+        SessionService = new SessionService(userId);
+        ScoreService = new ScoreService(userId);
         SessionService.Load();
         ScoreService.Load();
+
+        UserService.OnCurrentUserChanged += OnCurrentUserChanged;
         //SettingsService.Load();
+    }
+
+    private void OnCurrentUserChanged()
+    {
+        string userId = UserService.CurrentUser?.UserId;
+
+        Debug.Log(
+            $"[PersistenceManager] Recargando datos para el usuario {userId ?? "ninguno"}.");
+
+        SessionService.SetUserContext(userId);
+        ScoreService.SetUserContext(userId);
+
+        SessionService.Load();
+        ScoreService.Load();
+    }
+
+    public bool SelectUser(string userId)
+    {
+        if (UserService == null)
+        {
+            Debug.LogWarning("[PersistenceManager] UserService no está inicializado.");
+            return false;
+        }
+
+        return UserService.SelectUser(userId);
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance != this)
+            return;
+
+        if (UserService != null)
+            UserService.OnCurrentUserChanged -= OnCurrentUserChanged;
+
+        Instance = null;
     }
 }

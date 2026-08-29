@@ -3,15 +3,37 @@ using System.Linq;
 
 public class SessionService
 {
+    private string userId;
     private SessionsData sessionsData = new();
+
+    public SessionService()
+    {
+    }
+
+    public SessionService(string userId)
+    {
+        SetUserContext(userId);
+    }
 
     public IReadOnlyList<SessionSummary> Sessions => sessionsData.Sessions;
 
     public int TotalSessions => sessionsData.Sessions.Count;
 
+    public void SetUserContext(string userId)
+    {
+        this.userId = userId;
+        sessionsData = new SessionsData();
+    }
+
     public void Load()
     {
-        sessionsData = SaveSystem.Load<SessionsData>(SaveFiles.Sessions);
+        if (string.IsNullOrWhiteSpace(userId))
+        {
+            sessionsData = new SessionsData();
+            return;
+        }
+
+        sessionsData = SaveSystem.Load<SessionsData>(userId, SaveFiles.Sessions);
 
         if (sessionsData == null)
         {
@@ -21,7 +43,10 @@ public class SessionService
 
     public void Save()
     {
-        SaveSystem.Save(SaveFiles.Sessions, sessionsData);
+        if (string.IsNullOrWhiteSpace(userId))
+            return;
+
+        SaveSystem.Save(userId, SaveFiles.Sessions, sessionsData);
     }
 
     public SessionSummary AddSession(SessionSummary summary)
@@ -42,7 +67,9 @@ public class SessionService
 
     public void DeleteAll()
     {
-        SaveSystem.Delete(SaveFiles.Sessions);
+        if (!string.IsNullOrWhiteSpace(userId))
+            SaveSystem.Delete(userId, SaveFiles.Sessions);
+
         sessionsData = new SessionsData();
     }
 

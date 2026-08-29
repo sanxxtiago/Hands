@@ -120,5 +120,7 @@ public class RegisterForm : MonoBehaviour
         PersistenceManager.Instance.UserService.Register(
             userName,
             GetBirthDate());
+
+        gameObject.SetActive(false);
     }
 }

@@ -4,6 +4,9 @@ using UnityEngine;
 
 public static class SaveSystem
 {
+    private const string AppDirectoryName = "app";
+    private const string ProfilesDirectoryName = "profiles";
+
     private static readonly JsonSerializerSettings Settings =
     new()
     {
@@ -12,16 +15,57 @@ public static class SaveSystem
 
     public static void Save<T>(string fileName, T data)
     {
-        string json = JsonConvert.SerializeObject(
-            data,
-           Settings);
+        SaveToPath(GetPath(fileName), data);
+    }
 
-        File.WriteAllText(GetPath(fileName), json);
+    public static void Save<T>(string userId, string fileName, T data)
+    {
+        SaveToPath(GetPath(userId, fileName), data);
     }
 
     public static T Load<T>(string fileName)
     {
-        string path = GetPath(fileName);
+        return LoadFromPath<T>(GetPath(fileName));
+    }
+
+    public static T Load<T>(string userId, string fileName)
+    {
+        return LoadFromPath<T>(GetPath(userId, fileName));
+    }
+
+    public static bool Exists(string fileName)
+    {
+        return File.Exists(GetPath(fileName));
+    }
+
+    public static bool Exists(string userId, string fileName)
+    {
+        return File.Exists(GetPath(userId, fileName));
+    }
+
+    public static void Delete(string fileName)
+    {
+        DeletePath(GetPath(fileName));
+    }
+
+    public static void Delete(string userId, string fileName)
+    {
+        DeletePath(GetPath(userId, fileName));
+    }
+
+    private static void SaveToPath<T>(string path, T data)
+    {
+        string json = JsonConvert.SerializeObject(data, Settings);
+        string directory = Path.GetDirectoryName(path);
+
+        if (!string.IsNullOrEmpty(directory))
+            Directory.CreateDirectory(directory);
+
+        File.WriteAllText(path, json);
+    }
+
+    private static T LoadFromPath<T>(string path)
+    {
 
         if (!File.Exists(path))
             return default;
@@ -31,15 +75,8 @@ public static class SaveSystem
         return JsonConvert.DeserializeObject<T>(json);
     }
 
-    public static bool Exists(string fileName)
+    private static void DeletePath(string path)
     {
-        return File.Exists(GetPath(fileName));
-    }
-
-    public static void Delete(string fileName)
-    {
-        string path = GetPath(fileName);
-
         if (File.Exists(path))
             File.Delete(path);
     }
@@ -48,7 +85,17 @@ public static class SaveSystem
     {
         return Path.Combine(
             Application.persistentDataPath,
+            AppDirectoryName,
             $"{fileName}.json");
     }
 
+    private static string GetPath(string userId, string fileName)
+    {
+        return Path.Combine(
+            Application.persistentDataPath,
+            AppDirectoryName,
+            ProfilesDirectoryName,
+            userId,
+            $"{fileName}.json");
+    }
 }

@@ -3,15 +3,37 @@ using System.Linq;
 
 public class ScoreService
 {
+    private string userId;
     private ScoresData scoresData = new();
+
+    public ScoreService()
+    {
+    }
+
+    public ScoreService(string userId)
+    {
+        SetUserContext(userId);
+    }
 
     public IReadOnlyList<ScoreRecord> Records => scoresData.Records;
 
     public int TotalRecords => scoresData.Records.Count;
 
+    public void SetUserContext(string userId)
+    {
+        this.userId = userId;
+        scoresData = new ScoresData();
+    }
+
     public void Load()
     {
-        scoresData = SaveSystem.Load<ScoresData>(SaveFiles.Scores);
+        if (string.IsNullOrWhiteSpace(userId))
+        {
+            scoresData = new ScoresData();
+            return;
+        }
+
+        scoresData = SaveSystem.Load<ScoresData>(userId, SaveFiles.Scores);
 
         if (scoresData == null)
         {
@@ -21,7 +43,10 @@ public class ScoreService
 
     public void Save()
     {
-        SaveSystem.Save(SaveFiles.Scores, scoresData);
+        if (string.IsNullOrWhiteSpace(userId))
+            return;
+
+        SaveSystem.Save(userId, SaveFiles.Scores, scoresData);
     }
 
     public ScoreRecord AddScore(ScoreRecord record)
@@ -62,7 +87,9 @@ public class ScoreService
 
     public void DeleteAll()
     {
-        SaveSystem.Delete(SaveFiles.Scores);
+        if (!string.IsNullOrWhiteSpace(userId))
+            SaveSystem.Delete(userId, SaveFiles.Scores);
+
         scoresData = new ScoresData();
     }
 }
