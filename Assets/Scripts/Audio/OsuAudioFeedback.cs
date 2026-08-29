@@ -41,5 +41,10 @@ public class OsuAudioFeedback : MonoBehaviour
     private void HandleTargetResolved(OSUTargetScoreContext context)
     {
         AudioManager.StopLoop(AudioType.OsuHaloTimer);
+
+        if (context.wasTouched)
+            AudioManager.Play(AudioType.OsuTargetHit);
+        else
+            AudioManager.Play(AudioType.OsuTargetFailed);
     }
 }

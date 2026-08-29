@@ -20,9 +20,12 @@ public enum AudioType
     ExerciseAmbience = 13,
     MenuTheme = 14,
     DuckHit = 15,
-
-    // Trofeo
-    TrophyGold = 16,
-    TrophySilver = 17,
-    TrophyBronze = 18
+    TrophyReveal = 16,
+    OsuTargetHit = 17,
+    OsuTargetFailed = 18,
+    PieceGrabbed = 19,
+    DuckEscape = 20,
+    TrophyGold = 21,
+    TrophySilver = 22,
+    TrophyBronze = 23
 }

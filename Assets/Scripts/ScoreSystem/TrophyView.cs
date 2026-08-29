@@ -16,6 +16,7 @@ public class TrophyView : MonoBehaviour
     [SerializeField] private RawImage trophyImage;
 
     [Header("Anclaje al score UI")]
+    [Tooltip("RectTransform de TotalScoreText")]
     [SerializeField] private RectTransform scoreAnchorTarget;
 
     [Header("Datos del ejercicio")]

@@ -10,6 +10,8 @@ public class GameAudioFeedback : MonoBehaviour
         GameManager.OnExerciseEnd += HandleExerciseEnd;
         ExerciseProgressManager.OnPhaseCompleted += HandlePhaseCompleted;
         PieceBehaviour.OnPieceSnapped += HandlePieceSnapped;
+        PieceBehaviour.OnPieceGrabbed += HandlePieceGrabbed;
+        TrophyView.OnTrophyLanded += HandleTrophyLanded;
     }
 
     private void OnDisable()
@@ -18,6 +20,8 @@ public class GameAudioFeedback : MonoBehaviour
         GameManager.OnExerciseEnd -= HandleExerciseEnd;
         ExerciseProgressManager.OnPhaseCompleted -= HandlePhaseCompleted;
         PieceBehaviour.OnPieceSnapped -= HandlePieceSnapped;
+        PieceBehaviour.OnPieceGrabbed -= HandlePieceGrabbed;
+        TrophyView.OnTrophyLanded -= HandleTrophyLanded;
     }
 
     private void HandleExerciseStart()
@@ -39,5 +43,15 @@ public class GameAudioFeedback : MonoBehaviour
     private void HandlePieceSnapped(PieceBehaviour piece)
     {
         AudioManager.Play(AudioType.PieceSnapped);
+    }
+
+    private void HandlePieceGrabbed(PieceBehaviour piece)
+    {
+        AudioManager.Play(AudioType.PieceGrabbed);
+    }
+
+    private void HandleTrophyLanded(TrophyTier tier)
+    {
+        AudioManager.Play(AudioType.TrophyReveal);
     }
 }

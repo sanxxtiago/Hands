@@ -18,6 +18,9 @@ public class HunterAudioFeedback : MonoBehaviour
         if (sequenceRunner != null)
             sequenceRunner.OnDuckHit += HandleDuckHit;
 
+        if (sequenceRunner != null)
+            sequenceRunner.OnDuckMissed += HandleDuckMissed;
+
         for (int i = 0; i < poseListeners.Length; i++)
         {
             if (poseListeners[i] != null)
@@ -29,6 +32,9 @@ public class HunterAudioFeedback : MonoBehaviour
     {
         if (sequenceRunner != null)
             sequenceRunner.OnDuckHit -= HandleDuckHit;
+
+        if (sequenceRunner != null)
+            sequenceRunner.OnDuckMissed -= HandleDuckMissed;
 
         for (int i = 0; i < poseListeners.Length; i++)
         {
@@ -46,5 +52,10 @@ public class HunterAudioFeedback : MonoBehaviour
     private void HandleDuckHit(DuckScoreContext context)
     {
         AudioManager.Play(AudioType.DuckHit);
+    }
+
+    private void HandleDuckMissed(DuckScoreContext context)
+    {
+        AudioManager.Play(AudioType.DuckEscape);
     }
 }

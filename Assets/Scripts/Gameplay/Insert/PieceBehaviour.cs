@@ -16,6 +16,7 @@ public enum PieceState
 public class PieceBehaviour : Interactable
 {
     public static event Action<PieceBehaviour> OnPieceSnapped;
+    public static event Action<PieceBehaviour> OnPieceGrabbed;
     public HandType requiredHand = HandType.NONE;
     public SlotType pieceType;
     public PieceState state = PieceState.Idle;
@@ -127,6 +128,7 @@ public class PieceBehaviour : Interactable
         }
 
         state = PieceState.Grabbed;
+        OnPieceGrabbed?.Invoke(this);
 
         transform.DOKill();
         if (grabScaleIncrease > 0f && grabScaleDuration > 0f)
