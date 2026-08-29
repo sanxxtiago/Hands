@@ -212,15 +212,17 @@ MonoBehaviour:
   phaseCompleteEffectPrefab: {fileID: 2442581995994366611, guid: 27465c7cb736dde49bf283aa9a7a5375,
     type: 3}
   phaseFeedbackAnchor: {fileID: 765432109876543211}
-  exerciseEndDelay: 3
+  exerciseEndDelay: 2
   phases:
   - prefab: {fileID: 472284928914777599, guid: 80f35a05224101b4d8b20feede3767ec, type: 3}
     expectedPieces: 1
-  - prefab: {fileID: 472284928914777599, guid: 80f35a05224101b4d8b20feede3767ec, type: 3}
-    expectedPieces: 1
-  - prefab: {fileID: 472284928914777599, guid: 80f35a05224101b4d8b20feede3767ec, type: 3}
-    expectedPieces: 1
-  phaseTransitionDelay: 0.75
+  - prefab: {fileID: 7725013552508954380, guid: 06f75f31820c33f4589520e69d51f5db,
+      type: 3}
+    expectedPieces: 2
+  - prefab: {fileID: 4139748908326186920, guid: 801a3c97402c19b4f8d2179defc9e703,
+      type: 3}
+    expectedPieces: 4
+  phaseTransitionDelay: 1
   phaseFadeDuration: 0.35
   scoreAdapter: {fileID: 453338201}
 --- !u!114 &14109558

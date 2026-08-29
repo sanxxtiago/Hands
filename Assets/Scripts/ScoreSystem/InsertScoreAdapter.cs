@@ -25,14 +25,8 @@ public sealed class InsertScoreAdapter : MonoBehaviour
             scoreManager = GetComponent<ScoreManager>();
     }
 
-    private void OnEnable()
-    {
-        PieceBehaviour.OnPieceSnapped += OnPieceSnapped;
-    }
-
     private void OnDisable()
     {
-        PieceBehaviour.OnPieceSnapped -= OnPieceSnapped;
         Reset();
     }
 
@@ -185,7 +179,7 @@ public sealed class InsertScoreAdapter : MonoBehaviour
         pieceResults.Clear();
     }
 
-    private void OnPieceSnapped(PieceBehaviour piece)
+    public void RecordPieceSnapped(PieceBehaviour piece)
     {
         if (!exerciseActive || exerciseCompleted || !phaseActive || piece == null)
             return;
@@ -193,11 +187,13 @@ public sealed class InsertScoreAdapter : MonoBehaviour
         if (piece.ScorePhaseIndex != activePhaseIndex)
             return;
 
-        if (!completedPieces.Add(piece))
+        bool isNewPiece = completedPieces.Add(piece);
+        if (!isNewPiece)
         {
             ScoreSystemLog.Warning("[InsertScoreAdapter] Se ignoro una pieza duplicada.");
             return;
         }
+
 
         float now = Time.time;
         float placementTime = Mathf.Max(0f, now - lastPlacementTime);

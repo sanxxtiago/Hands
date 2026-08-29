@@ -104,6 +104,8 @@ public class WallInsertExercise : ExerciseController
             return;
         }
 
+        scoreAdapter?.RecordPieceSnapped(piece);
+
         progressManager.AddCompletedStep(
             new PieceStepDescriptor(piece.pieceType, piece.requiredHand));
 
