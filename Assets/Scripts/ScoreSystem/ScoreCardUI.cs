@@ -11,7 +11,7 @@ public sealed class ScoreCardUI : MonoBehaviour
     [SerializeField] private TMP_Text trophyTierText;
     [SerializeField] private Image accentImage;
 
-    public void SetData(ScoreRecord record, bool isMain)
+    public void SetData(ScoreRecord record)
     {
         if (record == null)
         {
@@ -23,8 +23,6 @@ public sealed class ScoreCardUI : MonoBehaviour
         SetScore(record.totalScore);
         SetTrophyTier(FormatTrophyTier(record.trophyTier));
 
-        if (accentImage != null && isMain)
-            accentImage.enabled = true;
     }
 
     // public void SetActive()
@@ -44,6 +42,13 @@ public sealed class ScoreCardUI : MonoBehaviour
     {
         if (trophyTierText != null)
             trophyTierText.text = trophyTier;
+    }
+
+    public void SetAccentColor(Color color)
+    {
+        if (accentImage == null) return;
+        accentImage.enabled = true;
+        accentImage.color = color;
     }
 
     private static string FormatTrophyTier(TrophyTier tier)
@@ -80,6 +85,5 @@ public sealed class ScoreCardUI : MonoBehaviour
         // if (emptyIndicator != null) emptyIndicator.SetActive(false);
         if (scoreText != null) scoreText.text = "-";
         if (trophyTierText != null) trophyTierText.text = "";
-        if (accentImage != null) accentImage.enabled = false;
     }
 }

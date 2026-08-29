@@ -22,6 +22,7 @@ public sealed class ScoresSummaryController : MonoBehaviour
     [SerializeField] private Button osuButton;
     [SerializeField] private Button duckHunterButton;
     [SerializeField] private Color tabHighlightColor = new Color(0.8666667f, 0.9058824f, 1f, 1f);
+    [SerializeField] private Color cardAccentBaseColor = new Color(0.145098f, 0.3882353f, 0.9215686f, 1f);
     [SerializeField] private ScoresSummaryTrophyView trophyView;
     [SerializeField] private Slider rankProgressSlider;
     [SerializeField] private Image rankProgressFill;
@@ -61,6 +62,7 @@ public sealed class ScoresSummaryController : MonoBehaviour
         AddButtonListener(osuButton, SelectOsu);
         AddButtonListener(duckHunterButton, SelectDuckHunter);
         SetSelectedTab(insertButton);
+        SetSelectedCard(insertCard);
 
         IReadOnlyList<ScoreRecord> records = LoadAllSessionRecords();
         Debug.Log($"RECORDS: {records}");
@@ -96,18 +98,21 @@ public sealed class ScoresSummaryController : MonoBehaviour
     public void SelectInsert()
     {
         SetSelectedTab(insertButton);
+        SetSelectedCard(insertCard);
         SelectExercise(insertRecord);
     }
 
     public void SelectOsu()
     {
         SetSelectedTab(osuButton);
+        SetSelectedCard(osuCard);
         SelectExercise(osuRecord);
     }
 
     public void SelectDuckHunter()
     {
         SetSelectedTab(duckHunterButton);
+        SetSelectedCard(duckHunterCard);
         SelectExercise(duckRecord);
     }
 
@@ -172,6 +177,19 @@ public sealed class ScoresSummaryController : MonoBehaviour
     {
         if (button != null)
             button.transition = Selectable.Transition.None;
+    }
+
+    private void SetSelectedCard(ScoreCardUI selectedCard)
+    {
+        SetCardAccent(insertCard, selectedCard == insertCard);
+        SetCardAccent(osuCard, selectedCard == osuCard);
+        SetCardAccent(duckHunterCard, selectedCard == duckHunterCard);
+    }
+
+    private void SetCardAccent(ScoreCardUI card, bool selected)
+    {
+        if (card == null) return;
+        card.SetAccentColor(selected ? tabHighlightColor : cardAccentBaseColor);
     }
 
     private void PopulateAverageScore(IReadOnlyList<ScoreRecord> records)
@@ -272,7 +290,7 @@ public sealed class ScoresSummaryController : MonoBehaviour
 
         if (insertCard != null && insertRecord != null)
         {
-            insertCard.SetData(insertRecord, true);
+            insertCard.SetData(insertRecord);
             MarkCompleted(insertCard);
         }
         else if (insertCard != null)
@@ -283,7 +301,7 @@ public sealed class ScoresSummaryController : MonoBehaviour
 
         if (osuCard != null && osuRecord != null)
         {
-            osuCard.SetData(osuRecord, false);
+            osuCard.SetData(osuRecord);
             MarkCompleted(osuCard);
         }
         else if (osuCard != null)
@@ -294,7 +312,7 @@ public sealed class ScoresSummaryController : MonoBehaviour
 
         if (duckHunterCard != null && duckRecord != null)
         {
-            duckHunterCard.SetData(duckRecord, false);
+            duckHunterCard.SetData(duckRecord);
             MarkCompleted(duckHunterCard);
         }
         else if (duckHunterCard != null)
