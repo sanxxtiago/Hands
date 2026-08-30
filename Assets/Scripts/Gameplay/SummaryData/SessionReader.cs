@@ -21,6 +21,7 @@ public class SessionReader : MonoBehaviour
     [SerializeField] private Button duckHunterTab;
     [SerializeField] private Button absoluteButton;
     [SerializeField] private Button relativeButton;
+    [SerializeField] private Color selectedButtonColor = new Color(0.8666667f, 0.9058824f, 1f, 1f);
 
     [Header("Charts")]
     [SerializeField] private RadarChart leftRadarChart;
@@ -41,6 +42,11 @@ public class SessionReader : MonoBehaviour
     private ExerciseType selectedExerciseType = ExerciseType.Insert;
     private SummaryMode currentMode = SummaryMode.Absolute;
     private bool isInitialized;
+    private Color insertTabBaseColor;
+    private Color osuTabBaseColor;
+    private Color duckHunterTabBaseColor;
+    private Color absoluteButtonBaseColor;
+    private Color relativeButtonBaseColor;
     [SerializeField] private TMP_Text sessionText;
     [SerializeField] private TMP_Text totalTimeText;
     [SerializeField] private TMP_Text dateText;
@@ -85,6 +91,7 @@ public class SessionReader : MonoBehaviour
 
         UpdateSessionInfo();
         ConfigureExerciseTabs();
+        InitializeButtonVisuals();
 
         AddButtonListener(absoluteButton, ShowAbsolute);
         AddButtonListener(relativeButton, ShowRelative);
@@ -154,6 +161,7 @@ public class SessionReader : MonoBehaviour
             return;
 
         selectedExerciseType = exerciseType;
+        UpdateExerciseButtonVisuals();
         RefreshUI();
     }
 
@@ -175,13 +183,63 @@ public class SessionReader : MonoBehaviour
     private void ShowAbsolute()
     {
         currentMode = SummaryMode.Absolute;
+        UpdateModeButtonVisuals();
         RefreshUI();
     }
 
     private void ShowRelative()
     {
         currentMode = SummaryMode.Relative;
+        UpdateModeButtonVisuals();
         RefreshUI();
+    }
+
+    private void InitializeButtonVisuals()
+    {
+        insertTabBaseColor = GetButtonColor(insertTab);
+        osuTabBaseColor = GetButtonColor(osuTab);
+        duckHunterTabBaseColor = GetButtonColor(duckHunterTab);
+        absoluteButtonBaseColor = GetButtonColor(absoluteButton);
+        relativeButtonBaseColor = GetButtonColor(relativeButton);
+
+        UpdateExerciseButtonVisuals();
+        UpdateModeButtonVisuals();
+    }
+
+    private void UpdateExerciseButtonVisuals()
+    {
+        SetButtonColor(insertTab, selectedExerciseType == ExerciseType.Insert
+            ? selectedButtonColor
+            : insertTabBaseColor);
+        SetButtonColor(osuTab, selectedExerciseType == ExerciseType.OSU
+            ? selectedButtonColor
+            : osuTabBaseColor);
+        SetButtonColor(duckHunterTab, selectedExerciseType == ExerciseType.DuckHunter
+            ? selectedButtonColor
+            : duckHunterTabBaseColor);
+    }
+
+    private void UpdateModeButtonVisuals()
+    {
+        SetButtonColor(absoluteButton, currentMode == SummaryMode.Absolute
+            ? selectedButtonColor
+            : absoluteButtonBaseColor);
+        SetButtonColor(relativeButton, currentMode == SummaryMode.Relative
+            ? selectedButtonColor
+            : relativeButtonBaseColor);
+    }
+
+    private static Color GetButtonColor(Button button)
+    {
+        return button != null && button.targetGraphic != null
+            ? button.targetGraphic.color
+            : Color.white;
+    }
+
+    private static void SetButtonColor(Button button, Color color)
+    {
+        if (button != null && button.targetGraphic != null)
+            button.targetGraphic.color = color;
     }
 
     private void RefreshUI()

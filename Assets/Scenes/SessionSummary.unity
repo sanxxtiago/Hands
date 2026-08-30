@@ -2291,7 +2291,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_EffectColor: {r: 0.2, g: 0.25490198, b: 0.33333334, a: 1}
+  m_EffectColor: {r: 0.14509805, g: 0.3882353, b: 0.92156863, a: 1}
   m_EffectDistance: {x: 1, y: -1}
   m_UseGraphicAlpha: 1
 --- !u!114 &301948395
@@ -2307,7 +2307,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.078431375, g: 0.10980392, b: 0.18431373, a: 1}
+  m_Color: {r: 0.06666667, g: 0.101960786, b: 0.1764706, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3587,8 +3587,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 32, y: -430}
-  m_SizeDelta: {x: 1004, y: 274}
+  m_AnchoredPosition: {x: 32, y: -436}
+  m_SizeDelta: {x: 1004, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &455884344
 MonoBehaviour:
@@ -3602,8 +3602,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_EffectColor: {r: 0.2, g: 0.25490198, b: 0.33333334, a: 0.7}
-  m_EffectDistance: {x: 1, y: -1}
+  m_EffectColor: {r: 0.14509805, g: 0.3882353, b: 0.92156863, a: 1}
+  m_EffectDistance: {x: 0, y: 2}
   m_UseGraphicAlpha: 1
 --- !u!114 &455884345
 MonoBehaviour:
@@ -3618,7 +3618,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.08235294, g: 0.11764706, b: 0.1882353, a: 1}
+  m_Color: {r: 0.06666667, g: 0.101960786, b: 0.1764706, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3955,9 +3955,9 @@ MonoBehaviour:
   lineColor: {r: 0.05490196, g: 0.64705884, b: 0.9137255, a: 1}
   pointColor: {r: 0.05490196, g: 0.64705884, b: 0.9137255, a: 1}
   values:
-  - 0.69
+  - 1
   - 0.94
-  - 0
+  - 0.23
 --- !u!222 &461868438
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4306,7 +4306,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 32, y: -126}
-  m_SizeDelta: {x: 1004, y: 274}
+  m_SizeDelta: {x: 1004, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &522602757
 MonoBehaviour:
@@ -4320,8 +4320,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_EffectColor: {r: 0.2, g: 0.25490198, b: 0.33333334, a: 0.7}
-  m_EffectDistance: {x: 1, y: -1}
+  m_EffectColor: {r: 0.14509805, g: 0.3882353, b: 0.92156863, a: 1}
+  m_EffectDistance: {x: 0, y: 2}
   m_UseGraphicAlpha: 1
 --- !u!114 &522602758
 MonoBehaviour:
@@ -4336,7 +4336,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.08235294, g: 0.11764706, b: 0.1882353, a: 1}
+  m_Color: {r: 0.06666667, g: 0.101960786, b: 0.1764706, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5275,16 +5275,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 791764962}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0.2588191, w: 0.9659258}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 703142199}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -30}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 30}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -0.00012207031, y: -0.000030517578}
   m_SizeDelta: {x: 430, y: 430}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &791764964
@@ -5979,6 +5979,7 @@ MonoBehaviour:
   duckHunterTab: {fileID: 83531045}
   absoluteButton: {fileID: 1418740321}
   relativeButton: {fileID: 2073247431}
+  selectedButtonColor: {r: 0.14117648, g: 0.37254903, b: 0.8862746, a: 1}
   leftRadarChart: {fileID: 461868437}
   rightRadarChart: {fileID: 1733160381}
   leftHandChart: {fileID: 1563720225}
@@ -8884,7 +8885,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.10980392, g: 0.14901961, b: 0.21960784, a: 1}
+  m_Color: {r: 0.11764706, g: 0.16078432, b: 0.23137255, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -15827,7 +15828,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.10980392, g: 0.14901961, b: 0.21960784, a: 1}
+  m_Color: {r: 0.11764706, g: 0.16078432, b: 0.23137255, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
