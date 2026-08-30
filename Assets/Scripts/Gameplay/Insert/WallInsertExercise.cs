@@ -270,6 +270,9 @@ public class WallInsertExercise : ExerciseController
         if (phaseFadeDuration <= 0f)
         {
             ApplyFadeAlpha(fadeData, to);
+            if (to >= 1f)
+                ConfigureOpaqueMaterials(fadeData);
+
             phaseFadeCoroutine = null;
             yield break;
         }
@@ -283,6 +286,9 @@ public class WallInsertExercise : ExerciseController
         }
 
         ApplyFadeAlpha(fadeData, to);
+        if (to >= 1f)
+            ConfigureOpaqueMaterials(fadeData);
+
         phaseFadeCoroutine = null;
     }
 
@@ -328,6 +334,39 @@ public class WallInsertExercise : ExerciseController
         material.DisableKeyword("_ALPHATEST_ON");
         material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
     }
+
+    private static void ConfigureOpaqueMaterials(RendererFadeData[] fadeData)
+    {
+        foreach (RendererFadeData rendererData in fadeData)
+        {
+            foreach (MaterialFadeData materialData in rendererData.Materials)
+            {
+                Material material = materialData.Material;
+
+                if (material.HasProperty("_Surface"))
+                    material.SetFloat("_Surface", 0f);
+
+                if (material.HasProperty("_Blend"))
+                    material.SetFloat("_Blend", 0f);
+
+                if (material.HasProperty("_SrcBlend"))
+                    material.SetFloat("_SrcBlend", (float)BlendMode.One);
+
+                if (material.HasProperty("_DstBlend"))
+                    material.SetFloat("_DstBlend", (float)BlendMode.Zero);
+
+                if (material.HasProperty("_ZWrite"))
+                    material.SetFloat("_ZWrite", 1f);
+
+                material.SetOverrideTag("RenderType", "Opaque");
+                material.renderQueue = (int)RenderQueue.Geometry;
+                material.DisableKeyword("_SURFACE_TYPE_TRANSPARENT");
+                material.DisableKeyword("_ALPHATEST_ON");
+                material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+            }
+        }
+    }
+
 
     private static Color GetMaterialColor(Material material, string property)
     {

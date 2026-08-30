@@ -53,9 +53,9 @@ Material:
     m_Floats:
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _alpha: 0.05
+    - _alpha: 0.288
     - _edge_intensity: 0.56
     m_Colors:
     - _edge_color: {r: 0.91548276, g: 1, b: 0.8254717, a: 0.14117648}
-    - _thickness: {r: 0.0075, g: 0.012, b: 0, a: 0}
+    - _thickness: {r: 0.015, g: 0.015, b: 0, a: 0}
   m_BuildTextureStacks: []

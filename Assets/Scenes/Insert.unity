@@ -8351,7 +8351,7 @@ GameObject:
   - component: {fileID: 2037717582}
   - component: {fileID: 2037717581}
   m_Layer: 0
-  m_Name: Prerender_Insert
+  m_Name: Prerender
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9110,6 +9110,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1493214527}
     m_Modifications:
+    - target: {fileID: 1572191477036051780, guid: 2ee60233f43c92a4bbb5ace6a493ca65,
+        type: 3}
+      propertyPath: m_Alpha
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3185806200586947544, guid: 2ee60233f43c92a4bbb5ace6a493ca65,
         type: 3}
       propertyPath: m_Pivot.x
@@ -10921,6 +10926,7 @@ SceneRoots:
   - {fileID: 5270838611174572070}
   - {fileID: 674523826}
   - {fileID: 1257066610}
+  - {fileID: 2037717582}
   - {fileID: 1763604296}
   - {fileID: 540416930}
   - {fileID: 482837269}
@@ -10945,7 +10951,6 @@ SceneRoots:
   - {fileID: 751529341}
   - {fileID: 2132699174}
   - {fileID: 1359865953}
-  - {fileID: 2037717582}
   - {fileID: 1023187264}
   - {fileID: 411708013}
   - {fileID: 453338202}
