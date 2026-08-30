@@ -739,7 +739,7 @@ MonoBehaviour:
   sequenceRunner: {fileID: 43925661}
   scoreManager: {fileID: 381754428}
   scoreAdapter: {fileID: 381754427}
-  sequence: {fileID: 11400000, guid: fea462375d2db0c49bd9d45da942aadb, type: 2}
+  sequence: {fileID: 11400000, guid: 3dc2402c24778ae439b651d3b5df45b9, type: 2}
 --- !u!114 &43925659
 MonoBehaviour:
   m_ObjectHideFlags: 0

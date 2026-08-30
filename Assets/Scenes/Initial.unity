@@ -262,7 +262,7 @@ MonoBehaviour:
   userDropdownPanel: {fileID: 1406427768}
   userDropdownContent: {fileID: 1406427769}
   userProfileOptionPrefab: {fileID: 328715894}
-  nextSceneName: Insert
+  nextSceneName: UserOrientationPhase1
 --- !u!114 &203
 MonoBehaviour:
   m_ObjectHideFlags: 0

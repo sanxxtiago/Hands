@@ -246,9 +246,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6295c4652c17e954dbd5eab77bf11009, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeToInteract: 3
+  timeToInteract: 10
   hitRadius: 0.05
   fadeDuration: 0.2
+  hitPopDuration: 0.35
+  hitPopAmplitude: 0.15
+  haloStartScale: 2
+  haloAlpha: 0.35
+  haloDismissDuration: 0.15
+  haloSprite: {fileID: 0}
   bg: {fileID: 8864962406679063790}
   ring: {fileID: 2346353660274738901}
   requiredHand: 0

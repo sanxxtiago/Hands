@@ -105,10 +105,6 @@ if (phaseIndex < 0 || phaseIndex >= phaseCount ||
             yield return new WaitForSeconds(exerciseEndDelay);
 
         OnExerciseEnd(elapsedTime);
-        if (SessionManager.Instance.CurrentSession != null)
-        {
-            SessionManager.Instance.EndSession();
-        }
     }
 
     protected abstract void OnExerciseStart();

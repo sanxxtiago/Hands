@@ -762,7 +762,7 @@ MonoBehaviour:
   sequenceRunner: {fileID: 43925656}
   scoreManager: {fileID: 89368434}
   scoreAdapter: {fileID: 89368433}
-  sequence: {fileID: 11400000, guid: d14862310887751408c1702093876e68, type: 2}
+  sequence: {fileID: 11400000, guid: 01884891831809043bdf86d3537c6e97, type: 2}
 --- !u!4 &43925655
 Transform:
   m_ObjectHideFlags: 0
@@ -11982,11 +11982,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1279631127275772491, guid: 2efb5a2874d5eba46985508973b2a291,
-        type: 3}
-      propertyPath: m_Color.a
-      value: 0.5019608
-      objectReference: {fileID: 0}
     - target: {fileID: 1279631127275772528, guid: 2efb5a2874d5eba46985508973b2a291,
         type: 3}
       propertyPath: m_Name
@@ -11996,11 +11991,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1279631127275772535, guid: 2efb5a2874d5eba46985508973b2a291,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 24
       objectReference: {fileID: 0}
     - target: {fileID: 1279631127275772535, guid: 2efb5a2874d5eba46985508973b2a291,
         type: 3}

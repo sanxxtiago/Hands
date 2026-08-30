@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class SessionReader : MonoBehaviour
 {
+    private const int HistoryLength = 7;
+
     public enum SummaryMode
     {
         Absolute,
@@ -14,7 +16,9 @@ public class SessionReader : MonoBehaviour
     }
 
     [Header("Controls")]
-    [SerializeField] private TMP_Dropdown exerciseDropdown;
+    [SerializeField] private Button insertTab;
+    [SerializeField] private Button osuTab;
+    [SerializeField] private Button duckHunterTab;
     [SerializeField] private Button absoluteButton;
     [SerializeField] private Button relativeButton;
 
@@ -30,8 +34,13 @@ public class SessionReader : MonoBehaviour
 
     private SessionSummary session;
     private ExerciseSummary CurrentSummary =>
-        session.Summaries[exerciseDropdown.value];
+        HasValidSession
+            ? FindExerciseSummary(session, selectedExerciseType)
+            : null;
+    private bool HasValidSession => IsCompleteSession(session);
+    private ExerciseType selectedExerciseType = ExerciseType.Insert;
     private SummaryMode currentMode = SummaryMode.Absolute;
+    private bool isInitialized;
     [SerializeField] private TMP_Text sessionText;
     [SerializeField] private TMP_Text totalTimeText;
     [SerializeField] private TMP_Text dateText;
@@ -39,80 +48,112 @@ public class SessionReader : MonoBehaviour
     [SerializeField] private TMP_Text generalSuggestionText;
 
 
-    private readonly List<ExerciseSummary> exercises = new();
-
     private void Start()
     {
-        if (SessionManager.Instance == null)
+        if (PersistenceManager.Instance == null)
         {
-            Debug.LogWarning("No existe un SessionManager.");
+            Debug.LogWarning("[SessionReader] No existe un PersistenceManager.");
+            ShowEmptyState();
             return;
         }
-        else
+
+        if (PersistenceManager.Instance.SessionService == null)
         {
-            Debug.Log("Si hay xs");
+            Debug.LogWarning("[SessionReader] No existe un SessionService.");
+            ShowEmptyState();
+            return;
         }
 
-        //Guarda la sesión actual y obtiene esa misma para una única fuente de verdad
-        session = PersistenceManager.Instance
-            .SessionService
-            .AddSession(SessionManager.Instance.CurrentSession);
+        IReadOnlyList<SessionSummary> lastSessions =
+            PersistenceManager.Instance.SessionService.GetLastSessions(1);
 
-        // The persisted session is now owned by this view; later exercises start fresh.
-        SessionManager.Instance.ClearSession();
-
-        if (session == null || session.Summaries.Count == 0)
+        if (lastSessions == null || lastSessions.Count == 0)
         {
-            Debug.LogWarning("No hay datos de sesión para mostrar.");
+            Debug.LogWarning("[SessionReader] No hay sesiones persistidas para mostrar.");
+            ShowEmptyState();
+            return;
+        }
+
+        session = lastSessions[lastSessions.Count - 1];
+        if (!IsCompleteSession(session))
+        {
+            Debug.LogWarning("[SessionReader] La última sesión persistida no está completa.");
+            session = null;
+            ShowEmptyState();
             return;
         }
 
         UpdateSessionInfo();
-        ConfigureDropdown();
+        ConfigureExerciseTabs();
 
-        absoluteButton.onClick.AddListener(ShowAbsolute);
-        relativeButton.onClick.AddListener(ShowRelative);
+        AddButtonListener(absoluteButton, ShowAbsolute);
+        AddButtonListener(relativeButton, ShowRelative);
 
-        exerciseDropdown.value = 0;
+        if (absoluteButton != null) absoluteButton.interactable = true;
+        if (relativeButton != null) relativeButton.interactable = true;
 
-        RefreshUI();
+        isInitialized = true;
+        SelectExercise(ExerciseType.Insert);
+    }
+
+    private void OnDestroy()
+    {
+        RemoveButtonListener(insertTab, ShowInsert);
+        RemoveButtonListener(osuTab, ShowOsu);
+        RemoveButtonListener(duckHunterTab, ShowDuckHunter);
+        RemoveButtonListener(absoluteButton, ShowAbsolute);
+        RemoveButtonListener(relativeButton, ShowRelative);
     }
 
     private void UpdateSessionInfo()
     {
         float duration = GetSessionDuration();
-        sessionText.text = $"Sesión #{session.SessionId}";
-        userName.text = PersistenceManager.Instance.UserService.UserName;
-        totalTimeText.text = FormatDuration(duration);
-        dateText.text = FormatSessionDate(session.date);
-    }
+        if (sessionText != null)
+            sessionText.text = $"Sesión #{session.SessionId}";
 
-    private void ConfigureDropdown()
-    {
-        exerciseDropdown.ClearOptions();
-        exercises.Clear();
-
-        List<string> options = new();
-
-        foreach (ExerciseSummary summary in session.Summaries)
+        if (userName != null)
         {
-            exercises.Add(summary);
-
-            options.Add(summary.exerciseType switch
-            {
-                ExerciseType.Insert => "Inserción de piezas",
-                ExerciseType.DuckHunter => "Cazador de patos",
-                ExerciseType.OSU => "Precisión",
-                _ => summary.exerciseType.ToString()
-            });
+            userName.text = PersistenceManager.Instance.UserService == null
+                ? string.Empty
+                : PersistenceManager.Instance.UserService.UserName;
         }
 
-        exerciseDropdown.AddOptions(options);
-        exerciseDropdown.onValueChanged.AddListener(OnExerciseChanged);
+        if (totalTimeText != null)
+            totalTimeText.text = FormatDuration(duration);
+
+        if (dateText != null)
+            dateText.text = FormatSessionDate(session.date);
     }
 
-    private void OnExerciseChanged(int index)
+    private void ConfigureExerciseTabs()
     {
+        AddButtonListener(insertTab, ShowInsert);
+        AddButtonListener(osuTab, ShowOsu);
+        AddButtonListener(duckHunterTab, ShowDuckHunter);
+        SetExerciseTabsInteractable(true);
+    }
+
+    private void ShowInsert()
+    {
+        SelectExercise(ExerciseType.Insert);
+    }
+
+    private void ShowOsu()
+    {
+        SelectExercise(ExerciseType.OSU);
+    }
+
+    private void ShowDuckHunter()
+    {
+        SelectExercise(ExerciseType.DuckHunter);
+    }
+
+    private void SelectExercise(ExerciseType exerciseType)
+    {
+        if (!isInitialized)
+            return;
+
+        selectedExerciseType = exerciseType;
         RefreshUI();
     }
 
@@ -121,7 +162,11 @@ public class SessionReader : MonoBehaviour
         if (generalSuggestionText == null)
             return;
 
-        string suggestion = CurrentSummary.generalSuggestion;
+        ExerciseSummary currentSummary = CurrentSummary;
+        if (currentSummary == null)
+            return;
+
+        string suggestion = currentSummary.generalSuggestion;
         generalSuggestionText.text = string.IsNullOrWhiteSpace(suggestion)
             ? "Continúa practicando para mejorar tu desempeño."
             : suggestion;
@@ -141,59 +186,108 @@ public class SessionReader : MonoBehaviour
 
     private void RefreshUI()
     {
+        if (!isInitialized || !HasValidSession)
+        {
+            ShowEmptyState();
+            return;
+        }
+
+        ExerciseSummary currentSummary = CurrentSummary;
+        if (currentSummary == null)
+        {
+            ShowEmptyState();
+            return;
+        }
+
         SetGeneralSuggestion();
 
         switch (currentMode)
         {
             case SummaryMode.Absolute:
 
-                leftRadarChart.SetValues(
-                    CurrentSummary.leftHand.absoluteUsage);
+                if (leftRadarChart != null)
+                {
+                    leftRadarChart.SetValues(
+                        currentSummary.leftHand.absoluteUsage);
+                }
 
-                rightRadarChart.SetValues(
-                    CurrentSummary.rightHand.absoluteUsage);
+                if (rightRadarChart != null)
+                {
+                    rightRadarChart.SetValues(
+                        currentSummary.rightHand.absoluteUsage);
+                }
 
                 break;
 
             case SummaryMode.Relative:
 
-                leftRadarChart.SetValues(
-                    CurrentSummary.leftHand.relativeUsage);
+                if (leftRadarChart != null)
+                {
+                    leftRadarChart.SetValues(
+                        currentSummary.leftHand.relativeUsage);
+                }
 
-                rightRadarChart.SetValues(
-                    CurrentSummary.rightHand.relativeUsage);
+                if (rightRadarChart != null)
+                {
+                    rightRadarChart.SetValues(
+                        currentSummary.rightHand.relativeUsage);
+                }
 
                 break;
         }
 
         //<-------------LINE CHARTS--------------->
-        leftHandChart.SetValues(
-       BuildCurrentSessionSeries(MotionZone.Hand, true));
+        if (leftHandChart != null)
+        {
+            leftHandChart.SetValues(
+                BuildCurrentSessionSeries(MotionZone.Hand, true));
+        }
 
-        leftWristChart.SetValues(
-            BuildCurrentSessionSeries(MotionZone.Wrist, true));
+        if (leftWristChart != null)
+        {
+            leftWristChart.SetValues(
+                BuildCurrentSessionSeries(MotionZone.Wrist, true));
+        }
 
-        leftForearmChart.SetValues(
-            BuildCurrentSessionSeries(MotionZone.Forearm, true));
+        if (leftForearmChart != null)
+        {
+            leftForearmChart.SetValues(
+                BuildCurrentSessionSeries(MotionZone.Forearm, true));
+        }
 
-        rightHandChart.SetValues(
-            BuildCurrentSessionSeries(MotionZone.Hand, false));
+        if (rightHandChart != null)
+        {
+            rightHandChart.SetValues(
+                BuildCurrentSessionSeries(MotionZone.Hand, false));
+        }
 
-        rightWristChart.SetValues(
-            BuildCurrentSessionSeries(MotionZone.Wrist, false));
+        if (rightWristChart != null)
+        {
+            rightWristChart.SetValues(
+                BuildCurrentSessionSeries(MotionZone.Wrist, false));
+        }
 
-        rightForearmChart.SetValues(
-            BuildCurrentSessionSeries(MotionZone.Forearm, false));
+        if (rightForearmChart != null)
+        {
+            rightForearmChart.SetValues(
+                BuildCurrentSessionSeries(MotionZone.Forearm, false));
+        }
     }
     private float GetUsageValue(HandUsageSummary summary, MotionZone zone)
     {
+        if (summary.zones == null)
+            return 0f;
+
         float[] values = currentMode == SummaryMode.Absolute
             ? summary.absoluteUsage
             : summary.relativeUsage;
 
+        if (values == null)
+            return 0f;
+
         for (int i = 0; i < summary.zones.Length; i++)
         {
-            if (summary.zones[i] == zone)
+            if (summary.zones[i] == zone && i < values.Length)
                 return values[i];
         }
 
@@ -203,28 +297,105 @@ public class SessionReader : MonoBehaviour
     private float[] BuildCurrentSessionSeries(MotionZone zone, bool isLeftHand)
     {
         IReadOnlyList<SessionSummary> history =
-            PersistenceManager.Instance
-                .SessionService
-                .GetLastSessions();
+            PersistenceManager.Instance == null
+                || PersistenceManager.Instance.SessionService == null
+                ? null
+                : PersistenceManager.Instance.SessionService.GetLastSessions(HistoryLength);
 
-        float[] series = new float[7];
+        float[] series = new float[HistoryLength];
 
-        int offset = 7 - history.Count;
+        if (history == null || history.Count == 0)
+            return series;
 
-        for (int i = 0; i < history.Count; i++)
+        int historyCount = Mathf.Min(history.Count, HistoryLength);
+        int historyStart = history.Count - historyCount;
+        int seriesOffset = HistoryLength - historyCount;
+
+        for (int i = 0; i < historyCount; i++)
         {
-            ExerciseSummary exercise =
-                history[i].Summaries[exerciseDropdown.value];
+            ExerciseSummary exercise = FindExerciseSummary(
+                history[historyStart + i],
+                selectedExerciseType);
+
+            if (exercise == null)
+                continue;
 
             HandUsageSummary hand =
                 isLeftHand
                     ? exercise.leftHand
                     : exercise.rightHand;
 
-            series[offset + i] = GetUsageValue(hand, zone);
+            series[seriesOffset + i] = GetUsageValue(hand, zone);
         }
 
         return series;
+    }
+
+    private static ExerciseSummary FindExerciseSummary(
+        SessionSummary summary,
+        ExerciseType exerciseType)
+    {
+        if (summary == null || summary.Summaries == null)
+            return null;
+
+        foreach (ExerciseSummary exercise in summary.Summaries)
+        {
+            if (exercise != null && exercise.exerciseType == exerciseType)
+                return exercise;
+        }
+
+        return null;
+    }
+
+    private static bool IsCompleteSession(SessionSummary summary)
+    {
+        if (summary == null || summary.Summaries == null || summary.Summaries.Count != 3)
+            return false;
+
+        HashSet<ExerciseType> exerciseTypes = new();
+        foreach (ExerciseSummary exercise in summary.Summaries)
+        {
+            if (exercise == null || !exerciseTypes.Add(exercise.exerciseType))
+                return false;
+        }
+
+        return exerciseTypes.Contains(ExerciseType.Insert)
+            && exerciseTypes.Contains(ExerciseType.OSU)
+            && exerciseTypes.Contains(ExerciseType.DuckHunter);
+    }
+
+    private void ShowEmptyState()
+    {
+        if (sessionText != null) sessionText.text = "Sin sesión";
+        if (userName != null) userName.text = string.Empty;
+        if (totalTimeText != null) totalTimeText.text = string.Empty;
+        if (dateText != null) dateText.text = string.Empty;
+        if (generalSuggestionText != null)
+            generalSuggestionText.text = "No hay datos de sesión para mostrar.";
+
+        SetExerciseTabsInteractable(false);
+
+        if (absoluteButton != null) absoluteButton.interactable = false;
+        if (relativeButton != null) relativeButton.interactable = false;
+    }
+
+    private void SetExerciseTabsInteractable(bool interactable)
+    {
+        if (insertTab != null) insertTab.interactable = interactable;
+        if (osuTab != null) osuTab.interactable = interactable;
+        if (duckHunterTab != null) duckHunterTab.interactable = interactable;
+    }
+
+    private static void AddButtonListener(Button button, UnityEngine.Events.UnityAction action)
+    {
+        if (button != null)
+            button.onClick.AddListener(action);
+    }
+
+    private static void RemoveButtonListener(Button button, UnityEngine.Events.UnityAction action)
+    {
+        if (button != null)
+            button.onClick.RemoveListener(action);
     }
 
     private float GetSessionDuration()
