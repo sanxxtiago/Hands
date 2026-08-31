@@ -11,6 +11,9 @@ public class OrientationSlotBehaviour : MonoBehaviour
     private OrientationPieceBehaviour currentPiece;
     private bool hasFittedPiece;
 
+    public OrientationPieceBehaviour CurrentPiece => currentPiece;
+    public bool IsPieceInside => pieceInside;
+
     private void OnTriggerEnter(Collider other)
     {
         if (!other.TryGetComponent<OrientationPieceBehaviour>(out var piece))
@@ -48,8 +51,21 @@ public class OrientationSlotBehaviour : MonoBehaviour
         if (!pieceInside || piece != currentPiece)
             return;
 
+        // Solo se encaja cuando la pieza ya descansa sobre la base (velocidad ~ 0),
+        // permitiendo que caiga por gravedad y repose físicamente antes de validar.
+        if (!piece.IsAtRest())
+            return;
+
+        CapturePiece();
+    }
+
+    public void CapturePiece()
+    {
+        if (hasFittedPiece || currentPiece == null || currentPiece.isFitted || currentPiece.IsGrabbed)
+            return;
+
         hasFittedPiece = true;
-        piece.FitIn();
+        currentPiece.FitIn();
         OnPieceFitted?.Invoke();
     }
 }

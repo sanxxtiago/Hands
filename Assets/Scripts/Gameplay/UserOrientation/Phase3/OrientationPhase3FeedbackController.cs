@@ -17,12 +17,9 @@ public sealed class OrientationPhase3FeedbackController : MonoBehaviour
     [SerializeField, Min(0f)] private float piecePunchScale = 0.06f;
     [SerializeField, Min(0f)] private float targetPunchDuration = 0.2f;
     [SerializeField, Min(0f)] private float targetPunchScale = 0.08f;
-    [SerializeField, Min(0f)] private float snapDuration = 0.2f;
     [SerializeField, Min(0f)] private float messageFadeOutDuration = 0.1f;
     [SerializeField, Min(0f)] private float messageFadeInDuration = 0.15f;
     [SerializeField, Min(0f)] private float messageOffset = 8f;
-    [SerializeField] private Vector3 snapPositionOffset;
-    [SerializeField] private Vector3 snapRotationOffset;
 
     [Header("Colores")]
     [SerializeField] private Color grabbedColor = new Color(1f, 0.86f, 0.35f, 1f);
@@ -199,35 +196,18 @@ public sealed class OrientationPhase3FeedbackController : MonoBehaviour
         SetColors(targetRenderers, targetCompletedColor);
         RestoreColors(pieceRenderers);
 
-        Vector3 snapPosition = targetBehaviour.transform.position +
-            targetBehaviour.transform.TransformVector(snapPositionOffset);
-        Quaternion snapRotation = targetBehaviour.transform.rotation *
-            Quaternion.Euler(snapRotationOffset);
-
         spawnedPiece.transform.DOKill(false);
         targetBehaviour.transform.DOKill(false);
+        spawnedPiece.transform.localScale = pieceOriginalScale;
 
-        Sequence fitSequence = DOTween.Sequence();
-        fitSequence.Append(
-            spawnedPiece.transform
-                .DOMove(snapPosition, snapDuration)
-                .SetEase(Ease.OutBack));
-        fitSequence.Join(
-            spawnedPiece.transform
-                .DORotateQuaternion(snapRotation, snapDuration)
-                .SetEase(Ease.OutBack));
-        fitSequence.Join(
-            targetBehaviour.transform
-                .DOPunchScale(Vector3.one * targetPunchScale, targetPunchDuration, 1, 0.5f)
-                .SetEase(Ease.OutQuad));
-        fitSequence.OnComplete(CompleteFitFeedback);
+        // No hay snap: la pieza se ha soltado y queda dentro del objetivo.
+        // Consolidar el estado y reproducir el feedback de completado de inmediato.
+        spawnedPiece.DisableInteractionCollider();
+        PlayFittedEffect();
     }
 
-    private void CompleteFitFeedback()
+    private void PlayFittedEffect()
     {
-        if (spawnedPiece != null)
-            spawnedPiece.DisableInteractionCollider();
-
         if (particleEffectPlayer == null || fittedEffectPrefab == null)
         {
             if (!warningLogged)

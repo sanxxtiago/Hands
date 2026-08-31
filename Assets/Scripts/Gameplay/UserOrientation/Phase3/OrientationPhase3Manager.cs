@@ -147,6 +147,13 @@ public class OrientationPhase3Manager : OrientationManager
     private void HandlePieceReleased()
     {
         if (isCompletionStarted) return;
+
+        // Si la pieza se suelta dentro del target, se deja caer y reposar sobre la
+        // base por física; OnTriggerStay la encaja cuando quede en reposo. No se
+        // captura aquí (ni se vuelve a ReadyToGrab) mientras siga en la zona.
+        if (targetBehaviour != null && targetBehaviour.IsPieceInside)
+            return;
+
         SetState(OrientationPhase3State.ReadyToGrab);
     }
 
