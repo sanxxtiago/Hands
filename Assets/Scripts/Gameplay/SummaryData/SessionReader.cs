@@ -15,6 +15,12 @@ public class SessionReader : MonoBehaviour
         Relative
     }
 
+    private enum SummaryContentMode
+    {
+        Usage,
+        Exposition
+    }
+
     [Header("Controls")]
     [SerializeField] private Button insertTab;
     [SerializeField] private Button osuTab;
@@ -41,17 +47,26 @@ public class SessionReader : MonoBehaviour
     private bool HasValidSession => IsCompleteSession(session);
     private ExerciseType selectedExerciseType = ExerciseType.Insert;
     private SummaryMode currentMode = SummaryMode.Absolute;
+    private SummaryContentMode currentContentMode = SummaryContentMode.Usage;
     private bool isInitialized;
     private Color insertTabBaseColor;
     private Color osuTabBaseColor;
     private Color duckHunterTabBaseColor;
     private Color absoluteButtonBaseColor;
     private Color relativeButtonBaseColor;
+    private Color usageAbsoluteButtonBaseColor;
+    private Color usageRelativeButtonBaseColor;
     [SerializeField] private TMP_Text sessionText;
     [SerializeField] private TMP_Text totalTimeText;
     [SerializeField] private TMP_Text dateText;
     [SerializeField] private TMP_Text userName;
     [SerializeField] private TMP_Text generalSuggestionText;
+
+    [Header("Summary panels")]
+    [SerializeField] private Button usageAbsoluteButton;
+    [SerializeField] private Button usageRelativeButton;
+    [SerializeField] private GameObject usagePanel;
+    [SerializeField] private ExpositionPanel expositionPanel;
 
 
     private void Start()
@@ -93,11 +108,15 @@ public class SessionReader : MonoBehaviour
         ConfigureExerciseTabs();
         InitializeButtonVisuals();
 
-        AddButtonListener(absoluteButton, ShowAbsolute);
-        AddButtonListener(relativeButton, ShowRelative);
+        AddButtonListener(absoluteButton, ShowUsage);
+        AddButtonListener(relativeButton, ShowExposition);
+        AddButtonListener(usageAbsoluteButton, ShowAbsolute);
+        AddButtonListener(usageRelativeButton, ShowRelative);
 
         if (absoluteButton != null) absoluteButton.interactable = true;
         if (relativeButton != null) relativeButton.interactable = true;
+        if (usageAbsoluteButton != null) usageAbsoluteButton.interactable = true;
+        if (usageRelativeButton != null) usageRelativeButton.interactable = true;
 
         isInitialized = true;
         SelectExercise(ExerciseType.Insert);
@@ -108,8 +127,10 @@ public class SessionReader : MonoBehaviour
         RemoveButtonListener(insertTab, ShowInsert);
         RemoveButtonListener(osuTab, ShowOsu);
         RemoveButtonListener(duckHunterTab, ShowDuckHunter);
-        RemoveButtonListener(absoluteButton, ShowAbsolute);
-        RemoveButtonListener(relativeButton, ShowRelative);
+        RemoveButtonListener(absoluteButton, ShowUsage);
+        RemoveButtonListener(relativeButton, ShowExposition);
+        RemoveButtonListener(usageAbsoluteButton, ShowAbsolute);
+        RemoveButtonListener(usageRelativeButton, ShowRelative);
     }
 
     private void UpdateSessionInfo()
@@ -183,14 +204,32 @@ public class SessionReader : MonoBehaviour
     private void ShowAbsolute()
     {
         currentMode = SummaryMode.Absolute;
+        currentContentMode = SummaryContentMode.Usage;
         UpdateModeButtonVisuals();
+        UpdateContentButtonVisuals();
         RefreshUI();
     }
 
     private void ShowRelative()
     {
         currentMode = SummaryMode.Relative;
+        currentContentMode = SummaryContentMode.Usage;
         UpdateModeButtonVisuals();
+        UpdateContentButtonVisuals();
+        RefreshUI();
+    }
+
+    private void ShowUsage()
+    {
+        currentContentMode = SummaryContentMode.Usage;
+        UpdateContentButtonVisuals();
+        RefreshUI();
+    }
+
+    private void ShowExposition()
+    {
+        currentContentMode = SummaryContentMode.Exposition;
+        UpdateContentButtonVisuals();
         RefreshUI();
     }
 
@@ -201,8 +240,11 @@ public class SessionReader : MonoBehaviour
         duckHunterTabBaseColor = GetButtonColor(duckHunterTab);
         absoluteButtonBaseColor = GetButtonColor(absoluteButton);
         relativeButtonBaseColor = GetButtonColor(relativeButton);
+        usageAbsoluteButtonBaseColor = GetButtonColor(usageAbsoluteButton);
+        usageRelativeButtonBaseColor = GetButtonColor(usageRelativeButton);
 
         UpdateExerciseButtonVisuals();
+        UpdateContentButtonVisuals();
         UpdateModeButtonVisuals();
     }
 
@@ -221,10 +263,20 @@ public class SessionReader : MonoBehaviour
 
     private void UpdateModeButtonVisuals()
     {
-        SetButtonColor(absoluteButton, currentMode == SummaryMode.Absolute
+        SetButtonColor(usageAbsoluteButton, currentMode == SummaryMode.Absolute
+            ? selectedButtonColor
+            : usageAbsoluteButtonBaseColor);
+        SetButtonColor(usageRelativeButton, currentMode == SummaryMode.Relative
+            ? selectedButtonColor
+            : usageRelativeButtonBaseColor);
+    }
+
+    private void UpdateContentButtonVisuals()
+    {
+        SetButtonColor(absoluteButton, currentContentMode == SummaryContentMode.Usage
             ? selectedButtonColor
             : absoluteButtonBaseColor);
-        SetButtonColor(relativeButton, currentMode == SummaryMode.Relative
+        SetButtonColor(relativeButton, currentContentMode == SummaryContentMode.Exposition
             ? selectedButtonColor
             : relativeButtonBaseColor);
     }
@@ -258,40 +310,49 @@ public class SessionReader : MonoBehaviour
         }
 
         SetGeneralSuggestion();
+        UpdateContentPanelVisuals();
 
-        switch (currentMode)
+        if (currentContentMode == SummaryContentMode.Exposition)
         {
-            case SummaryMode.Absolute:
+            if (expositionPanel != null)
+                expositionPanel.SetData(FindCurrentExposition());
+        }
+        else
+        {
+            switch (currentMode)
+            {
+                case SummaryMode.Absolute:
 
-                if (leftRadarChart != null)
-                {
-                    leftRadarChart.SetValues(
-                        currentSummary.leftHand.absoluteUsage);
-                }
+                    if (leftRadarChart != null)
+                    {
+                        leftRadarChart.SetValues(
+                            currentSummary.leftHand.absoluteUsage);
+                    }
 
-                if (rightRadarChart != null)
-                {
-                    rightRadarChart.SetValues(
-                        currentSummary.rightHand.absoluteUsage);
-                }
+                    if (rightRadarChart != null)
+                    {
+                        rightRadarChart.SetValues(
+                            currentSummary.rightHand.absoluteUsage);
+                    }
 
-                break;
+                    break;
 
-            case SummaryMode.Relative:
+                case SummaryMode.Relative:
 
-                if (leftRadarChart != null)
-                {
-                    leftRadarChart.SetValues(
-                        currentSummary.leftHand.relativeUsage);
-                }
+                    if (leftRadarChart != null)
+                    {
+                        leftRadarChart.SetValues(
+                            currentSummary.leftHand.relativeUsage);
+                    }
 
-                if (rightRadarChart != null)
-                {
-                    rightRadarChart.SetValues(
-                        currentSummary.rightHand.relativeUsage);
-                }
+                    if (rightRadarChart != null)
+                    {
+                        rightRadarChart.SetValues(
+                            currentSummary.rightHand.relativeUsage);
+                    }
 
-                break;
+                    break;
+            }
         }
 
         //<-------------LINE CHARTS--------------->
@@ -405,6 +466,20 @@ public class SessionReader : MonoBehaviour
         return null;
     }
 
+    private ExpositionSummary FindCurrentExposition()
+    {
+        if (PersistenceManager.Instance == null
+            || PersistenceManager.Instance.ExpositionServices == null
+            || session == null)
+        {
+            return null;
+        }
+
+        return PersistenceManager.Instance.ExpositionServices.GetExposition(
+            session.SessionGuid,
+            selectedExerciseType);
+    }
+
     private static bool IsCompleteSession(SessionSummary summary)
     {
         if (summary == null || summary.Summaries == null || summary.Summaries.Count != 3)
@@ -435,6 +510,12 @@ public class SessionReader : MonoBehaviour
 
         if (absoluteButton != null) absoluteButton.interactable = false;
         if (relativeButton != null) relativeButton.interactable = false;
+        if (usageAbsoluteButton != null) usageAbsoluteButton.interactable = false;
+        if (usageRelativeButton != null) usageRelativeButton.interactable = false;
+
+        SetActive(usagePanel, false);
+        if (expositionPanel != null)
+            expositionPanel.gameObject.SetActive(false);
     }
 
     private void SetExerciseTabsInteractable(bool interactable)
@@ -454,6 +535,30 @@ public class SessionReader : MonoBehaviour
     {
         if (button != null)
             button.onClick.RemoveListener(action);
+    }
+
+    private void UpdateContentPanelVisuals()
+    {
+        bool showUsage = currentContentMode == SummaryContentMode.Usage;
+        SetActive(usagePanel, showUsage);
+
+        if (expositionPanel != null)
+            expositionPanel.gameObject.SetActive(!showUsage);
+
+        SetActive(usageAbsoluteButton, showUsage);
+        SetActive(usageRelativeButton, showUsage);
+    }
+
+    private static void SetActive(GameObject gameObject, bool active)
+    {
+        if (gameObject != null && gameObject.activeSelf != active)
+            gameObject.SetActive(active);
+    }
+
+    private static void SetActive(Component component, bool active)
+    {
+        if (component != null)
+            SetActive(component.gameObject, active);
     }
 
     private float GetSessionDuration()
