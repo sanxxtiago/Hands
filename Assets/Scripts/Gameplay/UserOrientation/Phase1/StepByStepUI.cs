@@ -9,6 +9,11 @@ public class StepByStepUI : MonoBehaviour
     private const string CompletedInstruction = "\u00a1Fase completada!";
 
     [SerializeField] private OrientationPhase1Manager phase1;
+    [Header("Secuencia de volúmenes")]
+    [SerializeField] private OrientationPhase1Volume firstVolume;
+    [SerializeField] private OrientationPhase1Volume secondVolume;
+    [SerializeField] private OrientationPhase1Volume thirdVolume;
+    [SerializeField] private OrientationPhase1Volume fourthVolume;
     [SerializeField] private Slider progressBar;
     [SerializeField] private TMP_Text progressionText;
     [SerializeField] private TMP_Text instructionText;
@@ -38,6 +43,9 @@ public class StepByStepUI : MonoBehaviour
     private CanvasGroup instructionGroup;
     private Vector2 initialInstructionPosition;
     private string initialInstructionText;
+    private bool initialInstructionRichText;
+    private OrientationPhase1Volume[] volumeSequence;
+    private string[] volumeInstructions;
     private TMP_Text phase1Text;
     private TMP_Text phase2Text;
     private TMP_Text phase3Text;
@@ -68,7 +76,9 @@ public class StepByStepUI : MonoBehaviour
     private bool leftHandClosed;
     private bool rightHandClosed;
     private bool awaitingGrip;
+    private bool volumeSequenceStarted;
     private bool phaseCompleted;
+    private int currentVolumeIndex = -1;
 
     private void Awake()
     {
@@ -99,10 +109,22 @@ public class StepByStepUI : MonoBehaviour
             instructionRect = instructionText.rectTransform;
             initialInstructionPosition = instructionRect.anchoredPosition;
             initialInstructionText = instructionText.text;
+            initialInstructionRichText = instructionText.richText;
             instructionGroup = instructionText.GetComponent<CanvasGroup>();
             if (instructionGroup == null)
                 instructionGroup = instructionText.gameObject.AddComponent<CanvasGroup>();
+
+            instructionText.richText = true;
         }
+
+        volumeSequence = new[]
+        {
+            firstVolume,
+            secondVolume,
+            thirdVolume,
+            fourthVolume
+        };
+        volumeInstructions = CreateVolumeInstructions();
 
         ResolvePhaseLabel();
         CreateGripFeedback();
@@ -120,16 +142,22 @@ public class StepByStepUI : MonoBehaviour
         if (phase1 == null)
             return;
 
+        if (instructionText != null)
+            instructionText.richText = true;
+
         phase1.OnProgressChanged += UpdateProgressBar;
         phase1.OnActivityFeedbackChanged += HandleActivityFeedbackChanged;
         phase1.OnGripStateChanged += HandleGripStateChanged;
         phase1.OnHandPresenceChanged += HandleHandPresenceChanged;
         phase1.OnExplorationCompleted += HandleExplorationCompleted;
         phase1.OnPhaseCompleted += HandlePhaseCompleted;
+
+        SubscribeToVolumes();
     }
 
     private void Update()
     {
+        UpdateVolumeInstruction();
         UpdateProgressVisuals();
         UpdateActivityVisuals();
     }
@@ -145,6 +173,8 @@ public class StepByStepUI : MonoBehaviour
             phase1.OnExplorationCompleted -= HandleExplorationCompleted;
             phase1.OnPhaseCompleted -= HandlePhaseCompleted;
         }
+
+        UnsubscribeFromVolumes();
 
         instructionTween?.Kill();
         phaseCompletionTween?.Kill();
@@ -174,7 +204,10 @@ public class StepByStepUI : MonoBehaviour
             instructionGroup.alpha = 1f;
 
         if (instructionText != null)
+        {
             instructionText.text = initialInstructionText;
+            instructionText.richText = initialInstructionRichText;
+        }
 
         if (instructionRect != null)
             instructionRect.anchoredPosition = initialInstructionPosition;
@@ -183,7 +216,9 @@ public class StepByStepUI : MonoBehaviour
             gripFeedbackRoot.SetActive(false);
 
         awaitingGrip = false;
+        volumeSequenceStarted = false;
         phaseCompleted = false;
+        currentVolumeIndex = -1;
         targetProgress = 0f;
         displayedProgress = 0f;
         progressVelocity = 0f;
@@ -306,10 +341,55 @@ public class StepByStepUI : MonoBehaviour
         AnimateInstruction(GripInstruction);
     }
 
+    private void UpdateVolumeInstruction()
+    {
+        if (!awaitingGrip || volumeSequenceStarted || phaseCompleted)
+            return;
+
+        if (volumeSequence == null || volumeSequence.Length == 0 || volumeSequence[0] == null)
+            return;
+
+        if (!volumeSequence[0].isActiveAndEnabled)
+            return;
+
+        volumeSequenceStarted = true;
+        currentVolumeIndex = 0;
+
+        if (gripFeedbackRoot != null)
+            gripFeedbackRoot.SetActive(false);
+
+        AnimateInstruction(volumeInstructions[currentVolumeIndex]);
+    }
+
+    private void HandleVolumeTouched(OrientationPhase1Volume volume)
+    {
+        if (!volumeSequenceStarted || phaseCompleted || volume == null)
+            return;
+
+        if (currentVolumeIndex < 0 ||
+            currentVolumeIndex >= volumeSequence.Length ||
+            volume != volumeSequence[currentVolumeIndex])
+        {
+            return;
+        }
+
+        if (currentVolumeIndex >= volumeSequence.Length - 1)
+        {
+            volumeSequenceStarted = false;
+            currentVolumeIndex = -1;
+            return;
+        }
+
+        currentVolumeIndex++;
+        AnimateInstruction(volumeInstructions[currentVolumeIndex]);
+    }
+
     private void HandlePhaseCompleted()
     {
         phaseCompleted = true;
         awaitingGrip = false;
+        volumeSequenceStarted = false;
+        currentVolumeIndex = -1;
         targetProgress = 1f;
         displayedProgress = 1f;
         progressVelocity = 0f;
@@ -392,6 +472,61 @@ public class StepByStepUI : MonoBehaviour
                 .DOAnchorPos(initialInstructionPosition, halfDuration)
                 .SetEase(Ease.OutCubic));
         instructionTween = sequence;
+    }
+
+    private void SubscribeToVolumes()
+    {
+        if (volumeSequence == null)
+            return;
+
+        for (int i = 0; i < volumeSequence.Length; i++)
+        {
+            if (volumeSequence[i] != null)
+                volumeSequence[i].OnTouched += HandleVolumeTouched;
+        }
+    }
+
+    private void UnsubscribeFromVolumes()
+    {
+        if (volumeSequence == null)
+            return;
+
+        for (int i = 0; i < volumeSequence.Length; i++)
+        {
+            if (volumeSequence[i] != null)
+                volumeSequence[i].OnTouched -= HandleVolumeTouched;
+        }
+    }
+
+    private static string[] CreateVolumeInstructions()
+    {
+        return new[]
+        {
+            HighlightHandWords("Mueve tu mano derecha hacia la zona izquierda"),
+            HighlightHandWords("Mueve tu mano izquierda hacia la zona derecha"),
+            "Mueve una de tus manos hacia la parte trasera",
+            "Mueve una de tus manos hacia la base de la mesa"
+        };
+    }
+
+    private static string HighlightHandWords(string message)
+    {
+        message = HighlightWord(message, "derecha", HandsColor.Right);
+        message = HighlightWord(message, "Derecha", HandsColor.Right);
+        message = HighlightWord(message, "derecho", HandsColor.Right);
+        message = HighlightWord(message, "Derecho", HandsColor.Right);
+        message = HighlightWord(message, "izquierda", HandsColor.Left);
+        message = HighlightWord(message, "Izquierda", HandsColor.Left);
+        message = HighlightWord(message, "izquierdo", HandsColor.Left);
+        message = HighlightWord(message, "Izquierdo", HandsColor.Left);
+        return message;
+    }
+
+    private static string HighlightWord(string message, string word, Color color)
+    {
+        string colorHex = ColorUtility.ToHtmlStringRGB(color);
+        string highlightedWord = "<color=#" + colorHex + ">" + word + "</color>";
+        return message.Replace(word, highlightedWord);
     }
 
     private void PlayCompletionEffect()
