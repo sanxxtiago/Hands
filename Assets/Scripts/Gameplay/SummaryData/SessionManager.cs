@@ -61,7 +61,8 @@ public class SessionManager : MonoBehaviour
 
     public ExerciseCommitOutcome CommitExerciseResult(
         ExerciseSummary summary,
-        ExerciseScore score)
+        ExerciseScore score,
+        ExpositionSummary exposition = null)
     {
         if (CurrentSession == null)
         {
@@ -91,7 +92,8 @@ public class SessionManager : MonoBehaviour
         ExerciseCommitOutcome outcome = persistenceService.CommitExerciseResult(
             CurrentSession,
             summary,
-            score);
+            score,
+            exposition);
 
         if (outcome == ExerciseCommitOutcome.Committed)
             currentSessionPersisted = true;

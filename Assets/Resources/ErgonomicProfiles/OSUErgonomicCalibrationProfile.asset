@@ -13,22 +13,25 @@ MonoBehaviour:
   m_Name: OSUErgonomicCalibrationProfile
   m_EditorClassIdentifier: 
   profileVersion: 1
-  cumulativeExposureAlertSeconds: 60
-  sustainedExposureThresholdSeconds: 60
+  cumulativeExposureAlertSeconds: 3
+  sustainedExposureThresholdSeconds: 3
   maximumFrameGapSeconds: 0.25
   angleCalibrations:
   - dimension: 0
     isEnabled: 1
     minimumOptimalDegrees: -15
     maximumOptimalDegrees: 15
-    calibrationNote: Calibracion provisional del prototipo inspirada en RULA; no oficial ni validada clinicamente.
+    calibrationNote: Calibracion provisional del prototipo inspirada en RULA; no
+      oficial ni validada clinicamente.
   - dimension: 1
     isEnabled: 1
     minimumOptimalDegrees: -15
     maximumOptimalDegrees: 15
-    calibrationNote: Calibracion provisional del prototipo inspirada en RULA; no oficial ni validada clinicamente.
+    calibrationNote: Calibracion provisional del prototipo inspirada en RULA; no
+      oficial ni validada clinicamente.
   - dimension: 2
     isEnabled: 1
     minimumOptimalDegrees: -45
     maximumOptimalDegrees: 45
-    calibrationNote: Calibracion provisional del prototipo inspirada en RULA; no oficial ni validada clinicamente.
+    calibrationNote: Calibracion provisional del prototipo inspirada en RULA; no
+      oficial ni validada clinicamente.

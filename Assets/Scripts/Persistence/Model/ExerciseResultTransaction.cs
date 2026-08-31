@@ -30,6 +30,7 @@ public sealed class ExerciseResultTransactionItem
     public ExerciseType exerciseType;
     public ExerciseSummary summary;
     public ScoreRecord score;
+    public ExpositionSummary exposition;
 }
 
 internal static class ExerciseResultIdentity

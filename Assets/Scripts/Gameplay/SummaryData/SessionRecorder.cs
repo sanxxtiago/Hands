@@ -119,18 +119,86 @@ public class SessionRecorder : MonoBehaviour
         ExerciseScore score = pendingScore;
         pendingScore = null;
 
-        if (SessionManager.Instance == null)
+        SessionManager sessionManager = SessionManager.Instance;
+        if (sessionManager == null)
         {
             Debug.LogError("[SessionRecorder] No existe un SessionManager para confirmar el ejercicio.");
             return;
         }
 
-        ExerciseCommitOutcome outcome = SessionManager.Instance.CommitExerciseResult(
+        ExpositionSummary exposition = exposureReady
+            ? BuildExpositionSummary(
+                sessionManager.CurrentSession,
+                summary,
+                results.LeftExposure,
+                results.RightExposure)
+            : null;
+
+        ExerciseCommitOutcome outcome = sessionManager.CommitExerciseResult(
             summary,
-            score);
+            score,
+            exposition);
 
         Debug.Log(
             $"[SessionRecorder] Resultado del commit: ejercicio={exerciseType}, estado={outcome}.");
+    }
+
+    private static ExpositionSummary BuildExpositionSummary(
+        SessionSummary session,
+        ExerciseSummary exercise,
+        HandErgonomicExposureSummary leftExposure,
+        HandErgonomicExposureSummary rightExposure)
+    {
+        if (session == null
+            || session.Summaries == null
+            || exercise == null
+            || leftExposure.handType != HandType.LEFT
+            || rightExposure.handType != HandType.RIGHT)
+        {
+            return null;
+        }
+
+        return new ExpositionSummary
+        {
+            sessionGuid = session.SessionGuid,
+            sessionId = session.SessionId,
+            exerciseIndex = session.Summaries.Count,
+            exerciseType = exercise.exerciseType,
+            exerciseDuration = exercise.exerciseDuration,
+            leftHand = CreateHandExpositionSummary(leftExposure),
+            rightHand = CreateHandExpositionSummary(rightExposure)
+        };
+    }
+
+    private static HandExpositionSummary CreateHandExpositionSummary(
+        HandErgonomicExposureSummary exposure)
+    {
+        return new HandExpositionSummary
+        {
+            handType = exposure.handType,
+            wristFlexionExtension = CreateDimensionSummary(
+                exposure.wristFlexionExtension),
+            wristRadialUlnarDeviation = CreateDimensionSummary(
+                exposure.wristRadialUlnarDeviation),
+            wristPronationSupination = CreateDimensionSummary(
+                exposure.wristPronationSupination)
+        };
+    }
+
+    private static ExpositionDimensionSummary CreateDimensionSummary(
+        ErgonomicExposureDimensionSummary exposure)
+    {
+        return new ExpositionDimensionSummary
+        {
+            validObservationSeconds = exposure.validObservationSeconds,
+            maximumSustainedExposureSeconds = exposure.maximumSustainedExposureSeconds,
+            cumulativeExposureSeconds = exposure.cumulativeExposureSeconds,
+            sustainedExposureSeconds = exposure.sustainedExposureSeconds,
+            hasReachedCumulativeExposureAlert =
+                exposure.hasReachedCumulativeExposureAlert,
+            hasReachedSustainedExposureThreshold =
+                exposure.hasReachedSustainedExposureThreshold
+        };
     }
 }
 

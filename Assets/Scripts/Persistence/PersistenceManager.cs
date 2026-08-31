@@ -11,6 +11,7 @@ public class PersistenceManager : MonoBehaviour
     public SessionService SessionService { get; private set; }
     public ScoreService ScoreService { get; private set; }
     public LeaderboardService LeaderboardService { get; private set; }
+    public ExpositionServices ExpositionServices { get; private set; }
     public ExerciseResultPersistenceService ExerciseResultService { get; private set; }
     //public SettingsService SettingsService { get; private set; }
 
@@ -39,16 +40,19 @@ public class PersistenceManager : MonoBehaviour
         SessionService = new SessionService(userId);
         ScoreService = new ScoreService(userId, classificationCatalog);
         LeaderboardService = new LeaderboardService(classificationCatalog);
+        ExpositionServices = new ExpositionServices(userId);
         SessionService.Load();
         ScoreService.Load();
         LeaderboardService.Load();
+        ExpositionServices.Load();
 
         ExerciseResultService = new ExerciseResultPersistenceService(
             SessionService,
             ScoreService,
             LeaderboardService,
             userId,
-            UserService.CurrentUser?.Name);
+            UserService.CurrentUser?.Name,
+            ExpositionServices);
         ExerciseResultService.RecoverPendingTransaction();
 
         UserService.OnCurrentUserChanged += OnCurrentUserChanged;
@@ -84,9 +88,11 @@ public class PersistenceManager : MonoBehaviour
 
         SessionService.SetUserContext(userId);
         ScoreService.SetUserContext(userId);
+        ExpositionServices?.SetUserContext(userId);
 
         SessionService.Load();
         ScoreService.Load();
+        ExpositionServices?.Load();
 
         ExerciseResultService?.SetUserContext(userId, UserService.CurrentUser?.Name);
         ExerciseResultService?.RecoverPendingTransaction();

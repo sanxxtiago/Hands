@@ -8,6 +8,7 @@ public sealed class ExerciseResultPersistenceService
     private readonly SessionService sessionService;
     private readonly ScoreService scoreService;
     private readonly LeaderboardService leaderboardService;
+    private readonly ExpositionServices expositionServices;
     private readonly Dictionary<string, PendingExerciseResult> pendingResults =
         new(StringComparer.Ordinal);
     private readonly Dictionary<string, PendingExerciseResult> committedResults =
@@ -21,6 +22,8 @@ public sealed class ExerciseResultPersistenceService
         && sessionService != null
         && scoreService != null
         && leaderboardService != null
+        && expositionServices != null
+        && expositionServices.IsReady
         && !string.IsNullOrWhiteSpace(userId);
 
     public ExerciseResultPersistenceService(
@@ -28,11 +31,13 @@ public sealed class ExerciseResultPersistenceService
         ScoreService scoreService,
         LeaderboardService leaderboardService,
         string userId,
-        string userName)
+        string userName,
+        ExpositionServices expositionServices)
     {
         this.sessionService = sessionService;
         this.scoreService = scoreService;
         this.leaderboardService = leaderboardService;
+        this.expositionServices = expositionServices;
         SetUserContext(userId, userName);
     }
 
@@ -114,12 +119,16 @@ public sealed class ExerciseResultPersistenceService
     public ExerciseCommitOutcome CommitExerciseResult(
         SessionSummary session,
         ExerciseSummary summary,
-        ExerciseScore score)
+        ExerciseScore score,
+        ExpositionSummary exposition = null)
     {
         if (recoveryBlocked)
             return ExerciseCommitOutcome.Failed;
 
-        if (!IsValidContext(session, summary, score))
+        if (!IsReady)
+            return ExerciseCommitOutcome.Rejected;
+
+        if (!IsValidContext(session, summary, score, exposition))
             return ExerciseCommitOutcome.Rejected;
 
         string key = ExerciseResultIdentity.CreateKey(
@@ -133,7 +142,10 @@ public sealed class ExerciseResultPersistenceService
         if (pendingResults.TryGetValue(key, out PendingExerciseResult pendingResult))
         {
             if (!ExerciseResultIdentity.AreEquivalent(pendingResult.summary, summary)
-                || !ExerciseResultIdentity.AreEquivalent(pendingResult.score, score))
+                || !ExerciseResultIdentity.AreEquivalent(pendingResult.score, score)
+                || !ExerciseResultIdentity.AreEquivalent(
+                    pendingResult.exposition,
+                    exposition))
             {
                 Debug.LogWarning(
                     $"[ExerciseResultPersistence] Conflicto para la clave {key}.");
@@ -152,11 +164,23 @@ public sealed class ExerciseResultPersistenceService
         {
             if (committedResults.TryGetValue(key, out PendingExerciseResult committedResult)
                 && (!ExerciseResultIdentity.AreEquivalent(committedResult.summary, summary)
-                    || !ExerciseResultIdentity.AreEquivalent(committedResult.score, score)))
+                    || !ExerciseResultIdentity.AreEquivalent(committedResult.score, score)
+                    || !ExerciseResultIdentity.AreEquivalent(
+                        committedResult.exposition,
+                        exposition)))
             {
                 Debug.LogWarning(
                     $"[ExerciseResultPersistence] Conflicto para la clave {key}.");
                 return ExerciseCommitOutcome.Conflict;
+            }
+
+            if (!committedResults.ContainsKey(key) && expositionServices != null)
+            {
+                ExpositionSummary persistedExposition = expositionServices.GetExposition(
+                    session.SessionGuid,
+                    summary.exerciseType);
+                if (!ExerciseResultIdentity.AreEquivalent(persistedExposition, exposition))
+                    return ExerciseCommitOutcome.Conflict;
             }
 
             return ExerciseResultIdentity.AreEquivalent(existingSummary, summary)
@@ -174,7 +198,7 @@ public sealed class ExerciseResultPersistenceService
 
         pendingResults.Add(
             key,
-            new PendingExerciseResult(summary, score, record));
+            new PendingExerciseResult(summary, score, record, exposition));
 
         ExerciseCommitOutcome outcome = CompleteIfReady(session);
         if (outcome == ExerciseCommitOutcome.Rejected)
@@ -285,7 +309,8 @@ public sealed class ExerciseResultPersistenceService
                 idempotencyKey = key,
                 exerciseType = summary.exerciseType,
                 summary = summary,
-                score = pendingResult.record
+                score = pendingResult.record,
+                exposition = pendingResult.exposition
             });
         }
 
@@ -320,6 +345,18 @@ public sealed class ExerciseResultPersistenceService
 
         for (int i = 0; i < transaction.items.Count; i++)
         {
+            if (transaction.items[i].exposition != null
+                && (expositionServices == null
+                    || !expositionServices.Upsert(transaction.items[i].exposition)))
+            {
+                Debug.LogError(
+                    "[ExerciseResultPersistence] No se pudo insertar o validar una exposicion.");
+                return false;
+            }
+        }
+
+        for (int i = 0; i < transaction.items.Count; i++)
+        {
             ExerciseResultTransactionItem item = transaction.items[i];
             leaderboardService.UpdateHighscore(
                 item.score,
@@ -333,7 +370,8 @@ public sealed class ExerciseResultPersistenceService
     private bool IsValidContext(
         SessionSummary session,
         ExerciseSummary summary,
-        ExerciseScore score)
+        ExerciseScore score,
+        ExpositionSummary exposition)
     {
         if (string.IsNullOrWhiteSpace(userId)
             || session == null
@@ -348,6 +386,14 @@ public sealed class ExerciseResultPersistenceService
             return false;
         }
 
+        if (session.Summaries == null
+            || session.Summaries.Count > ExerciseResultIdentity.RequiredExerciseCount
+            || (session.Summaries.Count == ExerciseResultIdentity.RequiredExerciseCount
+                && FindSummary(session, summary.exerciseType) == null))
+        {
+            return false;
+        }
+
         if (!ExerciseResultIdentity.TryGetExerciseType(
                 score.exerciseType,
                 out ExerciseType scoreExerciseType)
@@ -356,12 +402,24 @@ public sealed class ExerciseResultPersistenceService
             return false;
         }
 
-        if (session.Summaries == null
-            || session.Summaries.Count > ExerciseResultIdentity.RequiredExerciseCount
-            || (session.Summaries.Count == ExerciseResultIdentity.RequiredExerciseCount
-                && FindSummary(session, summary.exerciseType) == null))
+        if (exposition != null)
         {
-            return false;
+            ExerciseSummary existingSummary = FindSummary(
+                session,
+                summary.exerciseType);
+            int expectedExerciseIndex = existingSummary == null
+                ? session.Summaries.Count
+                : session.Summaries.IndexOf(existingSummary);
+
+            if (!ExpositionServices.IsValidSummary(exposition)
+                || exposition.sessionGuid != session.SessionGuid
+                || exposition.sessionId != session.SessionId
+                || exposition.exerciseType != summary.exerciseType
+                || exposition.exerciseIndex != expectedExerciseIndex
+                || exposition.exerciseDuration != summary.exerciseDuration)
+            {
+                return false;
+            }
         }
 
         return true;
@@ -412,7 +470,14 @@ public sealed class ExerciseResultPersistenceService
                 || !ExerciseResultIdentity.TryGetExerciseType(
                     item.score.exerciseType,
                     out ExerciseType scoreExerciseType)
-                || scoreExerciseType != item.exerciseType)
+                || scoreExerciseType != item.exerciseType
+                || (item.exposition != null
+                    && (!ExpositionServices.IsValidSummary(item.exposition)
+                        || item.exposition.sessionGuid != transaction.sessionGuid
+                        || item.exposition.sessionId != transaction.sessionId
+                        || item.exposition.exerciseType != item.exerciseType
+                        || item.exposition.exerciseIndex != item.score.exerciseIndex
+                        || item.exposition.exerciseDuration != item.summary.exerciseDuration)))
             {
                 return false;
             }
@@ -491,15 +556,18 @@ public sealed class ExerciseResultPersistenceService
         public readonly ExerciseSummary summary;
         public readonly ExerciseScore score;
         public readonly ScoreRecord record;
+        public readonly ExpositionSummary exposition;
 
         public PendingExerciseResult(
             ExerciseSummary summary,
             ExerciseScore score,
-            ScoreRecord record)
+            ScoreRecord record,
+            ExpositionSummary exposition)
         {
             this.summary = summary;
             this.score = score;
             this.record = record;
+            this.exposition = exposition;
         }
     }
 }

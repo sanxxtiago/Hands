@@ -336,7 +336,8 @@ public sealed class HybridFinalSuggestionTests
         SessionSummary session = new SessionSummary { SessionId = 1 };
         const string testUser = "hybrid-final-suggestion-test";
         ExerciseResultPersistenceService service = new ExerciseResultPersistenceService(
-            new SessionService(testUser), new ScoreService(testUser), new LeaderboardService(), testUser, "Prueba");
+            new SessionService(testUser), new ScoreService(testUser), new LeaderboardService(), testUser, "Prueba",
+            new ExpositionServices(testUser));
         ExerciseScore score = new ExerciseScore { exerciseType = ScoreExerciseType.Insert, totalScore = 75f, scoreGrade = "Good", isValid = true };
         Assert.That(service.CommitExerciseResult(session, exercise, score), Is.EqualTo(ExerciseCommitOutcome.Pending));
         Assert.That(session.Summaries[0].generalSuggestion, Is.EqualTo(exercise.generalSuggestion));
