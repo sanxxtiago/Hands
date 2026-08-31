@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     public static event Action OnExcerciseStart;
     //Pasa la duración del ejercicio al finalizarlo
     public static event Action<float> OnExerciseEnd;
+    public static event Action<float> OnExerciseFinalizing;
     public static event Action OnShowResults;
     private void OnEnable()
     {
@@ -70,6 +71,7 @@ public class GameManager : MonoBehaviour
     public void EndExercise(float duration)
     {
         OnExerciseEnd?.Invoke(duration);
+        OnExerciseFinalizing?.Invoke(duration);
         SetState(GAMESTATE.RESULTS);
     }
 

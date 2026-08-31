@@ -10,25 +10,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9c83635deccbbd040956f946eca0f43a, type: 3}
-  m_Name: DefaultErgonomicCalibrationProfile
+  m_Name: DuckHunterErgonomicCalibrationProfile
   m_EditorClassIdentifier: 
   profileVersion: 1
-  cumulativeExposureAlertSeconds: 3
-  sustainedExposureThresholdSeconds: 3
+  cumulativeExposureAlertSeconds: 60
+  sustainedExposureThresholdSeconds: 60
   maximumFrameGapSeconds: 0.25
   angleCalibrations:
   - dimension: 0
     isEnabled: 1
     minimumOptimalDegrees: -15
     maximumOptimalDegrees: 15
-    calibrationNote: Rango preventivo del prototipo inspirado en RULA; no es oficial.
+    calibrationNote: Calibracion provisional del prototipo inspirada en RULA; no oficial ni validada clinicamente.
   - dimension: 1
     isEnabled: 1
     minimumOptimalDegrees: -15
     maximumOptimalDegrees: 15
-    calibrationNote: Rango provisional del prototipo; requiere validacion clinica.
+    calibrationNote: Calibracion provisional del prototipo inspirada en RULA; no oficial ni validada clinicamente.
   - dimension: 2
     isEnabled: 1
     minimumOptimalDegrees: -45
     maximumOptimalDegrees: 45
-    calibrationNote: Rango provisional del prototipo; requiere validacion clinica.
+    calibrationNote: Calibracion provisional del prototipo inspirada en RULA; no oficial ni validada clinicamente.

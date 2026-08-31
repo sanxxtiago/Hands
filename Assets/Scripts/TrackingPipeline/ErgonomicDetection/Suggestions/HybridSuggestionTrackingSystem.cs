@@ -3,6 +3,8 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public sealed class HybridSuggestionTrackingSystem : MonoBehaviour
 {
+    [Tooltip("Perfil por ejercicio. Si está asignado, gobierna la calibración y configuración runtime.")]
+    [SerializeField] private HybridExerciseProfile exerciseProfile;
     [SerializeField] private HybridSuggestionProfile suggestionProfile;
     [SerializeField] private ErgonomicCalibrationProfile calibrationProfile;
     [Tooltip("Objetivo explícito del ejercicio. ObserveOnly no recomienda aumentar articulaciones.")]
@@ -46,6 +48,18 @@ public sealed class HybridSuggestionTrackingSystem : MonoBehaviour
     {
         IsTracking = false;
         ClearPending();
+        if (exerciseProfile != null)
+        {
+            if (!exerciseProfile.TryValidate(out string error))
+            {
+                Debug.LogError($"[HybridSuggestions] Perfil del ejercicio inválido: {error}", this);
+                return;
+            }
+            suggestionProfile = exerciseProfile.RuntimeProfile;
+            calibrationProfile = exerciseProfile.CalibrationProfile;
+            leftGoal = exerciseProfile.CoordinationEnabled ? exerciseProfile.LeftHand.RuntimeGoal : HybridCoordinationGoal.ObserveOnly;
+            rightGoal = exerciseProfile.CoordinationEnabled ? exerciseProfile.RightHand.RuntimeGoal : HybridCoordinationGoal.ObserveOnly;
+        }
         if (suggestionProfile == null || !suggestionProfile.TryValidate(out _) ||
             calibrationProfile == null || !calibrationProfile.TryValidate(out _) ||
             !System.Enum.IsDefined(typeof(HybridCoordinationGoal), leftGoal) ||

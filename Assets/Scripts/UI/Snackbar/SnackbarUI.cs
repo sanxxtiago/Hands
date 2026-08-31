@@ -8,45 +8,62 @@ using UnityEngine.UI;
 
 public class SnackbarUI : MonoBehaviour
 {
-    //public string message;
-    public Color error;
-    public Color warning;
-    public Color success;
-    public Image bg;
-    public CanvasGroup group;
-    public TMP_Text message;
-    Tween hideTween;
-    void OnEnable()
+    [Header("Colores")]
+    [SerializeField] private Color error = new Color(0.827f, 0.118f, 0.118f, 1f);
+    [SerializeField] private Color warning = new Color(1f, 0.757f, 0.027f, 1f);
+    [SerializeField] private Color success = new Color(0.298f, 0.686f, 0.314f, 1f);
+    [SerializeField] private Color errorText = Color.white;
+    [SerializeField] private Color warningText = Color.black;
+    [SerializeField] private Color successText = Color.black;
+
+    [Header("Referencias")]
+    [SerializeField] private Image bg;
+    [SerializeField] private CanvasGroup group;
+    [SerializeField] private TMP_Text message;
+
+    private Tween hideTween;
+
+    private void OnEnable()
     {
         SnackbarManager.OnShow += Config;
     }
-    void Start()
+
+    private void Start()
     {
         group.alpha = 0;
     }
+
     private void Config(SNACKBARTYPE snackBarType, string msg, float time)
     {
         group.DOKill();
 
+        Color backgroundColor = error;
+        Color textColor = errorText;
+
         switch (snackBarType)
         {
             case SNACKBARTYPE.ERROR:
-                bg.color = error;
+                backgroundColor = error;
+                textColor = errorText;
                 break;
             case SNACKBARTYPE.WARNING:
-                bg.color = warning;
+                backgroundColor = warning;
+                textColor = warningText;
                 break;
             case SNACKBARTYPE.SUCCESS:
-                bg.color = success;
+                backgroundColor = success;
+                textColor = successText;
                 break;
         }
 
+        bg.color = backgroundColor;
+        message.color = textColor;
         message.text = msg;
 
         Show(time);
     }
 
-    void Show(float duration)
+    private void Show(float duration)
     {
         group.DOKill();
 
@@ -59,12 +76,12 @@ public class SnackbarUI : MonoBehaviour
         hideTween = DOVirtual.DelayedCall(duration, Hide);
     }
 
-    void Hide()
+    private void Hide()
     {
         group.DOFade(0, 0.3f);
     }
 
-    void OnDisable()
+    private void OnDisable()
     {
         SnackbarManager.OnShow -= Config;
 

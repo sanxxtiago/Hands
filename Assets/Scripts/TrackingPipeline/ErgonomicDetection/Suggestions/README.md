@@ -36,17 +36,33 @@ La prioridad es ordinal: sostenida (2), acumulada (1), objetivo motor (0). Nunca
 
 ## Configuración en Unity
 
-Las escenas Insert, OSU y DuckHunter tienen `HybridSuggestionTrackingSystem` en GameManager, junto al tracker de exposición. Comparten `DefaultHybridSuggestionProfile` y la calibración angular existente. Los parámetros se toman al comenzar cada ejercicio; cambiar configuración entre ejercicios, no durante una captura.
+Las escenas Insert, OSU y DuckHunter tienen `HybridSuggestionTrackingSystem` en GameManager, junto al tracker de exposición. Cada escena usa su propio `HybridExerciseProfile`, su `HybridRuntimeProfile` y su `ErgonomicCalibrationProfile` en `Assets/Resources/ErgonomicProfiles/`. Los assets Default permanecen como referencia. Cambiar configuración entre ejercicios, no durante una captura.
 
-- `leftGoal` / `rightGoal`: por defecto `ObserveOnly`. Solo permite protección postural. Seleccionar `IncludeWrist` o `IncludeForearm` cuando el objetivo motor de ese ejercicio lo justifique. No se inventan objetivos terapéuticos para las escenas existentes.
+- `exerciseProfile`: configura desempeño, objetivos finales, calibración y runtime por ejercicio. Sus objetivos runtime por mano están inicialmente en `ObserveOnly`; seleccionar `IncludeWrist` o `IncludeForearm` solo cuando el objetivo motor del ejercicio lo justifique. `coordinationEnabled = false` fuerza observación en vivo y desactiva coordinación final.
 - `output`: por defecto `LogOnly`. El híbrido procesa y publica eventos, pero el baseline conserva la pantalla. `LogAndSnackbar` muestra también el híbrido usando el adaptador existente; **no desactiva el baseline**. Evitar activar las dos salidas visuales para una evaluación comparativa.
-- `suggestionProfile`: ventana, mínimos de señal, bandas de participación y control de notificaciones propios del prototipo.
-- `calibrationProfile`: debe ser el mismo asset asignado al tracker de exposición de esa escena.
+- `suggestionProfile` y `leftGoal` / `rightGoal` del componente se mantienen por compatibilidad con instancias antiguas. Con `exerciseProfile` asignado se toman los valores del perfil al iniciar.
+- `calibrationProfile`: el asset referenciado por el perfil del ejercicio debe ser el mismo asignado al tracker de exposición de esa escena. El cierre verifica esa identidad y usa desempeño como respaldo si no coincide.
 
 El inicio (`OnExcerciseStart`) reinicia ambos intérpretes de uso, emparejamiento, reglas y anti-spam. El final (`OnExerciseEnd`) deja de procesar, elimina pendientes y registra cantidad de emisiones/descartes. Deshabilitar el componente cancela las suscripciones y no reanuda a mitad de ejercicio sin un nuevo inicio.
 
 ## Comparación y límites
 
-La fase actual mantiene el baseline sin cambios y ejecuta el híbrido en observación. Los logs incluyen mano, identidad, regla, causa, duración y participación; el evento lleva las evidencias completas para un futuro consumidor. No incluye persistencia, resultados de usuarios ni conmutación automática al híbrido como sistema principal.
+La fase actual mantiene el baseline sin cambios y ejecuta el híbrido runtime en observación. Los logs incluyen mano, identidad, regla, causa, duración y participación; el evento lleva las evidencias completas para un futuro consumidor. La sugerencia final híbrida sí alimenta resultados y persistencia. No incluye resultados de usuarios ni conmutación automática del feedback runtime.
+
+## Sugerencia final por ejercicio
+
+`OnExerciseEnd` detiene los trackers. `SessionRecorder` captura ambos resúmenes en cualquier orden. Al terminar todos los handlers, `GameManager.OnExerciseFinalizing` construye y confirma el resultado una sola vez; después `OnShowResults` permite a `ResultsManager` poblar la UI. El texto queda en `LastGeneralSuggestion` y en el campo existente `ExerciseSummary.generalSuggestion`. No se amplía el modelo persistido.
+
+`HybridFinalSuggestionBuilder` es independiente del baseline `GeneralSuggestionBuilder`. Prioriza exposición sostenida, luego acumulada, luego objetivos finales de uso; añade una segunda línea lógica de desempeño. Las líneas pueden ocupar varios renglones por ajuste de texto. El panel de resultados conserva su tamaño de fuente y amplía el espacio disponible.
+
+Para el resultado final se conserva `maximumSustainedExposureSeconds`: el episodio continuo más largo de todo el ejercicio. `sustainedExposureSeconds` sigue siendo el episodio actual al detenerse. La alerta sostenida del resumen usa el máximo, aunque el usuario haya corregido la postura. `validObservationSeconds` cuenta intervalos válidos por dimensión y permite distinguir ausencia de exposición de ausencia de datos. Estos campos son transitorios, no se guardan en `ExerciseSummary`.
+
+Los umbrales se leen únicamente de la calibración asociada: actualmente 60 s acumulados / 60 s sostenidos por ejercicio. No se escalan automáticamente por la duración esperada (90 s iniciales). Cambiar cada asset de calibración permite estudiar otros tiempos del prototipo sin atribuirlos a RULA.
+
+Los objetivos finales usan `HandUsageSummary.relativeUsage`, cuyo denominador incluye actividad de **mano + muñeca + antebrazo**. Insert inicia con muñeca 0.40, antebrazo 0.20 y tolerancia 0.05 para ambas manos. OSU y DuckHunter contienen valores editables de referencia, con coordinación desactivada hasta definir sus objetivos. Estos valores no se trasladan a las bandas 0.35/0.65 de señal rotacional en vivo: son magnitudes distintas.
+
+La coordinación requiere arrays de uso completos, únicos y finitos, suma relativa unitaria, actividad suficiente y al menos 2 s observados por dimensión. Cero exposición no genera elogios posturales. Si existe exposición de giro en esa mano, no se recomienda redistribuir hacia el antebrazo. Una exposición registrada, aun inferior al umbral, bloquea la conclusión genérica de coordinación sin exposición. Ante exposición elevada, las recomendaciones de desempeño no presionan para ganar velocidad ni prolongar posturas incómodas.
+
+La sincronización delimita cada ejercicio con inicio/cierre y duración común de los buses síncronos; no es un protocolo para resultados remotos o asíncronos tardíos. Si falta exposición, hay desacuerdo de duración/calibración o el perfil es inválido, se registra un diagnóstico y se conserva el desempeño baseline. Sin resumen de uso no se confirma un resultado incompleto. Sin datos de desempeño válidos ni otra conclusión, se informa que los datos son insuficientes.
 
 Comparar comprensión de mensajes, pertinencia percibida, interrupciones, errores de interpretación y usabilidad. Una mejora de usabilidad no demuestra prevención de lesiones, eficacia terapéutica, precisión clínica del seguimiento ni adherencia longitudinal. Antes de retirar el baseline hacen falta esa comparación y una revisión de los objetivos de cada ejercicio. El giro palma–antebrazo del SDK debe validarse antes de interpretarlo como pronación/supinación anatómica.

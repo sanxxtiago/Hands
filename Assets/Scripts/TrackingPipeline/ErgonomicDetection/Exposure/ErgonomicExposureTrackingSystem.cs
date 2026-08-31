@@ -24,6 +24,7 @@ public sealed class ErgonomicExposureTrackingSystem : MonoBehaviour
 
     private void OnDisable()
     {
+        _isTracking = false;
         ErgonomicEventBus.OnFrame -= OnErgonomicFrameReceived;
         GameManager.OnExcerciseStart -= RunTracking;
         GameManager.OnExerciseEnd -= StopTracking;
@@ -31,6 +32,8 @@ public sealed class ErgonomicExposureTrackingSystem : MonoBehaviour
 
     public void RunTracking()
     {
+        _isTracking = false;
+        CreateInterpreters();
         if (!EnsureInterpreters())
             return;
 
@@ -133,6 +136,8 @@ public sealed class ErgonomicExposureTrackingSystem : MonoBehaviour
     {
         return $"{label} | acumulada: {summary.cumulativeExposureSeconds:F2}s" +
             $" | continua: {summary.sustainedExposureSeconds:F2}s" +
+            $" | continua máxima: {summary.maximumSustainedExposureSeconds:F2}s" +
+            $" | observación válida: {summary.validObservationSeconds:F2}s" +
             $" | alerta acumulada: {FormatFlag(summary.hasReachedCumulativeExposureAlert)}" +
             $" | alerta sostenida: {FormatFlag(summary.hasReachedSustainedExposureThreshold)}";
     }

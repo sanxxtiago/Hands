@@ -82,6 +82,7 @@ public sealed class ErgonomicExposureInterpreter
         return new HandErgonomicExposureSummary
         {
             handType = _handType,
+            calibrationProfileId = _profile == null ? 0 : _profile.GetInstanceID(),
             wristFlexionExtension = BuildSummary(
                 ErgonomicPostureDimension.WristFlexionExtension),
             wristRadialUlnarDeviation = BuildSummary(
@@ -151,6 +152,7 @@ public sealed class ErgonomicExposureInterpreter
             return data;
         }
 
+        state.validObservationSeconds += deltaTime;
         data.isOutsideOptimalRange =
             !calibration.IsWithinOptimalRange(angle.degrees);
 
@@ -167,6 +169,8 @@ public sealed class ErgonomicExposureInterpreter
 
         state.cumulativeExposureSeconds += deltaTime;
         state.sustainedExposureSeconds += deltaTime;
+        state.maximumSustainedExposureSeconds = Mathf.Max(
+            state.maximumSustainedExposureSeconds, state.sustainedExposureSeconds);
         state.hasReachedCumulativeExposureAlert =
             state.cumulativeExposureSeconds >=
             _profile.CumulativeExposureAlertSeconds;
@@ -194,12 +198,14 @@ public sealed class ErgonomicExposureInterpreter
         DimensionState state = _states[(int)dimension];
         return new ErgonomicExposureDimensionSummary
         {
+            validObservationSeconds = state.validObservationSeconds,
+            maximumSustainedExposureSeconds = state.maximumSustainedExposureSeconds,
             cumulativeExposureSeconds = state.cumulativeExposureSeconds,
             sustainedExposureSeconds = state.sustainedExposureSeconds,
             hasReachedCumulativeExposureAlert =
                 state.hasReachedCumulativeExposureAlert,
             hasReachedSustainedExposureThreshold =
-                state.hasReachedSustainedExposureThreshold
+                _profile != null && state.maximumSustainedExposureSeconds >= _profile.SustainedExposureThresholdSeconds
         };
     }
 
@@ -220,6 +226,8 @@ public sealed class ErgonomicExposureInterpreter
 
     private struct DimensionState
     {
+        public float validObservationSeconds;
+        public float maximumSustainedExposureSeconds;
         public float cumulativeExposureSeconds;
         public float sustainedExposureSeconds;
         public bool hasReachedCumulativeExposureAlert;

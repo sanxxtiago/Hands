@@ -832,6 +832,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   exerciseType: 1
+  hybridProfile: {fileID: 11400000, guid: b8ee256f7cc94ebca7d163b7e29ff121, type: 2}
 --- !u!114 &43925660
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7018,7 +7019,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 80}
-  m_SizeDelta: {x: 700, y: 100}
+  m_SizeDelta: {x: 560, y: 72}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1374649193
 MonoBehaviour:
@@ -7032,9 +7033,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 071fbc0fa0cfb90488648bb08dfc7303, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  error: {r: 1, g: 0.2216981, b: 0.2216981, a: 1}
-  warning: {r: 0.963735, g: 1, b: 0, a: 1}
-  success: {r: 0.12519169, g: 1, b: 0, a: 1}
+  error: {r: 0.827, g: 0.118, b: 0.118, a: 1}
+  warning: {r: 1, g: 0.757, b: 0.027, a: 1}
+  success: {r: 0.298, g: 0.686, b: 0.314, a: 1}
+  errorText: {r: 1, g: 1, b: 1, a: 1}
+  warningText: {r: 0, g: 0, b: 0, a: 1}
+  successText: {r: 0, g: 0, b: 0, a: 1}
   bg: {fileID: 1374649194}
   group: {fileID: 1374649196}
   message: {fileID: 2100686652}
@@ -11404,7 +11408,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7d2d8055c55839459b5cddaebddf0ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  calibrationProfile: {fileID: 11400000, guid: 2289cfd9ec8984b4883f02eb4ef32069, type: 2}
+  calibrationProfile: {fileID: 11400000, guid: b8ee256f7cc94ebca7d163b7e29ff101, type: 2}
 --- !u!114 &1956825097
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11417,8 +11421,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c3648edadb757647d4e3816fe5e99f2, type: 3}
   m_Name:
   m_EditorClassIdentifier:
-  suggestionProfile: {fileID: 11400000, guid: b86bf7b65d581e499900f010ec71dedd, type: 2}
-  calibrationProfile: {fileID: 11400000, guid: 2289cfd9ec8984b4883f02eb4ef32069, type: 2}
+  exerciseProfile: {fileID: 11400000, guid: b8ee256f7cc94ebca7d163b7e29ff121, type: 2}
+  suggestionProfile: {fileID: 11400000, guid: b8ee256f7cc94ebca7d163b7e29ff111, type: 2}
+  calibrationProfile: {fileID: 11400000, guid: b8ee256f7cc94ebca7d163b7e29ff101, type: 2}
   leftGoal: 0
   rightGoal: 0
   output: 0
@@ -11882,7 +11887,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: 15, y: 0}
-  m_SizeDelta: {x: -30, y: 50}
+  m_SizeDelta: {x: -30, y: 48}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2100686652
 MonoBehaviour:
@@ -11931,8 +11936,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 24
+  m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

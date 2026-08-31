@@ -3,6 +3,7 @@ using UnityEngine;
 public class SessionRecorder : MonoBehaviour
 {
     [SerializeField] private ExerciseType exerciseType;
+    [SerializeField] private HybridExerciseProfile hybridProfile;
 
     public static string LastGeneralSuggestion { get; private set; }
 
@@ -14,32 +15,55 @@ public class SessionRecorder : MonoBehaviour
 
     private float completionTime;
     private ExerciseScore pendingScore;
+    private bool hasPerformance;
+    private readonly HybridExerciseResultSynchronizer results = new HybridExerciseResultSynchronizer();
 
     private void OnEnable()
     {
-        MetricsTrackingSystem.OnTrackingStop += SaveExerciseSummary;
+        MetricsTrackingSystem.OnTrackingStop += results.CaptureUsage;
+        ErgonomicExposureEventBus.OnTrackingStop += results.CaptureExposure;
+        GameManager.OnExcerciseStart += BeginExercise;
+        GameManager.OnExerciseFinalizing += SaveExerciseSummary;
     }
 
     private void OnDisable()
     {
-        MetricsTrackingSystem.OnTrackingStop -= SaveExerciseSummary;
+        MetricsTrackingSystem.OnTrackingStop -= results.CaptureUsage;
+        ErgonomicExposureEventBus.OnTrackingStop -= results.CaptureExposure;
+        GameManager.OnExcerciseStart -= BeginExercise;
+        GameManager.OnExerciseFinalizing -= SaveExerciseSummary;
+        results.Clear();
+        pendingScore = null;
+    }
+
+    private void BeginExercise()
+    {
+        results.Begin();
+        LastGeneralSuggestion = null;
+        pendingScore = null;
+        totalInteractionDelay = completionTime = 0f;
+        interactionCount = ducksHit = ducksMissed = 0;
+        hasPerformance = false;
     }
 
     public void SetOsuData(float totalInteractionDelay, int interactionCount)
     {
         this.totalInteractionDelay = totalInteractionDelay;
         this.interactionCount = interactionCount;
+        hasPerformance = true;
     }
 
     public void SetDuckHunterData(int ducksHit, int ducksMissed)
     {
         this.ducksHit = ducksHit;
         this.ducksMissed = ducksMissed;
+        hasPerformance = true;
     }
 
     public void SetInsertPiecesData(float completionTime)
     {
         this.completionTime = completionTime;
+        hasPerformance = true;
     }
 
     public void SetPendingScore(ExerciseScore score)
@@ -47,26 +71,21 @@ public class SessionRecorder : MonoBehaviour
         pendingScore = score;
     }
 
-    private void SaveExerciseSummary(
-        float duration,
-        HandUsageSummary leftSummary,
-        HandUsageSummary rightSummary)
+    private void SaveExerciseSummary(float duration)
     {
-        string generalSuggestion = GeneralSuggestionBuilder.Build(
-            exerciseType,
-            completionTime,
-            totalInteractionDelay,
-            ducksHit,
-            ducksMissed);
-
-        LastGeneralSuggestion = generalSuggestion;
+        if (!results.TryFinalize(duration, out bool exposureReady))
+        {
+            pendingScore = null;
+            Debug.LogWarning("[HybridFinalSuggestions] No hay resumen de uso pendiente del ejercicio; no se confirma un resultado incompleto o duplicado.", this);
+            return;
+        }
 
         ExerciseSummary summary = new()
         {
             exerciseType = exerciseType,
             exerciseDuration = duration,
-            leftHand = leftSummary,
-            rightHand = rightSummary,
+            leftHand = results.LeftUsage,
+            rightHand = results.RightUsage,
 
             totalInteractionDelay = totalInteractionDelay,
             interactionCount = interactionCount,
@@ -74,11 +93,28 @@ public class SessionRecorder : MonoBehaviour
             ducksHit = ducksHit,
             ducksMissed = ducksMissed,
 
-            completionTime = completionTime,
-            generalSuggestion = generalSuggestion
+            completionTime = completionTime
         };
 
-        Debug.Log($"[SuggestionSystem] Sugerencia final: {summary.generalSuggestion}");
+        bool profileReady = hybridProfile != null && hybridProfile.TryValidate(out _) && hybridProfile.ExerciseType == exerciseType;
+        bool matchingCalibration = profileReady && exposureReady &&
+            results.LeftExposure.calibrationProfileId == hybridProfile.CalibrationProfile.GetInstanceID() &&
+            results.RightExposure.calibrationProfileId == hybridProfile.CalibrationProfile.GetInstanceID();
+        if (matchingCalibration)
+        {
+            summary.generalSuggestion = HybridFinalSuggestionBuilder.Build(hybridProfile, summary,
+                results.LeftExposure, results.RightExposure, hasPerformance);
+        }
+        else
+        {
+            Debug.LogWarning("[HybridFinalSuggestions] Falta resumen ergonómico compatible o perfil del ejercicio; se utiliza el desempeño como respaldo.", this);
+            summary.generalSuggestion = hasPerformance ? GeneralSuggestionBuilder.Build(
+                exerciseType, completionTime, totalInteractionDelay, ducksHit, ducksMissed) : string.Empty;
+        }
+        if (string.IsNullOrWhiteSpace(summary.generalSuggestion))
+            summary.generalSuggestion = "No hay datos suficientes para formular una sugerencia final.";
+        LastGeneralSuggestion = summary.generalSuggestion;
+        Debug.Log($"[HybridFinalSuggestions] Sugerencia final ({exerciseType}): {summary.generalSuggestion}");
 
         ExerciseScore score = pendingScore;
         pendingScore = null;
