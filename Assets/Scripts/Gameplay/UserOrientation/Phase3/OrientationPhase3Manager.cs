@@ -93,7 +93,7 @@ public class OrientationPhase3Manager : OrientationManager
             );
         }
 
-        GameObject pieceInstance = Instantiate(piece, piecePos, Quaternion.identity);
+        GameObject pieceInstance = Instantiate(piece, piecePos, piece.transform.rotation);
         spawnedPiece = pieceInstance.GetComponent<OrientationPieceBehaviour>();
         if (spawnedPiece != null)
         {
@@ -101,7 +101,7 @@ public class OrientationPhase3Manager : OrientationManager
             spawnedPiece.OnReleased += HandlePieceReleased;
         }
 
-        GameObject targetInstance = Instantiate(target, targetPos, Quaternion.identity);
+        GameObject targetInstance = Instantiate(target, targetPos, target.transform.rotation);
         targetBehaviour = targetInstance.GetComponent<OrientationSlotBehaviour>();
         if (targetBehaviour != null)
         {

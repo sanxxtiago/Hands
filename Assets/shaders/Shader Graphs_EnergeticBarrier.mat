@@ -52,10 +52,10 @@ Material:
     m_Ints: []
     m_Floats:
     - _ColorTopB: 0
-    - _LineCount: 5
+    - _LineCount: 2.94
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Speed: 0.61
+    - _Speed: 0.18
     m_Colors:
-    - _ColorTopA: {r: 0.9427508, g: 1, b: 0, a: 1}
+    - _ColorTopA: {r: 0, g: 0.39763784, b: 1, a: 1}
   m_BuildTextureStacks: []
