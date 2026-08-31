@@ -81,15 +81,28 @@ if (phaseIndex < 0 || phaseIndex >= phaseCount ||
     IEnumerator ExerciseRoutine()
     {
         elapsedTime = 0f;
+
+        SessionManager sessionManager = SessionManager.Instance;
+        if (sessionManager == null)
+        {
+            Debug.LogError("[ExerciseController] No existe un SessionManager para iniciar el ejercicio.");
+            yield break;
+        }
+
+        if (sessionManager.CurrentSession == null)
+        {
+            sessionManager.BeginSession();
+        }
+
+        if (sessionManager.CurrentSession == null)
+        {
+            Debug.LogError("[ExerciseController] No se pudo iniciar una sesion; se cancela el ejercicio.");
+            yield break;
+        }
+
         OnExerciseStart();
 
         feedbackSystem?.BeginExercise();
-
-        
-        if (SessionManager.Instance.CurrentSession == null)
-        {
-            SessionManager.Instance.BeginSession();
-        }
 
         while (!IsExerciseCompleted())
         {
@@ -116,10 +129,11 @@ if (phaseIndex < 0 || phaseIndex >= phaseCount ||
 
     protected void OnExerciseEnd(float duration)
     {
-        SetSpecificData();
+        ExerciseScore score = SetSpecificData();
+        sessionRecorder?.SetPendingScore(score);
         gameManager.EndExercise(duration);
     }
 
-    protected abstract void SetSpecificData();
+    protected abstract ExerciseScore SetSpecificData();
 
 }

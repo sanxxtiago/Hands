@@ -12,13 +12,26 @@ public class OrientationModal : MonoBehaviour
 
     [Header("Animation")]
     [SerializeField] private float fadeDuration = 0.3f;
+    [SerializeField] private RectTransform modalContent;
+    [SerializeField, Min(0f)] private float popDuration = 0.25f;
     [SerializeField] private string sceneName;
     private CanvasGroup group;
+    private Vector3 modalContentScale = Vector3.one;
     private bool isClosing;
 
     private void Awake()
     {
         group = GetComponent<CanvasGroup>();
+
+        if (modalContent == null)
+        {
+            Transform content = transform.Find("ModalContent");
+            if (content != null)
+                modalContent = content.GetComponent<RectTransform>();
+        }
+
+        if (modalContent != null)
+            modalContentScale = modalContent.localScale;
     }
 
     private void OnEnable()
@@ -28,7 +41,11 @@ public class OrientationModal : MonoBehaviour
 
     private void OnDisable()
     {
-        orientationManager.OnPhaseCompleted -= Open;
+        if (orientationManager != null)
+            orientationManager.OnPhaseCompleted -= Open;
+
+        group?.DOKill(false);
+        modalContent?.DOKill(false);
     }
 
     private void Start()
@@ -47,6 +64,15 @@ public class OrientationModal : MonoBehaviour
         group.alpha = 0f;
         group.interactable = false;
         group.blocksRaycasts = false;
+
+        if (modalContent != null)
+        {
+            modalContent.DOKill(false);
+            modalContent.localScale = modalContentScale * 0.96f;
+            modalContent
+                .DOScale(modalContentScale, popDuration)
+                .SetEase(Ease.OutBack);
+        }
 
         group
             .DOFade(1f, fadeDuration)

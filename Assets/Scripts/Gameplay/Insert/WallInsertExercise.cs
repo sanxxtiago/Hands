@@ -120,10 +120,11 @@ public class WallInsertExercise : ExerciseController
         StartCoroutine(AdvanceToNextPhaseAfterDelay());
     }
 
-    protected override void SetSpecificData()
+    protected override ExerciseScore SetSpecificData()
     {
-        scoreAdapter?.CompleteExercise(CompletionTime);
+        ExerciseScore score = scoreAdapter?.CompleteExercise(CompletionTime);
         sessionRecorder.SetInsertPiecesData(CompletionTime);
+        return score;
     }
 
     private void AdvanceToNextPhase()

@@ -3,12 +3,16 @@ using System;
 public sealed class InsertScoreCalculator : IScoreCalculator<InsertScoreData>
 {
     private readonly InsertScoreConfig config;
+    private readonly ScoreClassificationProfile classificationProfile;
 
     public InsertScoreConfig Config => config;
 
-    public InsertScoreCalculator(InsertScoreConfig config = null)
+    public InsertScoreCalculator(
+        InsertScoreConfig config = null,
+        ScoreClassificationProfile classificationProfile = null)
     {
         this.config = config ?? new InsertScoreConfig();
+        this.classificationProfile = classificationProfile;
     }
 
     public ExerciseScore Calculate(InsertScoreData input)
@@ -74,7 +78,12 @@ public sealed class InsertScoreCalculator : IScoreCalculator<InsertScoreData>
             misses = 0
         };
 
-        return ScoreResultFactory.Create(ScoreExerciseType.Insert, breakdown, statsData, true);
+        return ScoreResultFactory.Create(
+            ScoreExerciseType.Insert,
+            breakdown,
+            statsData,
+            true,
+            classificationProfile);
     }
 
     public float CalculateExpectedTime(InsertScoreData input)

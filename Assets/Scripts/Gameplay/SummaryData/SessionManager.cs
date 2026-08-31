@@ -1,14 +1,14 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SessionManager : MonoBehaviour
 {
     public static SessionManager Instance { get; private set; }
 
-    [SerializeField] private SessionSummary currentSession;
+    [System.NonSerialized] private SessionSummary currentSession;
     public SessionSummary CurrentSession => currentSession;
 
+    private string currentSessionUserId;
     private bool currentSessionPersisted;
 
     private void Awake()
@@ -25,24 +25,78 @@ public class SessionManager : MonoBehaviour
 
     public void BeginSession()
     {
-        Debug.Log("Sesion iniciada");
-        currentSession = new SessionSummary
+        if (currentSession != null)
         {
-            SessionId = PersistenceManager.Instance.SessionService.PeekNextSessionId()
-        };
-
-        currentSessionPersisted = false;
-    }
-
-    public void AddExerciseSummary(ExerciseSummary summary)
-    {
-        if (CurrentSession == null)
-        {
-            Debug.LogWarning("No active session. Call BeginSession() first.");
+            Debug.LogWarning("[SessionManager] Ya existe una sesion activa; no se creara otra.");
             return;
         }
 
-        CurrentSession.AddSummary(summary);
+        PersistenceManager persistenceManager = PersistenceManager.Instance;
+        if (persistenceManager == null
+            || persistenceManager.SessionService == null
+            || persistenceManager.ExerciseResultService == null
+            || !persistenceManager.ExerciseResultService.IsReady)
+        {
+            Debug.LogError(
+                "[SessionManager] No se puede iniciar la sesion: la persistencia no esta disponible o bloqueada.");
+            return;
+        }
+
+        string userId = persistenceManager.UserService?.CurrentUser?.UserId;
+        if (string.IsNullOrWhiteSpace(userId))
+        {
+            Debug.LogError("[SessionManager] No se puede iniciar la sesion sin un usuario activo.");
+            return;
+        }
+
+        Debug.Log("[SessionManager] Sesion iniciada.");
+        currentSession = new SessionSummary
+        {
+            SessionId = persistenceManager.SessionService.PeekNextSessionId()
+        };
+
+        currentSessionUserId = userId;
+        currentSessionPersisted = false;
+    }
+
+    public ExerciseCommitOutcome CommitExerciseResult(
+        ExerciseSummary summary,
+        ExerciseScore score)
+    {
+        if (CurrentSession == null)
+        {
+            Debug.LogWarning("[SessionManager] No hay una sesion activa para confirmar el ejercicio.");
+            return ExerciseCommitOutcome.Rejected;
+        }
+
+        PersistenceManager persistenceManager = PersistenceManager.Instance;
+        ExerciseResultPersistenceService persistenceService =
+            persistenceManager?.ExerciseResultService;
+
+        string activeUserId = persistenceManager?.UserService?.CurrentUser?.UserId;
+        if (!string.Equals(currentSessionUserId, activeUserId, StringComparison.Ordinal))
+        {
+            Debug.LogWarning(
+                "[SessionManager] El usuario cambio durante la sesion; se descarta el resultado.");
+            ClearSession();
+            return ExerciseCommitOutcome.Rejected;
+        }
+
+        if (persistenceService == null)
+        {
+            Debug.LogError("[SessionManager] No existe el coordinador de persistencia transaccional.");
+            return ExerciseCommitOutcome.Failed;
+        }
+
+        ExerciseCommitOutcome outcome = persistenceService.CommitExerciseResult(
+            CurrentSession,
+            summary,
+            score);
+
+        if (outcome == ExerciseCommitOutcome.Committed)
+            currentSessionPersisted = true;
+
+        return outcome;
     }
 
     public SessionSummary EndSession()
@@ -56,44 +110,18 @@ public class SessionManager : MonoBehaviour
         if (currentSessionPersisted)
             return CurrentSession;
 
-        if (!HasAllExercises(CurrentSession))
-        {
-            Debug.LogWarning("[SessionManager] La sesion incompleta se descarta.");
-            ClearSession();
-            return null;
-        }
-
-        if (PersistenceManager.Instance == null || PersistenceManager.Instance.SessionService == null)
-        {
-            Debug.LogWarning("[SessionManager] No se puede guardar la sesion: PersistenceManager no disponible.");
-            return null;
-        }
-
-        PersistenceManager.Instance.SessionService.AddSession(CurrentSession);
-        currentSessionPersisted = true;
-        return CurrentSession;
+        Debug.LogWarning(
+            "[SessionManager] La sesion no fue confirmada por el coordinador y se descarta.");
+        ClearSession();
+        return null;
     }
 
     public void ClearSession()
     {
+        string sessionGuid = currentSession?.SessionGuid;
+        PersistenceManager.Instance?.ExerciseResultService?.DiscardPendingSession(sessionGuid);
         currentSession = null;
+        currentSessionUserId = null;
         currentSessionPersisted = false;
-    }
-
-    private static bool HasAllExercises(SessionSummary session)
-    {
-        if (session.Summaries == null || session.Summaries.Count != 3)
-            return false;
-
-        HashSet<ExerciseType> exerciseTypes = new();
-        foreach (ExerciseSummary summary in session.Summaries)
-        {
-            if (summary == null || !exerciseTypes.Add(summary.exerciseType))
-                return false;
-        }
-
-        return exerciseTypes.Contains(ExerciseType.Insert)
-            && exerciseTypes.Contains(ExerciseType.OSU)
-            && exerciseTypes.Contains(ExerciseType.DuckHunter);
     }
 }

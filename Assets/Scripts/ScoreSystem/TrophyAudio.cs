@@ -14,6 +14,9 @@ public class TrophyAudio : MonoBehaviour
 
     private void HandleTrophyLanded(TrophyTier tier)
     {
+        if (tier == TrophyTier.None)
+            return;
+
         AudioType audioType = MapTierToAudioType(tier);
         AudioManager.Play(audioType);
     }

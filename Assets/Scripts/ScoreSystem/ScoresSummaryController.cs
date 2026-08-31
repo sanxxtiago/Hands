@@ -256,12 +256,13 @@ public sealed class ScoresSummaryController : MonoBehaviour
             mainScoreText.text = Mathf.RoundToInt(record.totalScore).ToString();
 
 
-        string trophy = FormatTrophy(record.scoreGrade);
         if (mainGradeText != null)
-            mainGradeText.text = trophy;
+        {
+            mainGradeText.text = ScoreDisplayFormatter.FormatGrade(record.scoreGrade);
+        }
 
         if (trophyText != null)
-            trophyText.text = FormatTrophyTier(record.trophyTier);
+            trophyText.text = ScoreDisplayFormatter.FormatTrophyTier(record.trophyTier);
         if (challengeNameText != null)
             challengeNameText.text = ScoreDisplayFormatter.FormatExerciseType(record.exerciseType);
 
@@ -448,6 +449,7 @@ public sealed class ScoresSummaryController : MonoBehaviour
 
         if (mainScoreText != null) mainScoreText.text = "-";
         if (mainGradeText != null) mainGradeText.text = "";
+        if (trophyText != null) trophyText.text = "";
         if (motivationalMessageText != null) motivationalMessageText.text = "Sin datos de sesion.";
 
         if (breakdownContainer != null)
@@ -478,29 +480,6 @@ public sealed class ScoresSummaryController : MonoBehaviour
         return texts.Length > 0 ? texts[0] : null;
     }
 
-
-    private static string FormatTrophy(string grade)
-    {
-        switch (grade)
-        {
-            case "Excellent": return "ORO";
-            case "Good": return "PLATA";
-            case "Fair": return "BRONCE";
-            case "NeedsPractice": return "SIN TROFEO";
-            default: return string.IsNullOrEmpty(grade) ? "-" : grade;
-        }
-    }
-
-    private static string FormatTrophyTier(TrophyTier tier)
-    {
-        switch (tier)
-        {
-            case TrophyTier.Gold: return "ORO";
-            case TrophyTier.Silver: return "PLATA";
-            case TrophyTier.Bronze: return "BRONCE";
-            default: return "-";
-        }
-    }
 
     private static string FormatDuration(float seconds)
     {

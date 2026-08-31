@@ -17,6 +17,7 @@ public class LeaderboardEntry
     public string SessionGuid;
     public string ScoreGrade;
     public TrophyTier TrophyTier;
+    public int ClassificationProfileVersion;
 }
 
 public sealed class LeaderboardQueryResult

@@ -60,12 +60,13 @@ public class HunterExercise : ExerciseController
         //OnExerciseEnd();
     }
 
-    protected override void SetSpecificData()
+    protected override ExerciseScore SetSpecificData()
     {
-        scoreAdapter?.CompleteExercise(elapsedTime);
+        ExerciseScore score = scoreAdapter?.CompleteExercise(elapsedTime);
         sessionRecorder.SetDuckHunterData(
             DucksHit,
             DucksMissed
         );
+        return score;
     }
 }

@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c2f6a7d1b4e49f3a0d6c5e8b9271f44, type: 3}
+  m_Name: DefaultScoreClassificationProfile
+  m_EditorClassIdentifier: 
+  profileVersion: 1
+  ranges:
+  - minimumScore: 0
+    grade: 1
+    trophyTier: 3
+  - minimumScore: 60
+    grade: 2
+    trophyTier: 0
+  - minimumScore: 75
+    grade: 3
+    trophyTier: 1
+  - minimumScore: 90
+    grade: 4
+    trophyTier: 2

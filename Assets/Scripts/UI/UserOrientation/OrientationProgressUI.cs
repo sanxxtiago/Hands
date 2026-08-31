@@ -13,13 +13,19 @@ public class OrientationProgressUI : MonoBehaviour
     [SerializeField] private CanvasGroup containerGroup;
     [SerializeField, Min(1f)] private float targetSize = 20f;
     [SerializeField, Min(0f)] private float fadeInDuration = 0.35f;
-    [SerializeField, Min(0f)] private float completionAnimationDuration = 0.35f;
-    [SerializeField, Range(0f, 1f)] private float completedAlpha = 0.35f;
+    [SerializeField, Min(0f)] private float completionAnimationDuration = 0.12f;
+    [SerializeField, Range(0f, 1f)] private float completedAlpha = 0.9f;
+    [SerializeField] private Color pendingColor = new Color(0.68f, 0.72f, 0.82f, 0.55f);
+    [SerializeField] private Color activeColor = new Color(0.45f, 0.86f, 1f, 1f);
+    [SerializeField, Range(0f, 0.2f)] private float activePulseScale = 0.08f;
+    [SerializeField, Min(0f)] private float activePulseDuration = 0.8f;
     [SerializeField] private Color highlightColor = new Color(1f, 0.95f, 0.55f, 1f);
 
     private readonly List<Image> targetImages = new List<Image>();
     private readonly List<RectTransform> rowContainers = new List<RectTransform>(2);
     private Tween fadeTween;
+    private Tween activePulseTween;
+    private Tween completionTween;
     private int currentTargetCount = -1;
     private int completedTargetCount;
 
@@ -68,6 +74,9 @@ public class OrientationProgressUI : MonoBehaviour
 
         fadeTween?.Kill();
         fadeTween = null;
+        StopActivePulse();
+        completionTween?.Kill();
+        completionTween = null;
         ClearTargets();
         currentTargetCount = -1;
         completedTargetCount = 0;
@@ -93,6 +102,7 @@ public class OrientationProgressUI : MonoBehaviour
             MarkCompleted(i);
 
         completedTargetCount = newCompletedCount;
+        UpdateActiveTarget(newCompletedCount);
     }
 
     private void RebuildTargets(int targetCount)
@@ -159,6 +169,7 @@ public class OrientationProgressUI : MonoBehaviour
 
         Image targetImage = targetObject.GetComponent<Image>();
         targetImage.sprite = targetSprite;
+        targetImage.color = pendingColor;
         targetImage.preserveAspect = true;
         targetImage.raycastTarget = false;
         return targetImage;
@@ -203,6 +214,54 @@ public class OrientationProgressUI : MonoBehaviour
                 .SetEase(Ease.OutCubic));
     }
 
+    private void UpdateActiveTarget(int completedCount)
+    {
+        StopActivePulse();
+        completionTween?.Kill();
+        completionTween = null;
+
+        if (completedCount >= targetImages.Count)
+        {
+            if (targetImages.Count > 0)
+            {
+                completionTween = targetsContainer
+                    .DOPunchScale(new Vector3(0.04f, 0.04f, 0.04f), 0.3f, 1, 0.5f)
+                    .SetEase(Ease.OutCubic);
+            }
+
+            return;
+        }
+
+        for (int i = completedCount; i < targetImages.Count; i++)
+        {
+            Image targetImage = targetImages[i];
+            if (targetImage == null)
+                continue;
+
+            targetImage.DOKill();
+            targetImage.transform.DOKill();
+            targetImage.color = i == completedCount
+                ? activeColor
+                : pendingColor;
+            targetImage.transform.localScale = Vector3.one;
+        }
+
+        Image activeImage = targetImages[completedCount];
+        if (activeImage == null || activePulseDuration <= 0f || activePulseScale <= 0f)
+            return;
+
+        activePulseTween = activeImage.transform
+            .DOScale(Vector3.one * (1f + activePulseScale), activePulseDuration)
+            .SetEase(Ease.InOutSine)
+            .SetLoops(-1, LoopType.Yoyo);
+    }
+
+    private void StopActivePulse()
+    {
+        activePulseTween?.Kill();
+        activePulseTween = null;
+    }
+
     private void FadeIn()
     {
         fadeTween?.Kill();
@@ -224,6 +283,10 @@ public class OrientationProgressUI : MonoBehaviour
 
     private void ClearTargets()
     {
+        StopActivePulse();
+        completionTween?.Kill();
+        completionTween = null;
+
         for (int i = 0; i < targetImages.Count; i++)
         {
             if (targetImages[i] == null)

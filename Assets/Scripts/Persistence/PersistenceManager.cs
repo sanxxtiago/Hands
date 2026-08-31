@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class PersistenceManager : MonoBehaviour
 {
+    [Header("Score Classification")]
+    [SerializeField] private ScoreClassificationCatalog classificationCatalog;
 
     public static PersistenceManager Instance { get; private set; }
 
@@ -9,6 +11,7 @@ public class PersistenceManager : MonoBehaviour
     public SessionService SessionService { get; private set; }
     public ScoreService ScoreService { get; private set; }
     public LeaderboardService LeaderboardService { get; private set; }
+    public ExerciseResultPersistenceService ExerciseResultService { get; private set; }
     //public SettingsService SettingsService { get; private set; }
 
     private void Awake()
@@ -22,6 +25,7 @@ public class PersistenceManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
+        ValidateClassificationConfiguration();
         InitializeServices();
     }
 
@@ -33,19 +37,47 @@ public class PersistenceManager : MonoBehaviour
         string userId = UserService.CurrentUser?.UserId;
 
         SessionService = new SessionService(userId);
-        ScoreService = new ScoreService(userId);
-        LeaderboardService = new LeaderboardService();
+        ScoreService = new ScoreService(userId, classificationCatalog);
+        LeaderboardService = new LeaderboardService(classificationCatalog);
         SessionService.Load();
         ScoreService.Load();
         LeaderboardService.Load();
+
+        ExerciseResultService = new ExerciseResultPersistenceService(
+            SessionService,
+            ScoreService,
+            LeaderboardService,
+            userId,
+            UserService.CurrentUser?.Name);
+        ExerciseResultService.RecoverPendingTransaction();
 
         UserService.OnCurrentUserChanged += OnCurrentUserChanged;
         //SettingsService.Load();
     }
 
+    private void ValidateClassificationConfiguration()
+    {
+        if (classificationCatalog == null)
+        {
+            Debug.LogError(
+                "[PersistenceManager] No hay catalogo de clasificacion asignado.",
+                this);
+            return;
+        }
+
+        if (!classificationCatalog.TryValidate(out string validationError))
+        {
+            Debug.LogError(
+                $"[PersistenceManager] Catalogo de clasificacion invalido: {validationError}.",
+                this);
+        }
+    }
+
     private void OnCurrentUserChanged()
     {
         string userId = UserService.CurrentUser?.UserId;
+
+        SessionManager.Instance?.ClearSession();
 
         Debug.Log(
             $"[PersistenceManager] Recargando datos para el usuario {userId ?? "ninguno"}.");
@@ -55,6 +87,9 @@ public class PersistenceManager : MonoBehaviour
 
         SessionService.Load();
         ScoreService.Load();
+
+        ExerciseResultService?.SetUserContext(userId, UserService.CurrentUser?.Name);
+        ExerciseResultService?.RecoverPendingTransaction();
     }
 
     public bool SelectUser(string userId)

@@ -2,5 +2,6 @@ public enum TrophyTier
 {
     Bronze,
     Silver,
-    Gold
+    Gold,
+    None
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class LeaderboardService
 {
+    private readonly ScoreClassificationCatalog classificationCatalog;
     private readonly Dictionary<ScoreExerciseType, LeaderboardData> leaderboards =
         new Dictionary<ScoreExerciseType, LeaderboardData>
         {
@@ -12,6 +13,11 @@ public class LeaderboardService
             { ScoreExerciseType.OSU, new LeaderboardData() },
             { ScoreExerciseType.DuckHunter, new LeaderboardData() }
         };
+
+    public LeaderboardService(ScoreClassificationCatalog classificationCatalog = null)
+    {
+        this.classificationCatalog = classificationCatalog;
+    }
 
     public void Load()
     {
@@ -77,7 +83,8 @@ public class LeaderboardService
                 : record.recordedAt,
             SessionGuid = record.sessionGuid,
             ScoreGrade = record.scoreGrade,
-            TrophyTier = record.trophyTier
+            TrophyTier = record.trophyTier,
+            ClassificationProfileVersion = record.classificationProfileVersion
         };
 
         if (currentEntry == null)
@@ -197,7 +204,17 @@ public class LeaderboardService
         loadedData.Entries ??= new List<LeaderboardEntry>();
         leaderboards[exerciseType] = loadedData;
 
-        if (NormalizeEntries(loadedData))
+        bool changed = NormalizeEntries(loadedData);
+
+        for (int i = 0; i < loadedData.Entries.Count; i++)
+        {
+            changed |= ScoreClassificationMigration.NormalizeLeaderboardEntry(
+                loadedData.Entries[i],
+                exerciseType,
+                classificationCatalog);
+        }
+
+        if (changed)
             SaveLeaderboard(exerciseType);
     }
 

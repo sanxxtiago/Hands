@@ -3,12 +3,16 @@ using System;
 public sealed class DuckHunterScoreCalculator : IScoreCalculator<DuckHunterScoreData>
 {
     private readonly DuckHunterScoreConfig config;
+    private readonly ScoreClassificationProfile classificationProfile;
 
     public DuckHunterScoreConfig Config => config;
 
-    public DuckHunterScoreCalculator(DuckHunterScoreConfig config = null)
+    public DuckHunterScoreCalculator(
+        DuckHunterScoreConfig config = null,
+        ScoreClassificationProfile classificationProfile = null)
     {
         this.config = config ?? new DuckHunterScoreConfig();
+        this.classificationProfile = classificationProfile;
     }
 
     public ExerciseScore Calculate(DuckHunterScoreData input)
@@ -65,7 +69,12 @@ public sealed class DuckHunterScoreCalculator : IScoreCalculator<DuckHunterScore
             misses = aggregates.ducksMissed
         };
 
-        return ScoreResultFactory.Create(ScoreExerciseType.DuckHunter, breakdown, statsData, true);
+        return ScoreResultFactory.Create(
+            ScoreExerciseType.DuckHunter,
+            breakdown,
+            statsData,
+            true,
+            classificationProfile);
     }
 
     public float CalculateAccuracy(DuckHunterScoreData input)

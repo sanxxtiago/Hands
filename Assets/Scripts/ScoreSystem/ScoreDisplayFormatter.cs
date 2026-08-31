@@ -3,6 +3,26 @@ using System.Text;
 
 public static class ScoreDisplayFormatter
 {
+    public static string FormatGrade(string grade)
+    {
+        return string.IsNullOrEmpty(grade) ? "-" : grade;
+    }
+
+    public static string FormatTrophyTier(TrophyTier tier)
+    {
+        switch (tier)
+        {
+            case TrophyTier.Gold:
+                return "ORO";
+            case TrophyTier.Silver:
+                return "PLATA";
+            case TrophyTier.Bronze:
+                return "BRONCE";
+            default:
+                return "-";
+        }
+    }
+
     public static string FormatTotalScore(float score)
     {
         return score.ToString("0", CultureInfo.InvariantCulture) + "/100";

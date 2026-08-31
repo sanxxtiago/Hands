@@ -5,6 +5,7 @@ public sealed class ScoreManager : MonoBehaviour
     [SerializeField] private InsertScoreConfig insertConfig = new InsertScoreConfig();
     [SerializeField] private OSUScoreConfig osuConfig = new OSUScoreConfig();
     [SerializeField] private DuckHunterScoreConfig duckHunterConfig = new DuckHunterScoreConfig();
+    [SerializeField] private ScoreClassificationCatalog classificationCatalog;
 
     private ScoreCoordinator coordinator;
 
@@ -13,10 +14,13 @@ public sealed class ScoreManager : MonoBehaviour
 
     private void Awake()
     {
+        ValidateClassificationConfiguration();
+
         coordinator = new ScoreCoordinator(
             insertConfig,
             osuConfig,
-            duckHunterConfig);
+            duckHunterConfig,
+            classificationCatalog: classificationCatalog);
     }
 
     public void BeginExercise(ScoreExerciseType exerciseType)
@@ -62,6 +66,25 @@ public sealed class ScoreManager : MonoBehaviour
         coordinator = new ScoreCoordinator(
             insertConfig ?? new InsertScoreConfig(),
             osuConfig ?? new OSUScoreConfig(),
-            duckHunterConfig ?? new DuckHunterScoreConfig());
+            duckHunterConfig ?? new DuckHunterScoreConfig(),
+            classificationCatalog: classificationCatalog);
+    }
+
+    private void ValidateClassificationConfiguration()
+    {
+        if (classificationCatalog == null)
+        {
+            Debug.LogError(
+                "[ScoreSystem] ScoreManager no tiene un catalogo de clasificacion asignado.",
+                this);
+            return;
+        }
+
+        if (!classificationCatalog.TryValidate(out string validationError))
+        {
+            Debug.LogError(
+                $"[ScoreSystem] Catalogo de clasificacion invalido: {validationError}.",
+                this);
+        }
     }
 }

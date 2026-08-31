@@ -1567,9 +1567,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 263091b3655d23240b3232daa4265191, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentSession:
-    SessionId: 0
-    SessionGuid: 75bb4ad1-8d9b-4b6f-a6db-764024ce1efd
 --- !u!4 &201941217
 Transform:
   m_ObjectHideFlags: 0
@@ -9220,6 +9217,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f483e172e823f547a3bb85e6abe67bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  classificationCatalog: {fileID: 11400000, guid: f2b7c9d41a6e4380b5d9f2c7e8146a33, type: 2}
 --- !u!4 &1217096008
 Transform:
   m_ObjectHideFlags: 0

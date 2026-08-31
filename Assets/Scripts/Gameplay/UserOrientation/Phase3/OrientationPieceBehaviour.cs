@@ -10,14 +10,19 @@ public class OrientationPieceBehaviour : Interactable
     public bool isFitted;
     public bool IsGrabbed { get; private set; }
     private Rigidbody rb;
+    private Collider pieceCollider;
 
-    void Awake()
+    private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        pieceCollider = GetComponent<Collider>();
     }
 
-    void Update()
+    private void Update()
     {
+        if (isFitted)
+            return;
+
         transform.position = ClampPosition(transform.position);
     }
 
@@ -28,7 +33,20 @@ public class OrientationPieceBehaviour : Interactable
 
     public void FitIn()
     {
+        if (isFitted)
+            return;
+
         isFitted = true;
+        IsGrabbed = false;
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        rb.isKinematic = true;
+    }
+
+    public void DisableInteractionCollider()
+    {
+        if (pieceCollider != null)
+            pieceCollider.enabled = false;
     }
 
     public override void OnGrabStart()

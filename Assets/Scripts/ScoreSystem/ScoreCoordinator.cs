@@ -14,6 +14,7 @@ public sealed class ScoreCoordinator
             new InsertScoreConfig(),
             new OSUScoreConfig(),
             new DuckHunterScoreConfig(),
+            null,
             null)
     {
     }
@@ -23,6 +24,7 @@ public sealed class ScoreCoordinator
             insertConfig,
             new OSUScoreConfig(),
             new DuckHunterScoreConfig(),
+            null,
             null)
     {
     }
@@ -31,12 +33,19 @@ public sealed class ScoreCoordinator
         InsertScoreConfig insertConfig,
         OSUScoreConfig osuConfig,
         DuckHunterScoreConfig duckHunterConfig,
-        IScoreSession scoreSession = null)
+        IScoreSession scoreSession = null,
+        ScoreClassificationCatalog classificationCatalog = null)
     {
         this.scoreSession = scoreSession ?? new ScoreSession();
-        insertCalculator = new InsertScoreCalculator(insertConfig);
-        osuCalculator = new OSUScoreCalculator(osuConfig);
-        duckHunterCalculator = new DuckHunterScoreCalculator(duckHunterConfig);
+        insertCalculator = new InsertScoreCalculator(
+            insertConfig,
+            classificationCatalog?.GetProfile(ScoreExerciseType.Insert));
+        osuCalculator = new OSUScoreCalculator(
+            osuConfig,
+            classificationCatalog?.GetProfile(ScoreExerciseType.OSU));
+        duckHunterCalculator = new DuckHunterScoreCalculator(
+            duckHunterConfig,
+            classificationCatalog?.GetProfile(ScoreExerciseType.DuckHunter));
     }
 
     public void BeginExercise(ScoreExerciseType exerciseType)

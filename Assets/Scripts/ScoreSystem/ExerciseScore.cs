@@ -6,6 +6,8 @@ public sealed class ExerciseScore
     public ScoreExerciseType exerciseType;
     public float totalScore;
     public string scoreGrade;
+    public TrophyTier trophyTier;
+    public int classificationProfileVersion;
     public ScoreBreakdown[] breakdown;
     public string motivationalMessage;
     public bool isValid;
@@ -14,6 +16,8 @@ public sealed class ExerciseScore
     public ExerciseScore()
     {
         scoreGrade = "Invalid";
+        trophyTier = TrophyTier.None;
+        classificationProfileVersion = 0;
         breakdown = Array.Empty<ScoreBreakdown>();
         statsData = new ScoreStatsData();
     }
@@ -33,7 +37,8 @@ internal static class ScoreResultFactory
         ScoreExerciseType exerciseType,
         ScoreBreakdown[] breakdown,
         ScoreStatsData statsData,
-        bool isValid)
+        bool isValid,
+        ScoreClassificationProfile classificationProfile)
     {
         ScoreBreakdown[] normalizedBreakdown = NormalizeBreakdown(breakdown);
         float totalScore = ScoreMath.CalculateWeightedScore(normalizedBreakdown);
@@ -46,14 +51,30 @@ internal static class ScoreResultFactory
             ScoreSystemLog.Error("No se pudo construir un score valido con la configuracion recibida.");
 
         totalScore = ScoreMath.ClampScore(totalScore);
+        ScoreClassification classification = ScoreClassification.Invalid;
+
+        if (finalIsValid)
+        {
+            if (classificationProfile == null
+                || !classificationProfile.TryResolve(totalScore, out classification))
+            {
+                ScoreSystemLog.Error(
+                    "No se pudo clasificar el score: falta un perfil valido de clasificacion.");
+                finalIsValid = false;
+                totalScore = 0f;
+            }
+        }
 
         return new ExerciseScore
         {
             exerciseType = exerciseType,
             totalScore = finalIsValid ? totalScore : 0f,
-            scoreGrade = GetGrade(finalIsValid, totalScore),
+            scoreGrade = finalIsValid ? classification.Grade.ToString() : "Invalid",
+            trophyTier = finalIsValid ? classification.TrophyTier : TrophyTier.None,
+            classificationProfileVersion = finalIsValid ? classification.ProfileVersion : 0,
             breakdown = normalizedBreakdown,
-            motivationalMessage = GetMotivationalMessage(finalIsValid, totalScore),
+            motivationalMessage = GetMotivationalMessage(
+                finalIsValid ? classification.Grade : ScoreGrade.Invalid),
             isValid = finalIsValid,
             statsData = statsData
         };
@@ -68,6 +89,8 @@ internal static class ScoreResultFactory
             exerciseType = exerciseType,
             totalScore = 0f,
             scoreGrade = "Invalid",
+            trophyTier = TrophyTier.None,
+            classificationProfileVersion = 0,
             breakdown = Array.Empty<ScoreBreakdown>(),
             motivationalMessage = "No se pudo calcular la puntuacion con los datos recibidos.",
             isValid = false
@@ -94,37 +117,20 @@ internal static class ScoreResultFactory
         return normalized;
     }
 
-    private static string GetGrade(bool isValid, float score)
+    private static string GetMotivationalMessage(ScoreGrade grade)
     {
-        if (!isValid)
-            return "Invalid";
-
-        if (score >= 90f)
-            return "Excellent";
-
-        if (score >= 75f)
-            return "Good";
-
-        if (score >= 60f)
-            return "Fair";
-
-        return "NeedsPractice";
-    }
-
-    private static string GetMotivationalMessage(bool isValid, float score)
-    {
-        if (!isValid)
-            return "No se pudo calcular la puntuacion con los datos recibidos.";
-
-        if (score >= 90f)
-            return "Excelente trabajo. Mantene este ritmo.";
-
-        if (score >= 75f)
-            return "Buen trabajo. Sigue practicando para mejorar.";
-
-        if (score >= 60f)
-            return "Buen comienzo. Intenta mejorar poco a poco.";
-
-        return "Sigue practicando; cada intento cuenta.";
+        switch (grade)
+        {
+            case ScoreGrade.Excellent:
+                return "Excelente trabajo. Mantene este ritmo.";
+            case ScoreGrade.Good:
+                return "Buen trabajo. Sigue practicando para mejorar.";
+            case ScoreGrade.Fair:
+                return "Buen comienzo. Intenta mejorar poco a poco.";
+            case ScoreGrade.NeedsPractice:
+                return "Sigue practicando; cada intento cuenta.";
+            default:
+                return "No se pudo calcular la puntuacion con los datos recibidos.";
+        }
     }
 }

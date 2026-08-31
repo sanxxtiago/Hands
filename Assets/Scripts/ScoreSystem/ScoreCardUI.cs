@@ -21,7 +21,7 @@ public sealed class ScoreCardUI : MonoBehaviour
 
         ShowCompleted();
         SetScore(record.totalScore);
-        SetTrophyTier(FormatTrophyTier(record.trophyTier));
+        SetTrophyTier(ScoreDisplayFormatter.FormatTrophyTier(record.trophyTier));
 
     }
 
@@ -49,17 +49,6 @@ public sealed class ScoreCardUI : MonoBehaviour
         if (accentImage == null) return;
         accentImage.enabled = true;
         accentImage.color = color;
-    }
-
-    private static string FormatTrophyTier(TrophyTier tier)
-    {
-        return tier switch
-        {
-            TrophyTier.Gold => "ORO",
-            TrophyTier.Silver => "PLATA",
-            TrophyTier.Bronze => "BRONCE",
-            _ => "-",
-        };
     }
 
     public void ShowEmpty()

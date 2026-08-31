@@ -3,12 +3,16 @@ using System;
 public sealed class OSUScoreCalculator : IScoreCalculator<OSUScoreData>
 {
     private readonly OSUScoreConfig config;
+    private readonly ScoreClassificationProfile classificationProfile;
 
     public OSUScoreConfig Config => config;
 
-    public OSUScoreCalculator(OSUScoreConfig config = null)
+    public OSUScoreCalculator(
+        OSUScoreConfig config = null,
+        ScoreClassificationProfile classificationProfile = null)
     {
         this.config = config ?? new OSUScoreConfig();
+        this.classificationProfile = classificationProfile;
     }
 
     public ExerciseScore Calculate(OSUScoreData input)
@@ -84,7 +88,12 @@ public sealed class OSUScoreCalculator : IScoreCalculator<OSUScoreData>
             misses = aggregates.missedTargets
         };
 
-        return ScoreResultFactory.Create(ScoreExerciseType.OSU, breakdown, statsData, true);
+        return ScoreResultFactory.Create(
+            ScoreExerciseType.OSU,
+            breakdown,
+            statsData,
+            true,
+            classificationProfile);
     }
 
     public float CalculateEffectiveTime(OSUScoreData input)

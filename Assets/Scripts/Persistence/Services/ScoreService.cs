@@ -4,6 +4,7 @@ using System.Linq;
 public class ScoreService
 {
     private string userId;
+    private readonly ScoreClassificationCatalog classificationCatalog;
     private ScoresData scoresData = new();
 
     public ScoreService()
@@ -12,6 +13,14 @@ public class ScoreService
 
     public ScoreService(string userId)
     {
+        SetUserContext(userId);
+    }
+
+    public ScoreService(
+        string userId,
+        ScoreClassificationCatalog classificationCatalog)
+    {
+        this.classificationCatalog = classificationCatalog;
         SetUserContext(userId);
     }
 
@@ -38,6 +47,16 @@ public class ScoreService
         if (scoresData == null)
         {
             scoresData = new ScoresData();
+            return;
+        }
+
+        scoresData.Records ??= new List<ScoreRecord>();
+
+        if (ScoreClassificationMigration.NormalizeRecords(
+            scoresData.Records,
+            classificationCatalog))
+        {
+            Save();
         }
     }
 
@@ -49,20 +68,38 @@ public class ScoreService
         SaveSystem.Save(userId, SaveFiles.Scores, scoresData);
     }
 
-    public ScoreRecord AddScore(ScoreRecord record)
+    public bool UpsertScore(ScoreRecord record)
     {
-        if (record == null)
+        if (record == null
+            || !record.isValid
+            || string.IsNullOrWhiteSpace(record.sessionGuid)
+            || !ScoreMath.IsFinite(record.totalScore)
+            || record.totalScore < 0f
+            || !ExerciseResultIdentity.TryGetExerciseType(
+                record.exerciseType,
+                out _))
         {
-            UnityEngine.Debug.LogWarning("[ScoreService] Se ignoró un ScoreRecord nulo.");
-            return null;
+            UnityEngine.Debug.LogWarning("[ScoreService] Se rechazo un ScoreRecord invalido.");
+            return false;
         }
 
         if (record.recordedAt == default)
             record.recordedAt = System.DateTime.Now;
 
-        scoresData.Records.Add(record);
-        Save();
-        return record;
+        int existingIndex = scoresData.Records.FindIndex(
+            existing => existing != null
+                && existing.sessionGuid == record.sessionGuid
+                && existing.exerciseType == record.exerciseType);
+
+        if (existingIndex < 0)
+        {
+            scoresData.Records.Add(record);
+            Save();
+            return true;
+        }
+
+        ScoreRecord existingRecord = scoresData.Records[existingIndex];
+        return ExerciseResultIdentity.AreEquivalent(existingRecord, record);
     }
 
     public IReadOnlyList<ScoreRecord> GetScoresForSession(string sessionGuid)
@@ -91,5 +128,128 @@ public class ScoreService
             SaveSystem.Delete(userId, SaveFiles.Scores);
 
         scoresData = new ScoresData();
+    }
+}
+
+internal static class ScoreClassificationMigration
+{
+    public static bool NormalizeRecords(
+        IList<ScoreRecord> records,
+        ScoreClassificationCatalog catalog)
+    {
+        if (records == null || catalog == null)
+            return false;
+
+        bool changed = false;
+
+        for (int i = 0; i < records.Count; i++)
+        {
+            ScoreRecord record = records[i];
+            if (record == null || record.classificationProfileVersion > 0)
+                continue;
+
+            ScoreClassificationProfile profile = catalog.GetProfile(record.exerciseType);
+            if (profile == null)
+            {
+                DebugLogMissingProfile(record.exerciseType);
+                changed |= SetRecordClassification(
+                    record,
+                    "Invalid",
+                    TrophyTier.None,
+                    0);
+                continue;
+            }
+
+            if (!record.isValid || !ScoreMath.IsFinite(record.totalScore))
+            {
+                if (!ScoreMath.IsFinite(record.totalScore) && record.isValid)
+                {
+                    record.isValid = false;
+                    changed = true;
+                }
+
+                changed |= SetRecordClassification(
+                    record,
+                    "Invalid",
+                    TrophyTier.None,
+                    profile.ProfileVersion);
+                continue;
+            }
+
+            if (!profile.TryResolve(record.totalScore, out ScoreClassification classification))
+            {
+                changed |= SetRecordClassification(
+                    record,
+                    "Invalid",
+                    TrophyTier.None,
+                    0);
+                continue;
+            }
+
+            changed |= SetRecordClassification(
+                record,
+                classification.Grade.ToString(),
+                classification.TrophyTier,
+                classification.ProfileVersion);
+        }
+
+        return changed;
+    }
+
+    public static bool NormalizeLeaderboardEntry(
+        LeaderboardEntry entry,
+        ScoreExerciseType exerciseType,
+        ScoreClassificationCatalog catalog)
+    {
+        if (entry == null
+            || entry.ClassificationProfileVersion > 0
+            || catalog == null)
+        {
+            return false;
+        }
+
+        ScoreClassificationProfile profile = catalog.GetProfile(exerciseType);
+        if (profile == null)
+        {
+            DebugLogMissingProfile(exerciseType);
+            return false;
+        }
+
+        if (!ScoreMath.IsFinite(entry.Score))
+            return false;
+
+        if (!profile.TryResolve(entry.Score, out ScoreClassification classification))
+            return false;
+
+        bool changed = entry.ScoreGrade != classification.Grade.ToString()
+            || entry.TrophyTier != classification.TrophyTier
+            || entry.ClassificationProfileVersion != classification.ProfileVersion;
+
+        entry.ScoreGrade = classification.Grade.ToString();
+        entry.TrophyTier = classification.TrophyTier;
+        entry.ClassificationProfileVersion = classification.ProfileVersion;
+        return changed;
+    }
+
+    private static bool SetRecordClassification(
+        ScoreRecord record,
+        string grade,
+        TrophyTier trophyTier,
+        int profileVersion)
+    {
+        bool changed = record.scoreGrade != grade
+            || record.trophyTier != trophyTier
+            || record.classificationProfileVersion != profileVersion;
+
+        record.scoreGrade = grade;
+        record.trophyTier = trophyTier;
+        record.classificationProfileVersion = profileVersion;
+        return changed;
+    }
+
+    private static void DebugLogMissingProfile(ScoreExerciseType exerciseType)
+    {
+        UnityEngine.Debug.LogError(
+            $"[ScoreSystem] No existe perfil de clasificacion para {exerciseType}.");
     }
 }

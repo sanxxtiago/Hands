@@ -4,6 +4,14 @@ using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+public enum OrientationPhase3State
+{
+    ReadyToGrab,
+    Moving,
+    ReadyToRelease,
+    Completed
+}
+
 public class OrientationPhase3Manager : OrientationManager
 {
     private const string MsgTakePiece = "Usa una de tus manos para tomar la pieza";
@@ -22,18 +30,28 @@ public class OrientationPhase3Manager : OrientationManager
     [SerializeField, Min(0f)] private float completedMessageDuration = 1f;
     [SerializeField, Min(0f)] private float modalDelay = 2f;
 
+    public event Action<OrientationPhase3State> OnStateChanged;
+    public event Action<OrientationPieceBehaviour, OrientationSlotBehaviour> OnObjectsSpawned;
+
     private OrientationSlotBehaviour targetBehaviour;
     private OrientationPieceBehaviour spawnedPiece;
+    private OrientationPhase3State currentState;
+    private bool hasPublishedState;
+    private bool isCompletionStarted;
 
-    void Start()
+    public OrientationPhase3State CurrentState => currentState;
+    public bool IsCompletionStarted => isCompletionStarted;
+
+    private void Start()
     {
         SpawnObjects();
-        SetMessage(MsgTakePiece);
-        transition.FadeOut();
+        SetState(OrientationPhase3State.ReadyToGrab);
+        transition?.FadeOut();
     }
 
     private void OnDestroy()
     {
+        StopAllCoroutines();
         UnsubscribeFromPiece();
         UnsubscribeFromSlot();
     }
@@ -91,6 +109,9 @@ public class OrientationPhase3Manager : OrientationManager
             targetBehaviour.OnPieceExited += HandlePieceExited;
             targetBehaviour.OnPieceFitted += HandlePieceFitted;
         }
+
+        if (spawnedPiece != null && targetBehaviour != null)
+            OnObjectsSpawned?.Invoke(spawnedPiece, targetBehaviour);
     }
 
     private void UnsubscribeFromPiece()
@@ -119,44 +140,45 @@ public class OrientationPhase3Manager : OrientationManager
 
     private void HandlePieceGrabbed()
     {
-        if (IsPhaseCompleted()) return;
-        SetMessage(MsgMoveToTarget);
+        if (isCompletionStarted) return;
+        SetState(OrientationPhase3State.Moving);
     }
 
     private void HandlePieceReleased()
     {
-        if (IsPhaseCompleted()) return;
-        SetMessage(MsgTakePiece);
+        if (isCompletionStarted) return;
+        SetState(OrientationPhase3State.ReadyToGrab);
     }
 
     private void HandlePieceEntered()
     {
-        if (IsPhaseCompleted()) return;
-        SetMessage(MsgReleasePiece);
+        if (isCompletionStarted) return;
+        SetState(OrientationPhase3State.ReadyToRelease);
     }
 
     private void HandlePieceExited()
     {
-        if (IsPhaseCompleted()) return;
-        SetMessage(spawnedPiece != null && spawnedPiece.IsGrabbed ? MsgMoveToTarget : MsgTakePiece);
+        if (isCompletionStarted) return;
+        SetState(spawnedPiece != null && spawnedPiece.IsGrabbed
+            ? OrientationPhase3State.Moving
+            : OrientationPhase3State.ReadyToGrab);
     }
 
     private void HandlePieceFitted()
     {
-        if (IsPhaseCompleted()) return;
+        if (isCompletionStarted) return;
+        isCompletionStarted = true;
+        SetState(OrientationPhase3State.Completed);
         StartCoroutine(CompletePhaseSequence());
     }
 
     private IEnumerator CompletePhaseSequence()
     {
         MarkPhaseCompleted();
-        SetMessage(MsgPhaseCompleted);
         yield return new WaitForSeconds(completedMessageDuration);
         yield return new WaitForSeconds(Mathf.Max(0f, modalDelay - completedMessageDuration));
         CompletePhase();
     }
-
-    private bool IsPhaseCompleted() => message != null && message.text == MsgPhaseCompleted;
 
     private void MarkPhaseCompleted()
     {
@@ -167,6 +189,32 @@ public class OrientationPhase3Manager : OrientationManager
     protected override void CompletePhase()
     {
         base.CompletePhase();
+    }
+
+    private void SetState(OrientationPhase3State state)
+    {
+        if (hasPublishedState && currentState == state)
+            return;
+
+        currentState = state;
+        hasPublishedState = true;
+        SetMessage(GetMessage(state));
+        OnStateChanged?.Invoke(state);
+    }
+
+    private static string GetMessage(OrientationPhase3State state)
+    {
+        switch (state)
+        {
+            case OrientationPhase3State.Moving:
+                return MsgMoveToTarget;
+            case OrientationPhase3State.ReadyToRelease:
+                return MsgReleasePiece;
+            case OrientationPhase3State.Completed:
+                return MsgPhaseCompleted;
+            default:
+                return MsgTakePiece;
+        }
     }
 
     private void SetMessage(string text)

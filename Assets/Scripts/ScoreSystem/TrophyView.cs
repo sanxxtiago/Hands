@@ -80,12 +80,19 @@ public class TrophyView : MonoBehaviour
             return;
         }
 
-        Show(ScoreTierResolver.GetTier(scoreManager.LastScore));
+        Show(scoreManager.LastScore?.trophyTier ?? TrophyTier.None);
     }
 
     public void Show(TrophyTier tier)
     {
         ResetState();
+
+        if (tier == TrophyTier.None)
+        {
+            if (trophyImage != null)
+                trophyImage.enabled = false;
+            return;
+        }
 
         GameObject trophy = GetTrophyGameObject(tier);
         if (trophy == null)
@@ -188,7 +195,7 @@ public class TrophyView : MonoBehaviour
             TrophyTier.Gold => goldTrophy,
             TrophyTier.Silver => silverTrophy,
             TrophyTier.Bronze => bronzeTrophy,
-            _ => bronzeTrophy
+            _ => null
         };
     }
 
@@ -199,7 +206,7 @@ public class TrophyView : MonoBehaviour
             TrophyTier.Gold => goldEmission,
             TrophyTier.Silver => silverEmission,
             TrophyTier.Bronze => bronzeEmission,
-            _ => bronzeEmission
+            _ => Color.black
         };
     }
 }

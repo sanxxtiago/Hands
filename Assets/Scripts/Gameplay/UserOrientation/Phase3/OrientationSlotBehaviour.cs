@@ -9,13 +9,14 @@ public class OrientationSlotBehaviour : MonoBehaviour
 
     private bool pieceInside;
     private OrientationPieceBehaviour currentPiece;
+    private bool hasFittedPiece;
 
     private void OnTriggerEnter(Collider other)
     {
         if (!other.TryGetComponent<OrientationPieceBehaviour>(out var piece))
             return;
 
-        if (piece.isFitted)
+        if (piece.isFitted || hasFittedPiece)
             return;
 
         pieceInside = true;
@@ -41,12 +42,13 @@ public class OrientationSlotBehaviour : MonoBehaviour
         if (!other.TryGetComponent<OrientationPieceBehaviour>(out var piece))
             return;
 
-        if (piece.isFitted || piece.IsGrabbed)
+        if (piece.isFitted || piece.IsGrabbed || hasFittedPiece)
             return;
 
         if (!pieceInside || piece != currentPiece)
             return;
 
+        hasFittedPiece = true;
         piece.FitIn();
         OnPieceFitted?.Invoke();
     }

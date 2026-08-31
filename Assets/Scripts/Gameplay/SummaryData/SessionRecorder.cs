@@ -13,6 +13,7 @@ public class SessionRecorder : MonoBehaviour
     private int ducksMissed;
 
     private float completionTime;
+    private ExerciseScore pendingScore;
 
     private void OnEnable()
     {
@@ -39,6 +40,11 @@ public class SessionRecorder : MonoBehaviour
     public void SetInsertPiecesData(float completionTime)
     {
         this.completionTime = completionTime;
+    }
+
+    public void SetPendingScore(ExerciseScore score)
+    {
+        pendingScore = score;
     }
 
     private void SaveExerciseSummary(
@@ -74,7 +80,21 @@ public class SessionRecorder : MonoBehaviour
 
         Debug.Log($"[SuggestionSystem] Sugerencia final: {summary.generalSuggestion}");
 
-        SessionManager.Instance.AddExerciseSummary(summary);
+        ExerciseScore score = pendingScore;
+        pendingScore = null;
+
+        if (SessionManager.Instance == null)
+        {
+            Debug.LogError("[SessionRecorder] No existe un SessionManager para confirmar el ejercicio.");
+            return;
+        }
+
+        ExerciseCommitOutcome outcome = SessionManager.Instance.CommitExerciseResult(
+            summary,
+            score);
+
+        Debug.Log(
+            $"[SessionRecorder] Resultado del commit: ejercicio={exerciseType}, estado={outcome}.");
     }
 }
 

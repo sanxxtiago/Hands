@@ -38,6 +38,12 @@ public sealed class ScoresSummaryTrophyView : MonoBehaviour
 
     public void Show(TrophyTier tier)
     {
+        if (tier == TrophyTier.None)
+        {
+            Hide();
+            return;
+        }
+
         GameObject trophy = GetTrophy(tier);
         if (trophy == null)
         {

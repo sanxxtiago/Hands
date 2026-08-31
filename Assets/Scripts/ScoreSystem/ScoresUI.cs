@@ -62,7 +62,10 @@ public sealed class ScoresUI : MonoBehaviour
             return;
 
         SetText(totalScoreText, ScoreDisplayFormatter.FormatTotalScore(score.totalScore), "totalScoreText");
-        SetText(scoreGradeText, score.scoreGrade, "scoreGradeText");
+        SetText(
+            scoreGradeText,
+            ScoreDisplayFormatter.FormatGrade(score.scoreGrade),
+            "scoreGradeText");
         SetText(motivationalMessageText, score.motivationalMessage, "motivationalMessageText");
         SetText(
             exerciseTypeText,

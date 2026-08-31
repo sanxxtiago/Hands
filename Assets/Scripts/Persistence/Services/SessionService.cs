@@ -38,7 +38,10 @@ public class SessionService
         if (sessionsData == null)
         {
             sessionsData = new SessionsData();
+            return;
         }
+
+        sessionsData.Sessions ??= new List<SessionSummary>();
     }
 
     public void Save()
@@ -49,11 +52,27 @@ public class SessionService
         SaveSystem.Save(userId, SaveFiles.Sessions, sessionsData);
     }
 
-    public SessionSummary AddSession(SessionSummary summary)
+    public bool UpsertSession(SessionSummary summary)
     {
-        sessionsData.Sessions.Add(summary);
-        Save();
-        return summary;
+        if (!ExerciseResultIdentity.IsCompleteSession(summary)
+            || string.IsNullOrWhiteSpace(summary.SessionGuid))
+        {
+            return false;
+        }
+
+        int existingIndex = sessionsData.Sessions.FindIndex(
+            existing => existing != null
+                && existing.SessionGuid == summary.SessionGuid);
+
+        if (existingIndex < 0)
+        {
+            sessionsData.Sessions.Add(summary);
+            Save();
+            return true;
+        }
+
+        SessionSummary existingSummary = sessionsData.Sessions[existingIndex];
+        return ExerciseResultIdentity.AreEquivalent(existingSummary, summary);
     }
 
     public IReadOnlyList<SessionSummary> GetLastSessions(int count = 7)

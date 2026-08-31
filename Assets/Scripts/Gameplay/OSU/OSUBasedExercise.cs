@@ -31,12 +31,13 @@ public class OSUBasedExercise : ExerciseController
         sequenceRunner.StartSequence(sequence, this);
     }
 
-    protected override void SetSpecificData()
+    protected override ExerciseScore SetSpecificData()
     {
-        scoreAdapter?.CompleteExercise(elapsedTime);
+        ExerciseScore score = scoreAdapter?.CompleteExercise(elapsedTime);
         sessionRecorder.SetOsuData(
             TotalInteractionTime,
             InteractionCount
         );
+        return score;
     }
 }
