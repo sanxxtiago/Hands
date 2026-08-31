@@ -71,7 +71,7 @@ public class MotionAggregator
             handType = current.handType,
             handPos = current.palmPosition,
             handRotation = current.palmRotation,
-            timestamp = Time.time,
+            timestamp = current.timestamp,
             motions = motions,
             gestures = gestures
         };

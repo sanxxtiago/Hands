@@ -2,17 +2,25 @@ using UnityEngine;
 
 public class PreparationSceneLoader : SceneLoader
 {
-    [SerializeField] private HandsDetection handsDetection;
+    [SerializeField] private HandsPreparationFlow preparationFlow;
 
     private void OnEnable()
     {
-        handsDetection.OnPreparationCompleted += LoadNextScene;
+        if (preparationFlow == null)
+        {
+            Debug.LogError(
+                "[PreparationSceneLoader] Falta asignar HandsPreparationFlow.",
+                this);
+            return;
+        }
+
+        preparationFlow.OnPreparationCompleted += LoadNextScene;
     }
 
     private void OnDisable()
     {
-        handsDetection.OnPreparationCompleted -= LoadNextScene;
+        if (preparationFlow != null)
+            preparationFlow.OnPreparationCompleted -= LoadNextScene;
     }
 
-   
 }

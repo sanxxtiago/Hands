@@ -2191,7 +2191,8 @@ MonoBehaviour:
     missedDuckPenalty: 1
     reactionWeight: 0.35
     accuracyWeight: 0.65
-  classificationCatalog: {fileID: 11400000, guid: f2b7c9d41a6e4380b5d9f2c7e8146a33, type: 2}
+  classificationCatalog: {fileID: 11400000, guid: f2b7c9d41a6e4380b5d9f2c7e8146a33,
+    type: 2}
 --- !u!1 &482837265
 GameObject:
   m_ObjectHideFlags: 0
@@ -7669,6 +7670,7 @@ GameObject:
   - component: {fileID: 1956825092}
   - component: {fileID: 1956825094}
   - component: {fileID: 1956825095}
+  - component: {fileID: 1956825096}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -7734,6 +7736,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9eaed769314bc8943ad07dbc0e034230, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1956825096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1956825091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7d2d8055c55839459b5cddaebddf0ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  calibrationProfile: {fileID: 11400000, guid: 2289cfd9ec8984b4883f02eb4ef32069, type: 2}
 --- !u!1 &1957538744
 GameObject:
   m_ObjectHideFlags: 0
@@ -8946,7 +8961,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f483e172e823f547a3bb85e6abe67bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  classificationCatalog: {fileID: 11400000, guid: f2b7c9d41a6e4380b5d9f2c7e8146a33, type: 2}
+  classificationCatalog: {fileID: 11400000, guid: f2b7c9d41a6e4380b5d9f2c7e8146a33,
+    type: 2}
 --- !u!4 &2132699174
 Transform:
   m_ObjectHideFlags: 0
