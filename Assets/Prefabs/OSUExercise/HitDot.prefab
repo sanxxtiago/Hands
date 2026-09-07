@@ -110,6 +110,7 @@ GameObject:
   - component: {fileID: 8864962406679063761}
   - component: {fileID: 8864962406679063760}
   - component: {fileID: 8864962406679063763}
+  - component: {fileID: 4856135807126675579}
   m_Layer: 0
   m_Name: HitDot
   m_TagString: Untagged
@@ -258,3 +259,17 @@ MonoBehaviour:
   bg: {fileID: 8864962406679063790}
   ring: {fileID: 2346353660274738901}
   requiredHand: 0
+--- !u!114 &4856135807126675579
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8864962406679063765}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32e94de8fab36c24f8a882c0a65165e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetCamera: {fileID: 0}
+  facingOffsetEuler: {x: 0, y: 180, z: 0}

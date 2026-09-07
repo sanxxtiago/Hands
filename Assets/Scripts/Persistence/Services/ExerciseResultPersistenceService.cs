@@ -506,10 +506,8 @@ public sealed class ExerciseResultPersistenceService
             exerciseType = scoreExerciseType,
             recordedAt = DateTime.Now,
             totalScore = score.totalScore,
-            scoreGrade = score.scoreGrade,
             trophyTier = score.trophyTier,
             classificationProfileVersion = score.classificationProfileVersion,
-            motivationalMessage = score.motivationalMessage,
             isValid = score.isValid,
             statsData = score.statsData,
             breakdown = score.breakdown == null

@@ -13,7 +13,9 @@ public class CountdownUI : MonoBehaviour
 
     void Start()
     {
-        canvasGroup.alpha = 1f;
+        canvasGroup.alpha = 0f;
+        canvasGroup.interactable = false;
+        canvasGroup.blocksRaycasts = false;
     }
 
     private void OnEnable()
@@ -33,6 +35,9 @@ public class CountdownUI : MonoBehaviour
 
     IEnumerator Countdown()
     {
+        canvasGroup.alpha = 1;
+        canvasGroup.interactable = true;
+        canvasGroup.blocksRaycasts = true;
         for (int i = countdownTime; i > 0f; i--)
         {
             text.text = i.ToString();
@@ -44,7 +49,7 @@ public class CountdownUI : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         canvasGroup.alpha = 0f;
         OnCountdownFinished?.Invoke();
-       // GameManager.Instance.SetState(GAMESTATE.PLAYING);
+        // GameManager.Instance.SetState(GAMESTATE.PLAYING);
     }
 }
 

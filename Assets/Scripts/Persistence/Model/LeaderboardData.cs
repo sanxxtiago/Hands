@@ -15,7 +15,6 @@ public class LeaderboardEntry
     public float? DurationSeconds;
     public DateTime RecordedAt;
     public string SessionGuid;
-    public string ScoreGrade;
     public TrophyTier TrophyTier;
     public int ClassificationProfileVersion;
 }

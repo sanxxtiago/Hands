@@ -16,8 +16,6 @@ public sealed class ScoresSummaryController : MonoBehaviour
 
     [Header("Main Score Panel")]
     [SerializeField] private TMP_Text mainScoreText;
-    [SerializeField] private TMP_Text mainGradeText;
-    [SerializeField] private TMP_Text motivationalMessageText;
     [SerializeField] private TMP_Text pointsText;
     [SerializeField] private TMP_Text challengeNameText;
     [SerializeField] private TMP_Text trophyText;
@@ -256,20 +254,10 @@ public sealed class ScoresSummaryController : MonoBehaviour
             mainScoreText.text = Mathf.RoundToInt(record.totalScore).ToString();
 
 
-        if (mainGradeText != null)
-        {
-            mainGradeText.text = ScoreDisplayFormatter.FormatGrade(record.scoreGrade);
-        }
-
         if (trophyText != null)
             trophyText.text = ScoreDisplayFormatter.FormatTrophyTier(record.trophyTier);
         if (challengeNameText != null)
             challengeNameText.text = ScoreDisplayFormatter.FormatExerciseType(record.exerciseType);
-
-        if (motivationalMessageText != null)
-            motivationalMessageText.text = string.IsNullOrEmpty(record.motivationalMessage)
-                ? "Continua practicando para mejorar tu desempeno."
-                : record.motivationalMessage;
 
         if (rankProgressSlider != null)
         {
@@ -448,9 +436,7 @@ public sealed class ScoresSummaryController : MonoBehaviour
         if (duckHunterCard != null) duckHunterCard.ShowEmpty();
 
         if (mainScoreText != null) mainScoreText.text = "-";
-        if (mainGradeText != null) mainGradeText.text = "";
         if (trophyText != null) trophyText.text = "";
-        if (motivationalMessageText != null) motivationalMessageText.text = "Sin datos de sesion.";
 
         if (breakdownContainer != null)
         {

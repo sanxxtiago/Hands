@@ -25,6 +25,14 @@ public class DuckBehaviour : MonoBehaviour
     [SerializeField] private Renderer body;
     [SerializeField] private Renderer wings;
 
+    [Header("Vuelo suave")]
+    [Tooltip("Amplitud vertical de la flotación durante el vuelo, en unidades de mundo.")]
+    [SerializeField, Min(0f)] private float flightBobAmplitude = 0.01f;
+    [Tooltip("Frecuencia de la flotación durante el vuelo, en ciclos por segundo.")]
+    [SerializeField, Min(0f)] private float flightBobFrequency = 1.35f;
+    [Tooltip("Inclinación lateral sutil que acompaña a la flotación.")]
+    [SerializeField, Min(0f)] private float flightBankAngle = 4f;
+
     [Header("Feedback visual")]
     [Tooltip("Duración del fade de entrada al aparecer.")]
     [SerializeField, Min(0f)] private float spawnFadeDuration = 0.25f;
@@ -60,8 +68,11 @@ public class DuckBehaviour : MonoBehaviour
     private Tween spawnFadeTween;
     private Tween despawnTween;
     private Sequence deathSequence;
+    private Quaternion flightBaseRotation;
+    private float flightPhase;
+    private bool isStationaryFlight;
 
-    void Awake()
+    private void Awake()
     {
         if (body == null)
             body = GetComponent<Renderer>();
@@ -109,8 +120,17 @@ public class DuckBehaviour : MonoBehaviour
             startPoint = worldCenter;
             endPoint = worldCenter;
             transform.rotation = Quaternion.Euler(0, -90, 0);
+            isStationaryFlight = true;
 
         }
+
+        if (side != SpawnSide.Center)
+            isStationaryFlight = false;
+
+        flightBaseRotation = transform.rotation;
+        flightPhase = (int)requiredHand * 0.45f;
+        if (side == SpawnSide.Right)
+            flightPhase += Mathf.PI;
 
         transform.position = startPoint;
 
@@ -147,7 +167,20 @@ public class DuckBehaviour : MonoBehaviour
 
         float t = Mathf.Clamp01(elapsedTime / duration);
 
-        transform.position = Vector3.Lerp(startPoint, endPoint, t);
+        Vector3 flightPosition = Vector3.Lerp(startPoint, endPoint, t);
+        float phase = elapsedTime * flightBobFrequency * Mathf.PI * 2f + flightPhase;
+        float envelope = isStationaryFlight ? 1f : Mathf.Sin(Mathf.PI * t);
+        float bob = Mathf.Sin(phase) * flightBobAmplitude * envelope;
+        bob += Mathf.Sin(phase * 0.5f + 1.1f) * flightBobAmplitude * 0.25f * envelope;
+
+        flightPosition += Vector3.up * bob;
+        transform.position = flightPosition;
+
+        if (flightBankAngle > 0f)
+        {
+            float bank = Mathf.Sin(phase * 0.8f + 0.6f) * flightBankAngle;
+            transform.rotation = flightBaseRotation * Quaternion.Euler(0f, 0f, bank);
+        }
 
         if (t >= 1f)
         {

@@ -154,7 +154,6 @@ internal static class ScoreClassificationMigration
                 DebugLogMissingProfile(record.exerciseType);
                 changed |= SetRecordClassification(
                     record,
-                    "Invalid",
                     TrophyTier.None,
                     0);
                 continue;
@@ -170,7 +169,6 @@ internal static class ScoreClassificationMigration
 
                 changed |= SetRecordClassification(
                     record,
-                    "Invalid",
                     TrophyTier.None,
                     profile.ProfileVersion);
                 continue;
@@ -180,7 +178,6 @@ internal static class ScoreClassificationMigration
             {
                 changed |= SetRecordClassification(
                     record,
-                    "Invalid",
                     TrophyTier.None,
                     0);
                 continue;
@@ -188,7 +185,6 @@ internal static class ScoreClassificationMigration
 
             changed |= SetRecordClassification(
                 record,
-                classification.Grade.ToString(),
                 classification.TrophyTier,
                 classification.ProfileVersion);
         }
@@ -221,11 +217,9 @@ internal static class ScoreClassificationMigration
         if (!profile.TryResolve(entry.Score, out ScoreClassification classification))
             return false;
 
-        bool changed = entry.ScoreGrade != classification.Grade.ToString()
-            || entry.TrophyTier != classification.TrophyTier
+        bool changed = entry.TrophyTier != classification.TrophyTier
             || entry.ClassificationProfileVersion != classification.ProfileVersion;
 
-        entry.ScoreGrade = classification.Grade.ToString();
         entry.TrophyTier = classification.TrophyTier;
         entry.ClassificationProfileVersion = classification.ProfileVersion;
         return changed;
@@ -233,15 +227,12 @@ internal static class ScoreClassificationMigration
 
     private static bool SetRecordClassification(
         ScoreRecord record,
-        string grade,
         TrophyTier trophyTier,
         int profileVersion)
     {
-        bool changed = record.scoreGrade != grade
-            || record.trophyTier != trophyTier
+        bool changed = record.trophyTier != trophyTier
             || record.classificationProfileVersion != profileVersion;
 
-        record.scoreGrade = grade;
         record.trophyTier = trophyTier;
         record.classificationProfileVersion = profileVersion;
         return changed;

@@ -17,6 +17,8 @@ public sealed class VignetteFeedbackEffect : MonoBehaviour
     [SerializeField, Min(0f)] private float fadeInDuration = 0.06f;
     [SerializeField, Min(0f)] private float fadeOutDuration = 0.4f;
 
+    [SerializeField] private CanvasGroup canvasGroup;
+
     private Tween failureTween;
     private Tween successTween;
 
@@ -31,7 +33,7 @@ public sealed class VignetteFeedbackEffect : MonoBehaviour
             enabled = false;
             return;
         }
-
+        canvasGroup.alpha = 1f;
         ConfigureImage(failureImage);
         ConfigureImage(successImage);
         SetAlpha(failureImage, 0f);

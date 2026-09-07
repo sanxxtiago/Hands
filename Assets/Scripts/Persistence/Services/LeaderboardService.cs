@@ -82,7 +82,6 @@ public class LeaderboardService
                 ? DateTime.Now
                 : record.recordedAt,
             SessionGuid = record.sessionGuid,
-            ScoreGrade = record.scoreGrade,
             TrophyTier = record.trophyTier,
             ClassificationProfileVersion = record.classificationProfileVersion
         };

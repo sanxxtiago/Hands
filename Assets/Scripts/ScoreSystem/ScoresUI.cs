@@ -6,8 +6,6 @@ using UnityEngine.UI;
 public sealed class ScoresUI : MonoBehaviour
 {
     [SerializeField] private TMP_Text totalScoreText;
-    [SerializeField] private TMP_Text scoreGradeText;
-    [SerializeField] private TMP_Text motivationalMessageText;
     [SerializeField] private TMP_Text exerciseTypeText;
     [SerializeField] private TMP_Text breakdownText;
     [SerializeField] private Slider scoreSlider;
@@ -62,15 +60,6 @@ public sealed class ScoresUI : MonoBehaviour
             return;
 
         SetText(totalScoreText, ScoreDisplayFormatter.FormatTotalScore(score.totalScore), "totalScoreText");
-        SetText(
-            scoreGradeText,
-            ScoreDisplayFormatter.FormatGrade(score.scoreGrade),
-            "scoreGradeText");
-        SetText(motivationalMessageText, score.motivationalMessage, "motivationalMessageText");
-        SetText(
-            exerciseTypeText,
-            ScoreDisplayFormatter.FormatExerciseType(score.exerciseType),
-            "exerciseTypeText");
         SetText(
             breakdownText,
             ScoreDisplayFormatter.FormatBreakdown(score.breakdown),

@@ -3,11 +3,6 @@ using System.Text;
 
 public static class ScoreDisplayFormatter
 {
-    public static string FormatGrade(string grade)
-    {
-        return string.IsNullOrEmpty(grade) ? "-" : grade;
-    }
-
     public static string FormatTrophyTier(TrophyTier tier)
     {
         switch (tier)

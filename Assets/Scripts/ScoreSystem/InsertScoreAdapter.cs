@@ -145,7 +145,7 @@ public sealed class InsertScoreAdapter : MonoBehaviour
 
         Debug.Log(
             $"[ScoreSystem][InsertScoreAdapter] Ejercicio finalizado: " +
-            $"score={score.totalScore:F2}, grado={score.scoreGrade}, " +
+            $"score={score.totalScore:F2}, " +
             $"valido={score.isValid}, piezas={data.completedPieces}/{data.totalPieces}, " +
             $"tiempo={data.completionTime:F2}s.");
 

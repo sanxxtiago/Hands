@@ -121,8 +121,7 @@ public sealed class OSUScoreAdapter : MonoBehaviour
         }
 
         Log(
-            $"Score calculado: totalScore={score.totalScore:F2}, " +
-            $"scoreGrade={score.scoreGrade}, isValid={score.isValid}.");
+            $"Score calculado: totalScore={score.totalScore:F2}, isValid={score.isValid}.");
 
         for (int i = 0; i < score.breakdown.Length; i++)
         {
