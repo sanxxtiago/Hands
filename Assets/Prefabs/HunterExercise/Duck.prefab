@@ -238,6 +238,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   body: {fileID: 2577527278766498775}
   wings: {fileID: 9167147236588648791}
+  flightBobAmplitude: 0.01
+  flightBobFrequency: 1.35
+  flightBankAngle: 4
   spawnFadeDuration: 0.25
   escapeFadeDuration: 0.35
   squashDuration: 0.15

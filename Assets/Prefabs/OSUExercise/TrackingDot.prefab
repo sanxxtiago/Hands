@@ -162,7 +162,8 @@ MonoBehaviour:
   bg: {fileID: 1279631127275772491}
   ring: {fileID: 1587545474700197272}
   requiredHand: 0
-  timeOutside: 3
+  maxContinuousTimeOutside: 1
+  maxTotalTimeOutside: 1.2
   pathZOffset: 0.005
   trailDistance: 0.03
   samplesPerCurve: 30

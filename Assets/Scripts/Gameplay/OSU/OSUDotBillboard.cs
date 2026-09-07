@@ -21,21 +21,14 @@ public sealed class OSUDotBillboard : MonoBehaviour
         if (!ResolveCamera())
             return;
 
-        Vector3 toCamera = targetCameraTransform.position - transform.position;
-
-        if (toCamera.sqrMagnitude <= 0.000001f)
-            return;
-
-        Vector3 cameraUp = targetCameraTransform.up;
-
-        if (Mathf.Abs(Vector3.Dot(toCamera.normalized, cameraUp)) > 0.9999f)
-            cameraUp = targetCameraTransform.right;
-
-        Quaternion cameraFacingRotation =
-            Quaternion.LookRotation(toCamera, cameraUp);
+        // Todos los dots comparten el plano de la camara; la perspectiva aporta
+        // la inclinacion natural de los objetivos alejados del centro.
+        Quaternion cameraPlaneRotation = Quaternion.LookRotation(
+            -targetCameraTransform.forward,
+            targetCameraTransform.up);
 
         transform.rotation =
-            cameraFacingRotation * Quaternion.Euler(facingOffsetEuler);
+            cameraPlaneRotation * Quaternion.Euler(facingOffsetEuler);
     }
 
     private bool ResolveCamera()

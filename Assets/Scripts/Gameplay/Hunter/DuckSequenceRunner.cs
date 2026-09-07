@@ -29,6 +29,8 @@ public class DuckSequenceRunner : MonoBehaviour
     [SerializeField] private Transform leftBoundary;
     [SerializeField] private Transform rightBoundary;
     [SerializeField] private DuckBehaviour duckPrefab;
+    [SerializeField] private DuckSpawnPortal leftSpawnPortal;
+    [SerializeField] private DuckSpawnPortal rightSpawnPortal;
 
     private DuckSequence currentSequence;
     private HunterExercise exerciseController;
@@ -117,6 +119,7 @@ public class DuckSequenceRunner : MonoBehaviour
                 if (currentStep.delayBeforeSpawn > 0f)
                     yield return new WaitForSeconds(currentStep.delayBeforeSpawn);
 
+                yield return PlaySpawnCue(currentStep.spawnSide);
                 SpawnDuck(currentStep);
 
                 // El runner espera hasta que el pato es cazado o llega al destino.
@@ -163,6 +166,28 @@ public class DuckSequenceRunner : MonoBehaviour
             rightBoundary.position);
 
         OnDuckSpawned?.Invoke(CreateContext(activeDuck));
+    }
+
+    private IEnumerator PlaySpawnCue(SpawnSide side)
+    {
+        DuckSpawnPortal portal = GetSpawnPortal(side);
+        if (portal == null)
+            yield break;
+
+        yield return portal.PlaySpawnCue();
+    }
+
+    private DuckSpawnPortal GetSpawnPortal(SpawnSide side)
+    {
+        switch (side)
+        {
+            case SpawnSide.Left:
+                return leftSpawnPortal;
+            case SpawnSide.Right:
+                return rightSpawnPortal;
+            default:
+                return null;
+        }
     }
 
     private void HandleDuckHit(DuckBehaviour duck)

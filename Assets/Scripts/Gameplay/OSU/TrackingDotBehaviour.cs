@@ -7,14 +7,19 @@ public class TrackingDotBehaviour : DotBehaviour
 {
     //public float followRadius = 0.05f;
     public bool IsFollowing { get; private set; }
-    public float timeOutside = 0f;
     public float TotalTimeOutside { get; private set; }
     public event Action<bool, float> OnTrackingStateChanged;
+
+    [Tooltip("Tiempo maximo que la mano puede permanecer fuera de la trayectoria de forma continua antes de fallar.")]
+    [SerializeField, Min(0f)] private float maxContinuousTimeOutside = 1f;
+    [Tooltip("Tiempo maximo acumulado fuera de la trayectoria durante todo el seguimiento antes de fallar.")]
+    [SerializeField, Min(0f)] private float maxTotalTimeOutside = 1.2f;
 
     [SerializeField] private float pathZOffset = 0.005f;
     [SerializeField] private float trailDistance = 0.03f;
     [SerializeField] private int samplesPerCurve = 30;
 
+    private float timeOutside;
     private PathData path;
     private LineRenderer pathInstance;
     private readonly List<BezierCurveData> depthAdjustedCurves = new();
@@ -28,6 +33,9 @@ public class TrackingDotBehaviour : DotBehaviour
         float pointsDepth)
     {
         this.path = path;
+        timeOutside = 0f;
+        TotalTimeOutside = 0f;
+        IsFollowing = false;
         depthAdjustedCurves.Clear();
 
         if (path != null && path.curves != null)
@@ -156,7 +164,8 @@ public class TrackingDotBehaviour : DotBehaviour
 
             SetTrackingState(false);
 
-            if (timeOutside > 0.3f)
+            if (timeOutside >= maxContinuousTimeOutside ||
+                TotalTimeOutside >= maxTotalTimeOutside)
             {
                 Fail();
             }

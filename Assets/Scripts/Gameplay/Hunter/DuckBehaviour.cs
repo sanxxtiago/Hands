@@ -58,10 +58,10 @@ public class DuckBehaviour : MonoBehaviour
     // Margen extra antes de la autodestrucción para cubrir imprecisions de los tweens.
     private const float DespawnSafetyMargin = 0.15f;
 
-    private Material bodyMaterial;
-    private Material wingsMaterial;
     private Color bodyBaseColor = Color.white;
     private Color wingsBaseColor = Color.white;
+    private Material bodyMaterial;
+    private Material wingsMaterial;
     private Collider interactionCollider;
     private float currentAlpha = 1f;
     private bool isDespawning;
@@ -243,23 +243,6 @@ public class DuckBehaviour : MonoBehaviour
         StartCoroutine(DestroyAfterMaximumLifetime(visualDuration + DespawnSafetyMargin));
     }
 
-    private void StartSpawnFade()
-    {
-        spawnFadeTween?.Kill();
-        spawnFadeTween = null;
-
-        if (spawnFadeDuration <= 0f)
-        {
-            ApplyAlpha(1f);
-            return;
-        }
-
-        ApplyAlpha(0f);
-        spawnFadeTween = DOTween
-            .To(GetCurrentAlpha, ApplyAlpha, 1f, spawnFadeDuration)
-            .SetEase(Ease.OutCubic);
-    }
-
     private float PlayEscapeDespawn()
     {
         if (escapeFadeDuration <= 0f)
@@ -315,13 +298,6 @@ public class DuckBehaviour : MonoBehaviour
         Destroy(gameObject);
     }
 
-    private void SetPieceColor(Color color)
-    {
-        bodyBaseColor = color;
-        wingsBaseColor = color;
-        ApplyColorAndAlpha();
-    }
-
     private float GetCurrentAlpha()
     {
         return currentAlpha;
@@ -330,6 +306,30 @@ public class DuckBehaviour : MonoBehaviour
     private void ApplyAlpha(float alpha)
     {
         currentAlpha = Mathf.Clamp01(alpha);
+        ApplyColorAndAlpha();
+    }
+
+    private void StartSpawnFade()
+    {
+        spawnFadeTween?.Kill();
+        spawnFadeTween = null;
+
+        if (spawnFadeDuration <= 0f)
+        {
+            ApplyAlpha(1f);
+            return;
+        }
+
+        ApplyAlpha(0f);
+        spawnFadeTween = DOTween
+            .To(GetCurrentAlpha, ApplyAlpha, 1f, spawnFadeDuration)
+            .SetEase(Ease.OutCubic);
+    }
+
+    private void SetPieceColor(Color color)
+    {
+        bodyBaseColor = color;
+        wingsBaseColor = color;
         ApplyColorAndAlpha();
     }
 
