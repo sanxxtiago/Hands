@@ -10,6 +10,14 @@ public class SuggestionEngine
         rules.Add(rule);
     }
 
+    public void Reset()
+    {
+        foreach (TimedRule rule in rules)
+        {
+            rule?.Reset();
+        }
+    }
+
     public Suggestion Evaluate(AnalysisContext ctx, float dt)
     {
         // Debug.Log(

@@ -15,6 +15,12 @@ public class TimedRule
         this.cooldownTime = cooldownTime;
     }
 
+    public void Reset()
+    {
+        activeTime = 0f;
+        cooldown = 0f;
+    }
+
     public Suggestion Update(AnalysisContext ctx, float dt)
     {
         if (cooldown > 0f)

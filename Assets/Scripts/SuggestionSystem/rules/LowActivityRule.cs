@@ -15,7 +15,7 @@ public class LowActivityRule : IRule
 
 return new Suggestion
         {
-            message = "Muévete más, hay poca actividad",
+            message = "Poca actividad: retoma el movimiento con suavidad",
             severity = UnityEngine.Mathf.Clamp01(severity),
             type = SuggestionType.LowActivity
         };

@@ -20,9 +20,13 @@ public class ExerciseFeedbackSystem : MonoBehaviour
     [SerializeField, Min(0f)]
     private float zoneEvalMinActivity = 0.05f;
 
+    [Tooltip("Tiempo tras el cual una misma sugerencia (regla + mano) puede repetirse.")]
+    [SerializeField, Min(0f)]
+    private float repeatSuggestionAfter = 30f;
+
     private int suggestionsEmitted;
     private float cooldownRemaining;
-    private readonly HashSet<string> emittedMessages = new();
+    private readonly Dictionary<string, float> lastEmittedElapsed = new();
 
     void Start()
     {
@@ -33,7 +37,7 @@ public class ExerciseFeedbackSystem : MonoBehaviour
     {
         suggestionsEmitted = 0;
         cooldownRemaining = 0f;
-        emittedMessages.Clear();
+        lastEmittedElapsed.Clear();
         Initialize();
     }
 
@@ -90,7 +94,10 @@ public class ExerciseFeedbackSystem : MonoBehaviour
         if (suggestionsEmitted >= maxSuggestionsPerExercise) return;
 
         cooldownRemaining = Mathf.Max(0f, cooldownRemaining - dt);
-        bool canEmit = cooldownRemaining <= 0f;
+
+        // En cooldown global los engines se congelan: evita que los TimedRule
+        // consuman su disparo interno mientras la emisión está bloqueada.
+        if (cooldownRemaining > 0f) return;
 
         Suggestion best = null;
         HandType bestHand = HandType.NONE;
@@ -103,24 +110,41 @@ public class ExerciseFeedbackSystem : MonoBehaviour
         EvaluateLeadingLowActivity(elapsedTime, dt,
             ref best, ref bestHand, ref bestScore);
 
-        if (!canEmit) return;
         if (best == null || string.IsNullOrWhiteSpace(best.message)) return;
 
-        if (!emittedMessages.Add(best.message))
+        // Dedup por regla + mano con re-arme temporal: la misma sugerencia
+        // puede repetirse si la conducta persiste, sin agotar el presupuesto.
+        string repeatKey = best.message + "|" + bestHand;
+        if (lastEmittedElapsed.TryGetValue(repeatKey, out float lastElapsed)
+            && elapsedTime - lastElapsed < repeatSuggestionAfter)
             return;
 
+        lastEmittedElapsed[repeatKey] = elapsedTime;
         suggestionsEmitted++;
         cooldownRemaining = suggestionCooldown;
 
-        string handLabel = bestHand == HandType.NONE
-            ? string.Empty
-            : $"[{bestHand}] ";
+        string handPrefix = HandPrefix(bestHand);
 
-        Debug.Log($"[SuggestionSystem] {handLabel}{best.message}");
+        Debug.Log($"[SuggestionSystem] {handPrefix}{best.message}");
         SnackbarManager.Show(
             SNACKBARTYPE.WARNING,
-            $"{handLabel}{best.message}",
+            $"{handPrefix}{best.message}",
             snackbarDuration);
+    }
+
+    static string HandPrefix(HandType hand)
+    {
+        switch (hand)
+        {
+            case HandType.LEFT: return "Mano izquierda: ";
+            case HandType.RIGHT: return "Mano derecha: ";
+            default: return string.Empty;
+        }
+    }
+
+    static float ScoreFor(float severity, float activityRatio)
+    {
+        return severity * (0.25f + 0.75f * activityRatio);
     }
 
     void EvaluateHand(
@@ -139,8 +163,13 @@ public class ExerciseFeedbackSystem : MonoBehaviour
 
         float activity = tracker.GetActivityRatio(elapsedTime);
 
-        // Mano casi inmóvil: su señal de zonas no es significativa
-        if (activity < zoneEvalMinActivity) return;
+        // Mano casi inmóvil: su señal de zonas no es significativa.
+        // Se resetea el engine para no disparar con trigger acumulado previo.
+        if (activity < zoneEvalMinActivity)
+        {
+            engine.Reset();
+            return;
+        }
 
         var snapshot = tracker.GetRuntimeSnapshot();
         var normalized = MetricsProcessor.Normalize(snapshot);
@@ -156,7 +185,7 @@ public class ExerciseFeedbackSystem : MonoBehaviour
         if (suggestion == null) return;
 
         // Prioriza la mano con más actividad/movimiento
-        float score = suggestion.severity * (0.25f + 0.75f * activity);
+        float score = ScoreFor(suggestion.severity, activity);
 
         if (best == null || score > bestScore)
         {
@@ -203,11 +232,14 @@ public class ExerciseFeedbackSystem : MonoBehaviour
         var suggestion = rule.Update(context, dt);
         if (suggestion == null) return;
 
-        if (best == null || suggestion.severity > bestScore)
+        // Misma escala que las reglas de zona; sin etiqueta de mano porque
+        // es un estado global (la mano líder es la que MÁS se mueve).
+        float score = ScoreFor(suggestion.severity, leadingActivity);
+        if (best == null || score > bestScore)
         {
             best = suggestion;
-            bestHand = leading.HandType;
-            bestScore = suggestion.severity;
+            bestHand = HandType.NONE;
+            bestScore = score;
         }
     }
 

@@ -18,7 +18,7 @@ public class ExcessHandRule : IRule
     {
         return new Suggestion
         {
-            message = "Estás abusando de la mano",
+            message = "usa menos los dedos y mueve más la muñeca",
             severity = Mathf.Clamp01(ctx.deviation.hand - 1f) * criticality
         };
     }

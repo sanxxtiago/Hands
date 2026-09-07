@@ -18,7 +18,7 @@ public class LowForearmRule : IRule
     {
         return new Suggestion
         {
-            message = "Involucra más el antebrazo",
+            message = "involucra más el antebrazo en el movimiento",
             severity = Mathf.Clamp01(-ctx.deviation.forearm - 1f) * criticality
         };
     }

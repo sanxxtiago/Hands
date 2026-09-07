@@ -18,7 +18,7 @@ public class ExcessWristRule : IRule
     {
         return new Suggestion
         {
-            message = "Estás abusando de la muñeca",
+            message = "gira también con el antebrazo, no solo con la muñeca",
             severity = Mathf.Clamp01(ctx.deviation.wrist - 1f) * criticality
         };
     }
