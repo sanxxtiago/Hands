@@ -7222,7 +7222,7 @@ MonoBehaviour:
   trackingSystem: {fileID: 1956825094}
   warmupTime: 2
   maxSuggestionsPerExercise: 3
-  suggestionCooldown: 8
+  suggestionCooldown: 15
   snackbarDuration: 3
   zoneEvalMinActivity: 0.05
 --- !u!4 &1460689779

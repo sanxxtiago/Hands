@@ -19,6 +19,6 @@ MonoBehaviour:
   highContribution: 0.65
   coordinationHoldSeconds: 2
   warmupSeconds: 2
-  cooldownSeconds: 8
+  cooldownSeconds: 15
   maximumSuggestionsPerExercise: 3
   snackbarSeconds: 3

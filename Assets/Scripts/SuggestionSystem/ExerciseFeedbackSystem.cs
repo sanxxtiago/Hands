@@ -13,7 +13,7 @@ public class ExerciseFeedbackSystem : MonoBehaviour
 
     [SerializeField] private float warmupTime = 2f;
     [SerializeField, Min(1)] private int maxSuggestionsPerExercise = 3;
-    [SerializeField, Min(0f)] private float suggestionCooldown = 8f;
+    [SerializeField, Min(0f)] private float suggestionCooldown = 15f;
     [SerializeField, Min(0.5f)] private float snackbarDuration = 3f;
 
     [Tooltip("Minima actividad de una mano para evaluar sus reglas de zona.")]
@@ -161,7 +161,7 @@ public class ExerciseFeedbackSystem : MonoBehaviour
         var handProfile = GetProfile(tracker.HandType);
         if (handProfile == null) return;
 
-        float activity = tracker.GetActivityRatio(elapsedTime);
+        float activity = tracker.GetWindowedActivityRatio();
 
         // Mano casi inmóvil: su señal de zonas no es significativa.
         // Se resetea el engine para no disparar con trigger acumulado previo.
@@ -171,7 +171,7 @@ public class ExerciseFeedbackSystem : MonoBehaviour
             return;
         }
 
-        var snapshot = tracker.GetRuntimeSnapshot();
+        var snapshot = tracker.GetWindowedSnapshot();
         var normalized = MetricsProcessor.Normalize(snapshot);
         var deviation = MetricsProcessor.GetDeviation(normalized, handProfile);
 
@@ -208,9 +208,9 @@ public class ExerciseFeedbackSystem : MonoBehaviour
         // Mano con más actividad: si ni siquiera ella alcanza el mínimo,
         // el usuario no está ejecutando el movimiento esperado
         ExerciseMetricsTracker leading = trackingSystem.leftTracker;
-        float leadingActivity = trackingSystem.leftTracker.GetActivityRatio(elapsedTime);
+        float leadingActivity = trackingSystem.leftTracker.GetWindowedActivityRatio();
 
-        float rightActivity = trackingSystem.rightTracker.GetActivityRatio(elapsedTime);
+        float rightActivity = trackingSystem.rightTracker.GetWindowedActivityRatio();
         if (rightActivity > leadingActivity)
         {
             leading = trackingSystem.rightTracker;
