@@ -10,7 +10,7 @@ public sealed class OrientationPhase1Volume : MonoBehaviour
     [SerializeField] private HandType requiredHand = HandType.NONE;
 
     [Header("Touch")]
-    [SerializeField, Min(0f)] private float touchDelay = 0.15f;
+    [SerializeField, Min(0f)] private float touchDelay = 0.5f;
 
     [Header("Touch feedback")]
     [SerializeField] private ParticleSystem palmTouchEffectPrefab;

@@ -211,8 +211,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   targetRenderer: {fileID: 2268964220628954896}
-  touchedColor: {r: 0.75, g: 0.9, b: 1, a: 1}
   targetHalo: {fileID: 9123456789012345003}
+  touchedColor: {r: 0.75, g: 0.9, b: 1, a: 1}
   punchScale: 0.012
   punchDuration: 0.15
   highlightDuration: 0.08
@@ -317,7 +317,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &9123456789012345002
 Transform:
   m_ObjectHideFlags: 0

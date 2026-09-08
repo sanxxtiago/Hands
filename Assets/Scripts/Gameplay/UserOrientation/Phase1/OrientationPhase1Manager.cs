@@ -14,7 +14,6 @@ public class OrientationPhase1Manager : OrientationManager
     [SerializeField] private OrientationPhase1Volume firstVolume;
     [SerializeField] private OrientationPhase1Volume secondVolume;
     [SerializeField] private OrientationPhase1Volume thirdVolume;
-    [SerializeField] private OrientationPhase1Volume fourthVolume;
 
     public event Action<float, float> OnProgressChanged;
     public event Action<float, float> OnActivityFeedbackChanged;
@@ -36,8 +35,7 @@ public class OrientationPhase1Manager : OrientationManager
         {
             firstVolume,
             secondVolume,
-            thirdVolume,
-            fourthVolume
+            thirdVolume
         };
 
         if (handTracker == null || exploration == null)
@@ -187,7 +185,7 @@ public class OrientationPhase1Manager : OrientationManager
             if (_volumeSequence[i] == null)
             {
                 Debug.LogError(
-                    "[OrientationPhase1] Falta asignar uno de los cuatro volúmenes.",
+                    "[OrientationPhase1] Falta asignar uno de los tres volúmenes.",
                     this);
                 return false;
             }

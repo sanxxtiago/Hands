@@ -13,7 +13,6 @@ public class StepByStepUI : MonoBehaviour
     [SerializeField] private OrientationPhase1Volume firstVolume;
     [SerializeField] private OrientationPhase1Volume secondVolume;
     [SerializeField] private OrientationPhase1Volume thirdVolume;
-    [SerializeField] private OrientationPhase1Volume fourthVolume;
     [SerializeField] private Slider progressBar;
     [SerializeField] private TMP_Text progressionText;
     [SerializeField] private TMP_Text instructionText;
@@ -121,8 +120,7 @@ public class StepByStepUI : MonoBehaviour
         {
             firstVolume,
             secondVolume,
-            thirdVolume,
-            fourthVolume
+            thirdVolume
         };
         volumeInstructions = CreateVolumeInstructions();
 
@@ -504,8 +502,7 @@ public class StepByStepUI : MonoBehaviour
         {
             HighlightHandWords("Mueve tu mano derecha hacia la zona izquierda"),
             HighlightHandWords("Mueve tu mano izquierda hacia la zona derecha"),
-            "Mueve una de tus manos hacia la parte trasera",
-            "Mueve una de tus manos hacia la base de la mesa"
+            "Mueve una de tus manos hacia la parte trasera"
         };
     }
 

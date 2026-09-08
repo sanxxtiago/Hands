@@ -80,7 +80,7 @@ public sealed class OrientationPhase3ProgressUI : MonoBehaviour
             "   ",
             FormatStep("Mover", 1, activeStep),
             "   ",
-            FormatStep("Encajar", 2, activeStep));
+            FormatStep("Soltar", 2, activeStep));
     }
 
     private string FormatStep(string label, int step, int activeStep)
