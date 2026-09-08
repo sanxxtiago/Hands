@@ -6152,7 +6152,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   profile: {fileID: 11400000, guid: 985222d45ab32e24c9709c8c8ac63a27, type: 2}
   trackingSystem: {fileID: 1956825094}
-  warmupTime: 2
+  warmupTime: 10
   maxSuggestionsPerExercise: 3
   suggestionCooldown: 15
   snackbarDuration: 3

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dd614a686fbf7543893067f3fda136f, type: 3}
   m_Name: OSUSequence_01
   m_EditorClassIdentifier: 
-  pointsDepth: 0.5
+  pointsDepth: 0.55
   phases:
   - phaseName: Fase 1
     steps:
@@ -20,7 +20,7 @@ MonoBehaviour:
       requiredHand: 0
       prefab: {fileID: 8864962406679063765, guid: 8c01e15ef2e63444ea8bdfe129b000cd,
         type: 3}
-      spawnPosition: {x: 0, y: 0.2697, z: 0.5}
+      spawnPosition: {x: 0, y: 0.21, z: 0.5}
       path: {fileID: 0}
     - stepId: 2
       requiredHand: 2
