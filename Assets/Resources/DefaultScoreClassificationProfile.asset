@@ -20,9 +20,9 @@ MonoBehaviour:
   - minimumScore: 60
     grade: 2
     trophyTier: 0
-  - minimumScore: 75
+  - minimumScore: 80
     grade: 3
     trophyTier: 1
-  - minimumScore: 90
+  - minimumScore: 95
     grade: 4
     trophyTier: 2

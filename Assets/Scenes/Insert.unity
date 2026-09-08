@@ -221,6 +221,8 @@ MonoBehaviour:
     expectedPieces: 2
   - prefab: {fileID: 4139748908326186920, guid: 801a3c97402c19b4f8d2179defc9e703,
       type: 3}
+    expectedPieces: 3
+  - prefab: {fileID: 4139748908316240334}
     expectedPieces: 4
   phaseTransitionDelay: 1
   phaseFadeDuration: 0.35
@@ -2164,11 +2166,11 @@ MonoBehaviour:
   insertConfig:
     excellentRatio: 1
     maximumRatio: 2
-    baseTime: 5
-    timePerPiece: 5
+    baseTime: 8
+    timePerPiece: 12
     rotationExtraTime: 0
-    timeWeight: 0.75
-    completionWeight: 0.25
+    timeWeight: 0.9
+    completionWeight: 0.1
   osuConfig:
     excellentRatio: 1
     maximumRatio: 2
@@ -6155,6 +6157,7 @@ MonoBehaviour:
   suggestionCooldown: 15
   snackbarDuration: 3
   zoneEvalMinActivity: 0.05
+  repeatSuggestionAfter: 30
 --- !u!4 &1460689779
 Transform:
   m_ObjectHideFlags: 0
@@ -6434,8 +6437,8 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1722297171}
   - {fileID: 158645645}
+  - {fileID: 1722297171}
   - {fileID: 1374649192}
   - {fileID: 1968670757}
   - {fileID: 774383148}
@@ -8924,21 +8927,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: PhaseIndicatorContainer
       objectReference: {fileID: 0}
-    - target: {fileID: 3517510408029229659, guid: be0f1042a40fe474f83657cd650f4733,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 28.799927
-      objectReference: {fileID: 0}
-    - target: {fileID: 3722143725481129648, guid: be0f1042a40fe474f83657cd650f4733,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 28.799927
-      objectReference: {fileID: 0}
-    - target: {fileID: 7021203819902697896, guid: be0f1042a40fe474f83657cd650f4733,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 28.799927
-      objectReference: {fileID: 0}
     - target: {fileID: 8806547860555040713, guid: be0f1042a40fe474f83657cd650f4733,
         type: 3}
       propertyPath: m_Pivot.x
@@ -9293,6 +9281,12 @@ MonoBehaviour:
     to be suitable options. Child GameObjects will be automatically enabled when
     required, please do not enable them.'
   _isEditing: 0
+--- !u!1 &4139748908316240334 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3626083300260122736, guid: 778f54211f27d8042a75ca31a2106072,
+    type: 3}
+  m_PrefabInstance: {fileID: 7623605365022952471}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5030502563551763209
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10145,6 +10139,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7113228099216054980, guid: 39a5a08e669c09042abf53b4b39c2d9d,
+        type: 3}
+      propertyPath: m_Alpha
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8072334621542151579, guid: 39a5a08e669c09042abf53b4b39c2d9d,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -10545,6 +10544,79 @@ MonoBehaviour:
     Provider and adjust the Device Offset Mode to either Manual or Transform. \n\n(Note
     : \"Transform\" Offset Mode will not work with temporal warping)."
   _isEditing: 0
+--- !u!1001 &7623605365022952471
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3626083300260122736, guid: 778f54211f27d8042a75ca31a2106072,
+        type: 3}
+      propertyPath: m_Name
+      value: Config4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3626083300260122736, guid: 778f54211f27d8042a75ca31a2106072,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3988168932441814091, guid: 778f54211f27d8042a75ca31a2106072,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3988168932441814091, guid: 778f54211f27d8042a75ca31a2106072,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3988168932441814091, guid: 778f54211f27d8042a75ca31a2106072,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3988168932441814091, guid: 778f54211f27d8042a75ca31a2106072,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3988168932441814091, guid: 778f54211f27d8042a75ca31a2106072,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3988168932441814091, guid: 778f54211f27d8042a75ca31a2106072,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3988168932441814091, guid: 778f54211f27d8042a75ca31a2106072,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3988168932441814091, guid: 778f54211f27d8042a75ca31a2106072,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3988168932441814091, guid: 778f54211f27d8042a75ca31a2106072,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3988168932441814091, guid: 778f54211f27d8042a75ca31a2106072,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 778f54211f27d8042a75ca31a2106072, type: 3}
 --- !u!4 &8681616449363907116
 Transform:
   m_ObjectHideFlags: 0
@@ -10718,6 +10790,7 @@ SceneRoots:
   - {fileID: 2542622047228734839}
   - {fileID: 6630730314214793831}
   - {fileID: 9034781040596681955}
+  - {fileID: 7623605365022952471}
   - {fileID: 1273304089}
   - {fileID: 540689710}
   - {fileID: 2131207338}

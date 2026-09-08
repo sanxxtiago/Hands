@@ -82,6 +82,12 @@ MonoBehaviour:
   highlightMaxIntensity: 0.8
   snapFlashDuration: 0.4
   snapFlashScale: 0.18
+  wrongPulseColor: {r: 1, g: 0.15, b: 0.08, a: 1}
+  wrongPulseDuration: 0.55
+  wrongPulsePeakIntensity: 0.85
+  wrongPulseScale: 0.04
+  wrongProximityRadius: 0.15
+  wrongPulseCooldown: 0.6
 --- !u!1 &1749612391692582064
 GameObject:
   m_ObjectHideFlags: 0
@@ -311,6 +317,12 @@ MonoBehaviour:
   highlightMaxIntensity: 0.8
   snapFlashDuration: 0.4
   snapFlashScale: 0.18
+  wrongPulseColor: {r: 1, g: 0.15, b: 0.08, a: 1}
+  wrongPulseDuration: 0.55
+  wrongPulsePeakIntensity: 0.85
+  wrongPulseScale: 0.04
+  wrongProximityRadius: 0.15
+  wrongPulseCooldown: 0.6
 --- !u!1 &5154179929705535820
 GameObject:
   m_ObjectHideFlags: 0
@@ -365,6 +377,10 @@ MonoBehaviour:
   requireRotation: 1
   rb: {fileID: 0}
   pieceRenderer: {fileID: 1415307581656397155}
+  grabScaleIncrease: 0.1
+  grabScaleDuration: 0.12
+  grabGlowColor: {r: 0.85, g: 0.93, b: 1, a: 1}
+  grabGlowDuration: 0.25
 --- !u!65 &8742735232202138653
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -772,14 +788,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8742493408008784133}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.17364825, y: 0, z: 0, w: 0.9848078}
-  m_LocalPosition: {x: -0.061, y: 0.0268, z: 0.4353}
+  m_LocalRotation: {x: -0.12278779, y: -0.6963643, z: 0.12278779, w: 0.6963643}
+  m_LocalPosition: {x: -0.061, y: 0.0145, z: 0.4155}
   m_LocalScale: {x: 0.15, y: 0.15, z: 0.15}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6596787240076335229}
   m_Father: {fileID: 6818135338287439001}
-  m_LocalEulerAnglesHint: {x: -20, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 20}
 --- !u!114 &1354806383151552647
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -798,6 +814,10 @@ MonoBehaviour:
   requireRotation: 1
   rb: {fileID: 0}
   pieceRenderer: {fileID: 179840955953449959}
+  grabScaleIncrease: 0.1
+  grabScaleDuration: 0.12
+  grabGlowColor: {r: 0.85, g: 0.93, b: 1, a: 1}
+  grabGlowDuration: 0.25
 --- !u!54 &6486566686312993690
 Rigidbody:
   m_ObjectHideFlags: 0

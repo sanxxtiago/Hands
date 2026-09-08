@@ -4,12 +4,13 @@ using UnityEngine.UI;
 
 public class ProgressionUI : MonoBehaviour
 {
-    private const int ExpectedPhaseCount = 3;
+    private const int ExpectedPhaseCount = 4;
 
     // Se conserva para no romper las referencias existentes en las escenas.
     [SerializeField] private Image phasePoint1;
     [SerializeField] private Image phasePoint2;
     [SerializeField] private Image phasePoint3;
+    [SerializeField] private Image phasePoint4;
     [SerializeField] private Sprite emptyPhasePointSprite;
     [SerializeField] private Sprite filledPhasePointSprite;
     [SerializeField, Min(0f)] private float phasePointAnimationDuration = 0.2f;
@@ -26,7 +27,8 @@ public class ProgressionUI : MonoBehaviour
         {
             phasePoint1,
             phasePoint2,
-            phasePoint3
+            phasePoint3,
+            phasePoint4
         };
         phasePointTweens = new Tween[ExpectedPhaseCount];
         phasePointScales = new Vector3[ExpectedPhaseCount];

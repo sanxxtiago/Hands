@@ -7,6 +7,7 @@ public class InsertPhaseFeedback : MonoBehaviour
     [SerializeField] private RectTransform phasePoint1;
     [SerializeField] private RectTransform phasePoint2;
     [SerializeField] private RectTransform phasePoint3;
+    [SerializeField] private RectTransform phasePoint4;
     [SerializeField, Min(0f)] private float punchDuration = 0.3f;
     [SerializeField] private Vector3 punchScale = new Vector3(0.18f, 0.18f, 0.18f);
     [SerializeField, Min(0)] private int punchVibrato = 1;
@@ -19,7 +20,7 @@ public class InsertPhaseFeedback : MonoBehaviour
 
     private void Awake()
     {
-        phasePoints = new[] { phasePoint1, phasePoint2, phasePoint3 };
+        phasePoints = new[] { phasePoint1, phasePoint2, phasePoint3, phasePoint4 };
 
         for (int i = 0; i < phasePoints.Length; i++)
         {
