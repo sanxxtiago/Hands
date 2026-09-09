@@ -11204,11 +11204,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttons:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 1064033399}
+  - {fileID: 1556069293}
+  - {fileID: 1943592224}
   tabGroup: {fileID: 0}
   playMenuTheme: 0
 --- !u!1 &1563720223

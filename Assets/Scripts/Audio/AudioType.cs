@@ -27,5 +27,6 @@ public enum AudioType
     DuckEscape = 20,
     TrophyGold = 21,
     TrophySilver = 22,
-    TrophyBronze = 23
+    TrophyBronze = 23,
+    OrientationTargetPop = 24
 }

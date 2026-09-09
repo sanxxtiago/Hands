@@ -11,7 +11,6 @@ public class GameAudioFeedback : MonoBehaviour
         ExerciseProgressManager.OnPhaseCompleted += HandlePhaseCompleted;
         PieceBehaviour.OnPieceSnapped += HandlePieceSnapped;
         PieceBehaviour.OnPieceGrabbed += HandlePieceGrabbed;
-        TrophyView.OnTrophyLanded += HandleTrophyLanded;
     }
 
     private void OnDisable()
@@ -21,7 +20,9 @@ public class GameAudioFeedback : MonoBehaviour
         ExerciseProgressManager.OnPhaseCompleted -= HandlePhaseCompleted;
         PieceBehaviour.OnPieceSnapped -= HandlePieceSnapped;
         PieceBehaviour.OnPieceGrabbed -= HandlePieceGrabbed;
-        TrophyView.OnTrophyLanded -= HandleTrophyLanded;
+
+        // Si se abandona la escena a mitad del ejercicio, no arrastrar el loop.
+        AudioManager.StopLoop(AudioType.ExerciseAmbience);
     }
 
     private void HandleExerciseStart()
@@ -48,10 +49,5 @@ public class GameAudioFeedback : MonoBehaviour
     private void HandlePieceGrabbed(PieceBehaviour piece)
     {
         AudioManager.Play(AudioType.PieceGrabbed);
-    }
-
-    private void HandleTrophyLanded(TrophyTier tier)
-    {
-        AudioManager.Play(AudioType.TrophyReveal);
     }
 }

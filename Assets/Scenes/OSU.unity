@@ -10169,8 +10169,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1825811534}
   - component: {fileID: 1825811533}
-  - component: {fileID: 2725811532}
-  - component: {fileID: 2725811533}
   m_Layer: 0
   m_Name: AudioManager
   m_TagString: Untagged
@@ -11757,13 +11755,47 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 90, y: 180, z: 0}
+--- !u!1 &1825811600
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1825811601}
+  - component: {fileID: 2725811532}
+  - component: {fileID: 2725811533}
+  - component: {fileID: 2725811534}
+  m_Layer: 0
+  m_Name: OSUAudioFeedback
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1825811601
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1825811600}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2725811532
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1825811532}
+  m_GameObject: {fileID: 1825811600}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 16c6f6f21a2c4ebf8c0c51e58ab5ede6, type: 3}
@@ -11775,13 +11807,25 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1825811532}
+  m_GameObject: {fileID: 1825811600}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 18d401fd29c34b09bd320ad34ba264b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   sequenceRunner: {fileID: 43925656}
+--- !u!114 &2725811534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1825811600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56f7b747585ae3343af9f608155ad688, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &451446591723614969
 PrefabInstance:
   m_ObjectHideFlags: 0

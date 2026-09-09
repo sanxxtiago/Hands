@@ -51,7 +51,7 @@ public class AudioManager : MonoBehaviour
 
     public static void Play(AudioType type)
     {
-        if (!IsTypePlayable(type) || !TryGetDefinition(type, out AudioDefinition definition))
+        if (!IsTypePlayable(type) || !TryGetDefinition(type, out AudioDefinition definition, nameof(Play)))
             return;
 
         Instance.EnsureAudioSource();
@@ -62,7 +62,7 @@ public class AudioManager : MonoBehaviour
 
     public static void PlayLoop(AudioType type)
     {
-        if (!IsTypePlayable(type) || !TryGetDefinition(type, out AudioDefinition definition))
+        if (!IsTypePlayable(type) || !TryGetDefinition(type, out AudioDefinition definition, nameof(PlayLoop)))
             return;
 
         AudioSource loopSource = Instance.GetOrCreateLoopSource(type);
@@ -107,12 +107,16 @@ public class AudioManager : MonoBehaviour
         return true;
     }
 
-    private static bool TryGetDefinition(AudioType type, out AudioDefinition definition)
+    private static bool TryGetDefinition(AudioType type, out AudioDefinition definition, string caller = "")
     {
         if (Instance.lookup == null)
             Instance.BuildLookup();
 
-        return Instance.lookup.TryGetValue(type, out definition);
+        if (Instance.lookup.TryGetValue(type, out definition))
+            return true;
+
+        Debug.LogWarning($"[Audio] {caller}: '{type}' no tiene clip asignado en la AudioLibrary.", Instance);
+        return false;
     }
 
     private void BuildLookup()

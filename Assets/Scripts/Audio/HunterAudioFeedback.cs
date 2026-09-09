@@ -12,8 +12,8 @@ public class HunterAudioFeedback : MonoBehaviour
         if (sequenceRunner == null)
             Debug.LogError("[Audio] DuckHunter: falta asignar el DuckSequenceRunner en el feedback de audio.", this);
 
-        if (poseListeners.Length == 0)
-            Debug.LogWarning("[Audio] DuckHunter: no hay HandPoseListener asignados; el disparo no sonará.", this);
+        if (!HasValidPoseListener())
+            Debug.LogWarning("[Audio] DuckHunter: no hay HandPoseListener válidos asignados; el disparo no sonará.", this);
 
         if (sequenceRunner != null)
             sequenceRunner.OnDuckHit += HandleDuckHit;
@@ -41,6 +41,17 @@ public class HunterAudioFeedback : MonoBehaviour
             if (poseListeners[i] != null)
                 poseListeners[i].ShootStarted -= HandleShootStarted;
         }
+    }
+
+    private bool HasValidPoseListener()
+    {
+        for (int i = 0; i < poseListeners.Length; i++)
+        {
+            if (poseListeners[i] != null)
+                return true;
+        }
+
+        return false;
     }
 
     // Suena al jalar el gatillo, haya o no un pato en la mira.

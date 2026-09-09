@@ -1626,8 +1626,6 @@ GameObject:
   m_Component:
   - component: {fileID: 313147683}
   - component: {fileID: 313147682}
-  - component: {fileID: 1213147681}
-  - component: {fileID: 1213147682}
   m_Layer: 0
   m_Name: AudioManager
   m_TagString: Untagged
@@ -6666,13 +6664,47 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &313147700
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 313147701}
+  - component: {fileID: 1213147681}
+  - component: {fileID: 1213147682}
+  - component: {fileID: 1213147683}
+  m_Layer: 0
+  m_Name: DuckHunterAudioFeedback
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &313147701
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 313147700}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1213147681
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 313147681}
+  m_GameObject: {fileID: 313147700}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 16c6f6f21a2c4ebf8c0c51e58ab5ede6, type: 3}
@@ -6684,7 +6716,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 313147681}
+  m_GameObject: {fileID: 313147700}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7c98e91c93e1492888cdc58cecebd625, type: 3}
@@ -6692,7 +6724,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sequenceRunner: {fileID: 43925661}
   poseListeners:
-  - {fileID: 0}
+  - {fileID: 367788028}
+  - {fileID: 1875341538}
+--- !u!114 &1213147683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 313147700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56f7b747585ae3343af9f608155ad688, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1232738117
 GameObject:
   m_ObjectHideFlags: 0

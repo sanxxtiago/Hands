@@ -31,6 +31,9 @@ public class OsuAudioFeedback : MonoBehaviour
         sequenceRunner.OnTargetCompleted -= HandleTargetResolved;
         sequenceRunner.OnTargetMissed -= HandleTargetResolved;
         sequenceRunner.OnTargetFailed -= HandleTargetResolved;
+
+        // Si se abandona la escena con un halo activo, no arrastrar el loop.
+        AudioManager.StopLoop(AudioType.OsuHaloTimer);
     }
 
     private void HandleTargetSpawned(OSUTargetScoreContext context)

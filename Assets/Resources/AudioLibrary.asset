@@ -37,6 +37,12 @@ MonoBehaviour:
   - type: 15
     clip: {fileID: 8300000, guid: d58be743132467345a2838d5bb179e81, type: 3}
     volume: 1
+  - type: 9
+    clip: {fileID: 8300000, guid: ac9c172c4b4976249924c21b8fc42344, type: 3}
+    volume: 1
+  - type: 10
+    clip: {fileID: 8300000, guid: 9f04f95c29f5a2549b77e019c6a41eaf, type: 3}
+    volume: 1
   - type: 16
     clip: {fileID: 8300000, guid: a4b22ac165811f74ca09919a57536538, type: 3}
     volume: 1
@@ -60,4 +66,7 @@ MonoBehaviour:
     volume: 1
   - type: 23
     clip: {fileID: 8300000, guid: 4c2d50e865ad68944821c2e748e4f377, type: 3}
+    volume: 1
+  - type: 24
+    clip: {fileID: 8300000, guid: d58be743132467345a2838d5bb179e81, type: 3}
     volume: 1
