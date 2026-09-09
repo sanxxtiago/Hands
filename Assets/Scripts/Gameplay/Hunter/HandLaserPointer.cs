@@ -9,8 +9,10 @@ public class HandLaserPointer : MonoBehaviour
 
     [Header("Settings")]
     [SerializeField] private HandType handType = HandType.RIGHT;
-    [SerializeField] private float laserLength = 2f;
+    [Tooltip("Distancia máxima del rayo. El límite real es la pared (capa HunterWall), salvo que un pato se cruce antes.")]
+    [SerializeField, Min(0f)] private float maxLaserDistance = 2f;
     [SerializeField] private float laserOriginOffset = 0.02f;
+    [Tooltip("Capas que detienen el láser: DuckLayer + HunterWall. El hit más cercano manda, así el pato tapa a la pared.")]
     [SerializeField] private LayerMask hitMask;
 
     [Header("Retícula")]
@@ -64,12 +66,13 @@ public class HandLaserPointer : MonoBehaviour
         Vector3 endPoint = Vector3.zero;
         Vector3 facing = direction;
         bool alignToSurface = false;
-        float traveledDistance = laserLength;
+        float traveledDistance = maxLaserDistance;
 
         // Resetear el objetivo en cada frame antes de volver a comprobar
         currentTarget = null;
 
-        if (Physics.Raycast(origin, direction, out RaycastHit hit, laserLength, hitMask))
+        // El rayo llega hasta la pared; si un pato se cruza antes, ese hit es el más cercano y manda.
+        if (Physics.Raycast(origin, direction, out RaycastHit hit, maxLaserDistance, hitMask))
         {
             endPoint = hit.point;
             facing = hit.normal;
@@ -86,7 +89,8 @@ public class HandLaserPointer : MonoBehaviour
         }
         else
         {
-            endPoint = origin + direction * laserLength;
+            // Sin impacto (p. ej. apuntando fuera de la pared): el láser flota a distancia máxima.
+            endPoint = origin + direction * maxLaserDistance;
         }
 
         lineRenderer.SetPosition(0, origin);
@@ -94,7 +98,7 @@ public class HandLaserPointer : MonoBehaviour
 
         reticle?.UpdatePose(endPoint, facing, traveledDistance, alignToSurface);
 
-        Debug.DrawRay(origin, direction * laserLength, Color.red);
+        Debug.DrawRay(origin, direction * maxLaserDistance, Color.red);
     }
 
     // Este método solo se ejecuta cuando el paciente hace la pose del gatillo (Pinch)

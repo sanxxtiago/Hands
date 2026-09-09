@@ -1938,11 +1938,11 @@ MonoBehaviour:
   handInput: {fileID: 43925659}
   poseListener: {fileID: 367788028}
   handType: 1
-  laserLength: 0.25
+  maxLaserDistance: 2
   laserOriginOffset: 0.1
   hitMask:
     serializedVersion: 2
-    m_Bits: 1024
+    m_Bits: 5120
   reticle: {fileID: 7711000000000000004}
 --- !u!4 &338621366
 Transform:
@@ -3375,11 +3375,11 @@ MonoBehaviour:
   handInput: {fileID: 43925659}
   poseListener: {fileID: 1875341538}
   handType: 2
-  laserLength: 0.25
+  maxLaserDistance: 2
   laserOriginOffset: 0.1
   hitMask:
     serializedVersion: 2
-    m_Bits: 1024
+    m_Bits: 5120
   reticle: {fileID: 7712000000000000004}
 --- !u!4 &569803557
 Transform:
@@ -7441,7 +7441,7 @@ GameObject:
   - component: {fileID: 1309833415}
   - component: {fileID: 1309833414}
   - component: {fileID: 1309833413}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
