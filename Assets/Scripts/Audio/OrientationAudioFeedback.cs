@@ -11,6 +11,9 @@ public class OrientationAudioFeedback : MonoBehaviour
     private OrientationPhase2Manager phase2Manager;
     private int lastCompletedCount;
 
+    private OrientationPhase3Manager phase3Manager;
+    private OrientationSlotBehaviour spawnedSlot;
+
     private void OnEnable()
     {
         AudioManager.PlayLoop(AudioType.ExerciseAmbience);
@@ -31,6 +34,12 @@ public class OrientationAudioFeedback : MonoBehaviour
             lastCompletedCount = 0;
             phase2Manager.OnProgressChanged += HandleOrientationProgress;
         }
+
+        // Fase 3: pieza y slot se instancian en runtime; el manager avisa
+        // con OnObjectsSpawned y ahí se suscribe el encaje.
+        phase3Manager = phaseManager as OrientationPhase3Manager;
+        if (phase3Manager != null)
+            phase3Manager.OnObjectsSpawned += HandleObjectsSpawned;
     }
 
     private void OnDisable()
@@ -47,6 +56,14 @@ public class OrientationAudioFeedback : MonoBehaviour
             phase2Manager = null;
         }
 
+        if (phase3Manager != null)
+        {
+            phase3Manager.OnObjectsSpawned -= HandleObjectsSpawned;
+            phase3Manager = null;
+        }
+
+        UnsubscribeSpawnedSlot();
+
         AudioManager.StopLoop(AudioType.ExerciseAmbience);
     }
 
@@ -58,6 +75,26 @@ public class OrientationAudioFeedback : MonoBehaviour
     private void HandlePieceFitted()
     {
         AudioManager.Play(AudioType.PieceSnapped);
+    }
+
+    private void HandleObjectsSpawned(
+        OrientationPieceBehaviour spawnedPiece,
+        OrientationSlotBehaviour spawnedSlotBehaviour)
+    {
+        UnsubscribeSpawnedSlot();
+
+        spawnedSlot = spawnedSlotBehaviour;
+        if (spawnedSlot != null)
+            spawnedSlot.OnPieceFitted += HandlePieceFitted;
+    }
+
+    private void UnsubscribeSpawnedSlot()
+    {
+        if (spawnedSlot != null)
+        {
+            spawnedSlot.OnPieceFitted -= HandlePieceFitted;
+            spawnedSlot = null;
+        }
     }
 
     private void HandleOrientationProgress(int completed, int total)

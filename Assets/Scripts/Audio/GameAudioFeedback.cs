@@ -27,6 +27,7 @@ public class GameAudioFeedback : MonoBehaviour
 
     private void HandleExerciseStart()
     {
+        AudioManager.Play(AudioType.ExerciseStart);
         AudioManager.PlayLoop(AudioType.ExerciseAmbience);
     }
 

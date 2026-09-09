@@ -20,7 +20,6 @@ public enum AudioType
     ExerciseAmbience = 13,
     MenuTheme = 14,
     DuckHit = 15,
-    TrophyReveal = 16,
     OsuTargetHit = 17,
     OsuTargetFailed = 18,
     PieceGrabbed = 19,

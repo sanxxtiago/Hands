@@ -63,6 +63,7 @@ public class CountdownUI : MonoBehaviour
         for (int i = countdownTime; i > 0f; i--)
         {
             text.text = i.ToString();
+            AudioManager.Play(AudioType.CountdownTick);
             yield return new WaitForSeconds(1f);
         }
 
