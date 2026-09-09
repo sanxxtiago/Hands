@@ -15,6 +15,15 @@ public class InteractionManager : MonoBehaviour
     [SerializeField] private Vector3 grabOffset = new(0f, 0f, 0.05f);
     [SerializeField] private LayerMask interactableLayer;
 
+    [Header("Fallos de toma (Q5)")]
+    [Tooltip("Radio para considerar que un GRAB START fallido iba dirigido a una pieza cercana.")]
+    [SerializeField, Min(0f)] private float missProximityRadius = 0.2f;
+    [Tooltip("Tiempo minimo entre dos fallos contabilizados de esta mano (anti-flutter).")]
+    [SerializeField, Min(0f)] private float missDebounce = 0.5f;
+
+    public int FailedTakes { get; private set; }
+    private float lastMissTime = float.NegativeInfinity;
+
     private Interactable grabbed;
 
     // Debug
@@ -51,6 +60,12 @@ public class InteractionManager : MonoBehaviour
     {
         tracker?.Dispose();
         //rightTracker?.Dispose();
+    }
+
+    public void ResetMisses()
+    {
+        FailedTakes = 0;
+        lastMissTime = float.NegativeInfinity;
     }
 
     void Update()
@@ -196,10 +211,16 @@ public class InteractionManager : MonoBehaviour
                 return;
 
             if (r.target == null)
+            {
+                TryCountMiss(e);
                 return;
+            }
 
             if (!r.target.CanInteract(InteractionType.Grab, e.handType))
+            {
+                TryCountMiss(e);
                 return;
+            }
 
             grabbed = r.target;
             grabbed.OnForcedRelease += HandleForcedRelease;
@@ -219,6 +240,35 @@ public class InteractionManager : MonoBehaviour
             }
             grabbed = null;
         }
+    }
+
+    private void TryCountMiss(InteractionEvent e)
+    {
+        if (missDebounce > 0f && Time.time - lastMissTime < missDebounce)
+            return;
+
+        if (!HasNearbyPiece(e.palmPosition))
+            return;
+
+        lastMissTime = Time.time;
+        FailedTakes++;
+    }
+
+    private bool HasNearbyPiece(Vector3 palmPosition)
+    {
+        float radius = Mathf.Max(missProximityRadius, grabRadius);
+        if (radius <= 0f)
+            return false;
+
+        Collider[] hits = Physics.OverlapSphere(palmPosition, radius, interactableLayer);
+        for (int i = 0; i < hits.Length; i++)
+        {
+            PieceBehaviour piece = hits[i].GetComponentInParent<PieceBehaviour>();
+            if (piece != null && piece.state != PieceState.Snapped)
+                return true;
+        }
+
+        return false;
     }
 
     void HandleRotate(ResolvedInteraction r)

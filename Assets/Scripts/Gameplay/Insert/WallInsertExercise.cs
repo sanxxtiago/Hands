@@ -36,6 +36,8 @@ public class WallInsertExercise : ExerciseController
     private Coroutine phaseFadeCoroutine;
     private bool invalidConfiguration;
     private bool phaseTransitionInProgress;
+    private InteractionManager leftGrabManager;
+    private InteractionManager rightGrabManager;
 
     public float CompletionTime => elapsedTime;
 
@@ -67,6 +69,11 @@ public class WallInsertExercise : ExerciseController
     protected override void OnExerciseStart()
     {
         scoreAdapter?.Reset();
+        ResolveGrabManagers();
+        if (leftGrabManager != null)
+            leftGrabManager.ResetMisses();
+        if (rightGrabManager != null)
+            rightGrabManager.ResetMisses();
 
         if (phases.Count == 0)
         {
@@ -123,8 +130,29 @@ public class WallInsertExercise : ExerciseController
     protected override ExerciseScore SetSpecificData()
     {
         ExerciseScore score = scoreAdapter?.CompleteExercise(CompletionTime);
-        sessionRecorder.SetInsertPiecesData(CompletionTime);
+        int leftMisses = leftGrabManager != null ? leftGrabManager.FailedTakes : 0;
+        int rightMisses = rightGrabManager != null ? rightGrabManager.FailedTakes : 0;
+        sessionRecorder.SetInsertPiecesData(CompletionTime, leftMisses, rightMisses);
+        Debug.Log($"[Insert][GrabMisses] L={leftMisses} R={rightMisses} Total={leftMisses + rightMisses}");
         return score;
+    }
+
+    private void ResolveGrabManagers()
+    {
+        if (leftGrabManager != null && rightGrabManager != null)
+            return;
+
+        InteractionManager[] managers = FindObjectsByType<InteractionManager>(FindObjectsSortMode.None);
+        for (int i = 0; i < managers.Length; i++)
+        {
+            if (managers[i] == null)
+                continue;
+
+            if (managers[i].handType == HandType.LEFT)
+                leftGrabManager = managers[i];
+            else if (managers[i].handType == HandType.RIGHT)
+                rightGrabManager = managers[i];
+        }
     }
 
     private void AdvanceToNextPhase()

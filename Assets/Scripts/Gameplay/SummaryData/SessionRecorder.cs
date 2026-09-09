@@ -14,6 +14,8 @@ public class SessionRecorder : MonoBehaviour
     private int ducksMissed;
 
     private float completionTime;
+    private int leftGrabMisses;
+    private int rightGrabMisses;
     private ExerciseScore pendingScore;
     private bool hasPerformance;
     private readonly HybridExerciseResultSynchronizer results = new HybridExerciseResultSynchronizer();
@@ -42,6 +44,7 @@ public class SessionRecorder : MonoBehaviour
         LastGeneralSuggestion = null;
         pendingScore = null;
         totalInteractionDelay = completionTime = 0f;
+        leftGrabMisses = rightGrabMisses = 0;
         interactionCount = ducksHit = ducksMissed = 0;
         hasPerformance = false;
     }
@@ -60,9 +63,11 @@ public class SessionRecorder : MonoBehaviour
         hasPerformance = true;
     }
 
-    public void SetInsertPiecesData(float completionTime)
+    public void SetInsertPiecesData(float completionTime, int leftGrabMisses, int rightGrabMisses)
     {
         this.completionTime = completionTime;
+        this.leftGrabMisses = Mathf.Max(0, leftGrabMisses);
+        this.rightGrabMisses = Mathf.Max(0, rightGrabMisses);
         hasPerformance = true;
     }
 
@@ -93,7 +98,10 @@ public class SessionRecorder : MonoBehaviour
             ducksHit = ducksHit,
             ducksMissed = ducksMissed,
 
-            completionTime = completionTime
+            completionTime = completionTime,
+
+            leftGrabMisses = leftGrabMisses,
+            rightGrabMisses = rightGrabMisses
         };
 
         bool profileReady = hybridProfile != null && hybridProfile.TryValidate(out _) && hybridProfile.ExerciseType == exerciseType;

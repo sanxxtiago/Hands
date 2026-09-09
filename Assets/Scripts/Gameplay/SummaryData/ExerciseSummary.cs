@@ -18,6 +18,9 @@ public class ExerciseSummary
 
     //Insert
     public float completionTime;
+    public int leftGrabMisses;
+    public int rightGrabMisses;
+    public int TotalGrabMisses => leftGrabMisses + rightGrabMisses;
 
     //Suggestion
     public string generalSuggestion;
