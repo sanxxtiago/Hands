@@ -66,7 +66,7 @@ public class CountdownUI : MonoBehaviour
             yield return new WaitForSeconds(1f);
         }
 
-        text.text = "GO";
+        text.text = "¡VAMOS!";
 
         yield return new WaitForSeconds(0.5f);
         canvasGroup.interactable = false;
