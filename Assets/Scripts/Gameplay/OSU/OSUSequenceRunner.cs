@@ -21,10 +21,14 @@ public class OSUSequenceRunner : MonoBehaviour
     private OSUSequence sequence;
     [SerializeField] private TargetDetector detector;
     [SerializeField] private LineRenderer pathPrefab;
+    [Header("Ritmo")]
+    [SerializeField, Min(0f), Tooltip("Pausa entre un dot y el siguiente dentro de la misma fase.")]
+    private float stepSpawnDelay = 0.3f;
     private OSUBasedExercise exerciseController;
     private int currentPhaseIndex;
     private int currentStepIndex;
     private Coroutine phaseTransitionCoroutine;
+    private Coroutine stepDelayCoroutine;
 
     private DotBehaviour currentDot;
     private int currentTargetIndex;
@@ -46,6 +50,7 @@ public class OSUSequenceRunner : MonoBehaviour
     public void StartSequence(OSUSequence sequence, OSUBasedExercise controller)
     {
         StopPhaseTransition();
+        StopStepDelay();
         UnsubscribeCurrentDot();
 
         exerciseController = controller;
@@ -69,6 +74,7 @@ public class OSUSequenceRunner : MonoBehaviour
     private void OnDisable()
     {
         StopPhaseTransition();
+        StopStepDelay();
         UnsubscribeCurrentDot();
     }
 
@@ -256,12 +262,29 @@ public class OSUSequenceRunner : MonoBehaviour
 
         if (currentStepIndex < phase.StepCount)
         {
-            SpawnCurrentStep();
+            if (stepSpawnDelay > 0f)
+            {
+                StopStepDelay();
+                stepDelayCoroutine = StartCoroutine(DelayedSpawnCurrentStep(stepSpawnDelay));
+            }
+            else
+            {
+                SpawnCurrentStep();
+            }
             return;
         }
 
         if (currentPhaseIndex < sequence.PhaseCount - 1)
             StartNextPhase();
+    }
+
+    private IEnumerator DelayedSpawnCurrentStep(float delay)
+    {
+        if (delay > 0f)
+            yield return new WaitForSeconds(delay);
+
+        stepDelayCoroutine = null;
+        SpawnCurrentStep();
     }
 
     private void StartNextPhase()
@@ -355,5 +378,14 @@ public class OSUSequenceRunner : MonoBehaviour
 
         StopCoroutine(phaseTransitionCoroutine);
         phaseTransitionCoroutine = null;
+    }
+
+    private void StopStepDelay()
+    {
+        if (stepDelayCoroutine == null)
+            return;
+
+        StopCoroutine(stepDelayCoroutine);
+        stepDelayCoroutine = null;
     }
 }

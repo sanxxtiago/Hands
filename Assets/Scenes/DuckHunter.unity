@@ -804,7 +804,7 @@ MonoBehaviour:
   sequenceRunner: {fileID: 43925661}
   scoreManager: {fileID: 381754428}
   scoreAdapter: {fileID: 381754427}
-  sequence: {fileID: 11400000, guid: fea462375d2db0c49bd9d45da942aadb, type: 2}
+  sequence: {fileID: 11400000, guid: 3dc2402c24778ae439b651d3b5df45b9, type: 2}
 --- !u!114 &43925659
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3934,7 +3934,7 @@ PrefabInstance:
     - target: {fileID: 881856104623370398, guid: be0f1042a40fe474f83657cd650f4733,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3517510408029229659, guid: be0f1042a40fe474f83657cd650f4733,
         type: 3}
@@ -6188,7 +6188,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: EJERCICIO 02
+  m_text: EJERCICIO 03
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -7508,7 +7508,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1374649192
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8701,6 +8701,7 @@ MonoBehaviour:
   canvasGroup: {fileID: 1722297172}
   text: {fileID: 102388098}
   countdownTime: 3
+  fadeDuration: 0.3
 --- !u!1 &1724479702
 GameObject:
   m_ObjectHideFlags: 0
@@ -9263,7 +9264,7 @@ VideoPlayer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1877227173}
   m_Enabled: 1
-  m_VideoClip: {fileID: 32900000, guid: 1e00ea1f088062c43976df70d1bb8f69, type: 3}
+  m_VideoClip: {fileID: 32900000, guid: 23ddb59a26c89f447bb9e07dbd068575, type: 3}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
   m_TargetCamera: {fileID: 0}
@@ -10869,6 +10870,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PhaseIndicatorContainerDEMO
+      objectReference: {fileID: 0}
+    - target: {fileID: 881856104623370398, guid: be0f1042a40fe474f83657cd650f4733,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 927997707562567269, guid: be0f1042a40fe474f83657cd650f4733,
         type: 3}

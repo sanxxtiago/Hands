@@ -776,7 +776,7 @@ MonoBehaviour:
   sequenceRunner: {fileID: 43925656}
   scoreManager: {fileID: 89368434}
   scoreAdapter: {fileID: 89368433}
-  sequence: {fileID: 11400000, guid: d14862310887751408c1702093876e68, type: 2}
+  sequence: {fileID: 11400000, guid: 691cfff8f16b3114b9db2ce8e5a60239, type: 2}
 --- !u!4 &43925655
 Transform:
   m_ObjectHideFlags: 0
@@ -806,6 +806,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   detector: {fileID: 43925657}
   pathPrefab: {fileID: 7906183174604349298}
+  stepSpawnDelay: 0.75
 --- !u!114 &43925657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4089,7 +4090,7 @@ PrefabInstance:
     - target: {fileID: 881856104623370398, guid: be0f1042a40fe474f83657cd650f4733,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 927997707562567269, guid: be0f1042a40fe474f83657cd650f4733,
         type: 3}
@@ -9800,8 +9801,8 @@ CanvasGroup:
   m_GameObject: {fileID: 1722297170}
   m_Enabled: 1
   m_Alpha: 0
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!114 &1722297173
 MonoBehaviour:
@@ -9857,6 +9858,7 @@ MonoBehaviour:
   canvasGroup: {fileID: 1722297172}
   text: {fileID: 102388098}
   countdownTime: 3
+  fadeDuration: 0.3
 --- !u!1 &1763604294
 GameObject:
   m_ObjectHideFlags: 0
@@ -10466,7 +10468,7 @@ VideoPlayer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1877227173}
   m_Enabled: 1
-  m_VideoClip: {fileID: 32900000, guid: 1e00ea1f088062c43976df70d1bb8f69, type: 3}
+  m_VideoClip: {fileID: 32900000, guid: 7c2a8df9c3ec328409cde1f73245ebff, type: 3}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
   m_TargetCamera: {fileID: 0}
@@ -10666,7 +10668,7 @@ PrefabInstance:
     - target: {fileID: 881856104623370398, guid: be0f1042a40fe474f83657cd650f4733,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3517510408029229659, guid: be0f1042a40fe474f83657cd650f4733,
         type: 3}

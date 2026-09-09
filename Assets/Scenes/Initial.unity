@@ -130,6 +130,7 @@ GameObject:
   m_Component:
   - component: {fileID: 101}
   - component: {fileID: 102}
+  - component: {fileID: 103}
   m_Layer: 0
   m_Name: PersistenceManager
   m_TagString: Untagged
@@ -166,6 +167,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   classificationCatalog: {fileID: 11400000, guid: f2b7c9d41a6e4380b5d9f2c7e8146a33,
     type: 2}
+--- !u!114 &103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c792f2367330a640bd0187d98b33e4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  insert: Insert
+  osu: OSU
+  hunter: DuckHunter
 --- !u!1 &200
 GameObject:
   m_ObjectHideFlags: 0

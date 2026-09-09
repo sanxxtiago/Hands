@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
@@ -10,6 +11,10 @@ public class CountdownUI : MonoBehaviour
     public CanvasGroup canvasGroup;
     public TMP_Text text;
     public int countdownTime = 3;
+    [Header("Fade")]
+    [SerializeField, Min(0f), Tooltip("Duración del fundido de salida al terminar la cuenta atrás.")]
+    private float fadeDuration = 0.3f;
+    private Coroutine countdownCoroutine;
 
     void Start()
     {
@@ -26,15 +31,32 @@ public class CountdownUI : MonoBehaviour
     private void OnDisable()
     {
         GameManager.OnCountdownStart -= StartCountdown;
+        if (countdownCoroutine != null)
+        {
+            StopCoroutine(countdownCoroutine);
+            countdownCoroutine = null;
+        }
+        if (canvasGroup != null)
+            canvasGroup.DOKill();
     }
 
     void StartCountdown()
     {
-        StartCoroutine(Countdown());
+        if (countdownCoroutine != null)
+        {
+            StopCoroutine(countdownCoroutine);
+            countdownCoroutine = null;
+        }
+        if (canvasGroup != null)
+            canvasGroup.DOKill();
+        countdownCoroutine = StartCoroutine(Countdown());
     }
 
     IEnumerator Countdown()
     {
+        if (canvasGroup == null)
+            yield break;
+        canvasGroup.DOKill();
         canvasGroup.alpha = 1;
         canvasGroup.interactable = true;
         canvasGroup.blocksRaycasts = true;
@@ -47,8 +69,17 @@ public class CountdownUI : MonoBehaviour
         text.text = "GO";
 
         yield return new WaitForSeconds(0.5f);
-        canvasGroup.alpha = 0f;
-        OnCountdownFinished?.Invoke();
+        canvasGroup.interactable = false;
+        canvasGroup.blocksRaycasts = false;
+        // Fundido de salida; el evento se emite al completarlo para encadenar con PLAYING.
+        canvasGroup
+            .DOFade(0f, fadeDuration)
+            .SetEase(Ease.OutQuad)
+            .OnComplete(() =>
+            {
+                countdownCoroutine = null;
+                OnCountdownFinished?.Invoke();
+            });
         // GameManager.Instance.SetState(GAMESTATE.PLAYING);
     }
 }

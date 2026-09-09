@@ -214,9 +214,8 @@ MonoBehaviour:
   phaseFeedbackAnchor: {fileID: 765432109876543211}
   exerciseEndDelay: 2
   phases:
-  - prefab: {fileID: 7416712316170100737, guid: 1cc4d69ef08c7b94ba4757c628f2127f,
-      type: 3}
-    expectedPieces: 2
+  - prefab: {fileID: 472284928914777599, guid: 80f35a05224101b4d8b20feede3767ec, type: 3}
+    expectedPieces: 1
   - prefab: {fileID: 7725013552508954380, guid: 06f75f31820c33f4589520e69d51f5db,
       type: 3}
     expectedPieces: 2
@@ -6004,7 +6003,7 @@ VideoPlayer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1447283323}
   m_Enabled: 1
-  m_VideoClip: {fileID: 32900000, guid: 1e00ea1f088062c43976df70d1bb8f69, type: 3}
+  m_VideoClip: {fileID: 32900000, guid: 54482d936e5ee98458a30c9908a07b47, type: 3}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
   m_TargetCamera: {fileID: 0}
@@ -6813,6 +6812,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PhaseIndicatorContainerDEMO
       objectReference: {fileID: 0}
+    - target: {fileID: 881856104623370398, guid: be0f1042a40fe474f83657cd650f4733,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 927997707562567269, guid: be0f1042a40fe474f83657cd650f4733,
         type: 3}
       propertyPath: m_IsActive
@@ -7045,6 +7049,7 @@ MonoBehaviour:
   canvasGroup: {fileID: 1722297172}
   text: {fileID: 102388098}
   countdownTime: 3
+  fadeDuration: 0.3
 --- !u!1 &1763604294
 GameObject:
   m_ObjectHideFlags: 0
@@ -9149,7 +9154,7 @@ PrefabInstance:
     - target: {fileID: 881856104623370398, guid: be0f1042a40fe474f83657cd650f4733,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8806547860555040713, guid: be0f1042a40fe474f83657cd650f4733,
         type: 3}
@@ -11013,9 +11018,9 @@ SceneRoots:
   - {fileID: 841475559}
   - {fileID: 2542622047228734839}
   - {fileID: 6630730314214793831}
-  - {fileID: 826864654823621609}
   - {fileID: 9034781040596681955}
   - {fileID: 7623605365022952471}
+  - {fileID: 826864654823621609}
   - {fileID: 1273304089}
   - {fileID: 540689710}
   - {fileID: 2131207338}
