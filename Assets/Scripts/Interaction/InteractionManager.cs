@@ -205,7 +205,9 @@ public class InteractionManager : MonoBehaviour
             grabbed.OnForcedRelease += HandleForcedRelease;
 
             //Debug.Log("Grabbed: " + grabbed.name);
-            grabbed.OnGrabStart();
+            grabbed.OnGrabStart(new InteractableData(
+                e.palmPosition,
+                e.palmRotation));
         }
 
         if (e.phase == GesturePhase.END)

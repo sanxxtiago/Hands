@@ -31,11 +31,17 @@ public class OrientationPieceBehaviour : Interactable
         return !isFitted;
     }
 
+    private void OnDisable()
+    {
+        CancelGrabAnchorAdjustment();
+    }
+
     public void FitIn()
     {
         if (isFitted)
             return;
 
+        CancelGrabAnchorAdjustment();
         isFitted = true;
         IsGrabbed = false;
         rb.velocity = Vector3.zero;
@@ -64,9 +70,9 @@ public class OrientationPieceBehaviour : Interactable
             && rb.angularVelocity.sqrMagnitude < angularThreshold * angularThreshold;
     }
 
-    public override void OnGrabStart()
+    public override void OnGrabStart(InteractableData handData)
     {
-        base.OnGrabStart();
+        base.OnGrabStart(handData);
         IsGrabbed = true;
         OnGrabbed?.Invoke();
     }

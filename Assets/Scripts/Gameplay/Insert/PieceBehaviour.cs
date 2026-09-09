@@ -55,6 +55,7 @@ public class PieceBehaviour : Interactable
         SlotBehaviour.ClearHighlightFor(this);
         CountdownUI.OnCountdownFinished -= SetPieceChirality;
 
+        CancelGrabAnchorAdjustment();
         transform.DOKill();
         transform.localScale = baseScale;
 
@@ -117,15 +118,15 @@ public class PieceBehaviour : Interactable
         return requiredHand == handType;
     }
 
-    public override void OnGrabStart()
+    public override void OnGrabStart(InteractableData handData)
     {
-        base.OnGrabStart();
-
         if (state == PieceState.Snapped)
         {
             SlotBehaviour.ClearHighlightFor(this);
             return;
         }
+
+        base.OnGrabStart(handData);
 
         state = PieceState.Grabbed;
         OnPieceGrabbed?.Invoke(this);
