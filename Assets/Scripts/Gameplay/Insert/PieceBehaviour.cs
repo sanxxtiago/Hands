@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using DG.Tweening;
 using Leap;
 using Leap.PhysicalHands;
@@ -46,14 +47,22 @@ public class PieceBehaviour : Interactable
     private Material pieceMaterial;
     private Color baseEmission;
     private static readonly int emissionColorId = Shader.PropertyToID("_EmissionColor");
+    private Vector3 initialPosition;
+    private Quaternion initialRotation;
+    private static readonly List<PieceBehaviour> activePieces = new();
+    private static int lastResetFrame = -1;
     void OnEnable()
     {
         CountdownUI.OnCountdownFinished += SetPieceChirality;
+
+        if (!activePieces.Contains(this))
+            activePieces.Add(this);
     }
     void OnDisable()
     {
         SlotBehaviour.ClearHighlightFor(this);
         CountdownUI.OnCountdownFinished -= SetPieceChirality;
+        activePieces.Remove(this);
 
         CancelGrabAnchorAdjustment();
         transform.DOKill();
@@ -70,6 +79,11 @@ public class PieceBehaviour : Interactable
     void Awake()
     {
         baseScale = transform.localScale;
+
+        // La fase se instancia tal cual viene en el prefab y nadie recoloca
+        // las piezas despues, asi que la pose de Awake es la inicial valida.
+        initialPosition = transform.position;
+        initialRotation = transform.rotation;
 
         int grabbableLayer = LayerMask.NameToLayer("GrabbableLayer");
         if (grabbableLayer >= 0 && gameObject.layer != grabbableLayer)
@@ -97,6 +111,9 @@ public class PieceBehaviour : Interactable
     }
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Alpha0) || Input.GetKeyDown(KeyCode.Keypad0))
+            TryResetUnsnappedPieces();
+
         if (state == PieceState.Snapped)
             return;
 
@@ -174,6 +191,54 @@ public class PieceBehaviour : Interactable
         {
             transform.localScale = baseScale;
         }
+    }
+
+    // Reinicio rapido de depuracion: devuelve a su pose inicial las piezas
+    // que aun no se han encajado. La guarda de frame evita que cada pieza
+    // repita el mismo reinicio en el frame en que se pulsa la tecla.
+    private static void TryResetUnsnappedPieces()
+    {
+        if (Time.frameCount == lastResetFrame)
+            return;
+
+        lastResetFrame = Time.frameCount;
+
+        int resetCount = 0;
+        for (int i = activePieces.Count - 1; i >= 0; i--)
+        {
+            PieceBehaviour piece = activePieces[i];
+
+            if (piece == null)
+            {
+                activePieces.RemoveAt(i);
+                continue;
+            }
+
+            if (piece.ResetToInitialPose())
+                resetCount++;
+        }
+
+        Debug.Log(
+            $"[Insert] Reinicio rapido con '0': {resetCount} piezas " +
+            "devueltas a su posicion inicial.");
+    }
+
+    private bool ResetToInitialPose()
+    {
+        if (state == PieceState.Snapped)
+            return false;
+
+        // Si esta agarrada se libera primero para que el InteractionManager
+        // suelte su referencia y restaure escala y resaltado por el camino normal.
+        ForceRelease();
+        CancelGrabAnchorAdjustment();
+
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        transform.SetPositionAndRotation(initialPosition, initialRotation);
+        transform.localScale = baseScale;
+
+        return true;
     }
 
     public void LockPhysics()

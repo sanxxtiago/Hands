@@ -7450,7 +7450,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13d45ac7058c2c24289b65bafd69ce2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  handPoseName: AimPose_10
+  handPoseName: ShootPose_NOSE
   handToRecord: 0
   leapProvider: {fileID: 1707031922}
   savePath: HandPoses/

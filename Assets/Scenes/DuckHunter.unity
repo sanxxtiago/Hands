@@ -982,7 +982,8 @@ MonoBehaviour:
   bothHandsMustMatchPose: 0
   chiralityToCheck: 1
   poseToDetect: {fileID: 11400000, guid: 9929a0f861dcc7c4b8316ac26204db02, type: 2}
-  posesToDetect: []
+  posesToDetect:
+  - {fileID: 11400000, guid: c3b205f3891dc39438bc7c1984195d37, type: 2}
   leapProvider: {fileID: 0}
   OnPoseDetected:
     m_PersistentCalls:
@@ -3005,6 +3006,8 @@ MonoBehaviour:
   interactableLayer:
     serializedVersion: 2
     m_Bits: 64
+  missProximityRadius: 0.2
+  missDebounce: 0.5
   debug: 0
   sphereDebug: {fileID: 244446963}
 --- !u!114 &540416933
@@ -3025,6 +3028,8 @@ MonoBehaviour:
   interactableLayer:
     serializedVersion: 2
     m_Bits: 64
+  missProximityRadius: 0.2
+  missDebounce: 0.5
   debug: 0
   sphereDebug: {fileID: 1903367412}
 --- !u!1 &540689707
@@ -4487,6 +4492,15 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9386a51228a596b4c8a35945429ffe14, type: 2}
   - {fileID: 11400000, guid: 81a6e66f2cf514147aafabf2d1064203, type: 2}
   - {fileID: 11400000, guid: ab8a881f3774d89488ef180113f7281a, type: 2}
+  - {fileID: 11400000, guid: 3072a5b41b972a743bf77148d488df97, type: 2}
+  - {fileID: 11400000, guid: 5ebd111325407fb46bd08266c35482bc, type: 2}
+  - {fileID: 11400000, guid: b5da3d0283b0a774f9d241437caa025a, type: 2}
+  - {fileID: 11400000, guid: 7617b3ddbdc194c429465cb313c8bb76, type: 2}
+  - {fileID: 11400000, guid: 57e627d16eb92754e9d465e13d4a39e3, type: 2}
+  - {fileID: 11400000, guid: 7ba8ca6e8302a4c47bff09f5da36ad61, type: 2}
+  - {fileID: 11400000, guid: 0a4cdea9bbf9a2946933ff79e9185b9e, type: 2}
+  - {fileID: 11400000, guid: 7088fe9aacd537740aba35466c9fc67a, type: 2}
+  - {fileID: 11400000, guid: c0fb9efa5d8c1ee4187fea4a7abffc2b, type: 2}
   leapProvider: {fileID: 0}
   OnPoseDetected:
     m_PersistentCalls:
@@ -4780,7 +4794,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 880663703}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -5847,7 +5861,7 @@ PrefabInstance:
     - target: {fileID: 7113228099216054980, guid: 39a5a08e669c09042abf53b4b39c2d9d,
         type: 3}
       propertyPath: m_Alpha
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8072334621542151579, guid: 39a5a08e669c09042abf53b4b39c2d9d,
         type: 3}
@@ -8420,7 +8434,8 @@ MonoBehaviour:
   bothHandsMustMatchPose: 0
   chiralityToCheck: 0
   poseToDetect: {fileID: 11400000, guid: 9929a0f861dcc7c4b8316ac26204db02, type: 2}
-  posesToDetect: []
+  posesToDetect:
+  - {fileID: 11400000, guid: c3b205f3891dc39438bc7c1984195d37, type: 2}
   leapProvider: {fileID: 0}
   OnPoseDetected:
     m_PersistentCalls:
@@ -11562,6 +11577,15 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9386a51228a596b4c8a35945429ffe14, type: 2}
   - {fileID: 11400000, guid: 81a6e66f2cf514147aafabf2d1064203, type: 2}
   - {fileID: 11400000, guid: ab8a881f3774d89488ef180113f7281a, type: 2}
+  - {fileID: 11400000, guid: 3072a5b41b972a743bf77148d488df97, type: 2}
+  - {fileID: 11400000, guid: 5ebd111325407fb46bd08266c35482bc, type: 2}
+  - {fileID: 11400000, guid: b5da3d0283b0a774f9d241437caa025a, type: 2}
+  - {fileID: 11400000, guid: 7617b3ddbdc194c429465cb313c8bb76, type: 2}
+  - {fileID: 11400000, guid: 57e627d16eb92754e9d465e13d4a39e3, type: 2}
+  - {fileID: 11400000, guid: 7ba8ca6e8302a4c47bff09f5da36ad61, type: 2}
+  - {fileID: 11400000, guid: 0a4cdea9bbf9a2946933ff79e9185b9e, type: 2}
+  - {fileID: 11400000, guid: 7088fe9aacd537740aba35466c9fc67a, type: 2}
+  - {fileID: 11400000, guid: c0fb9efa5d8c1ee4187fea4a7abffc2b, type: 2}
   leapProvider: {fileID: 0}
   OnPoseDetected:
     m_PersistentCalls:
@@ -11920,7 +11944,7 @@ PrefabInstance:
     - target: {fileID: 2829531013624671764, guid: aac52138f916de84082373b998bb73af,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.243
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2829531013624671764, guid: aac52138f916de84082373b998bb73af,
         type: 3}

@@ -2628,6 +2628,8 @@ MonoBehaviour:
   interactableLayer:
     serializedVersion: 2
     m_Bits: 64
+  missProximityRadius: 0.2
+  missDebounce: 0.5
   debug: 0
   sphereDebug: {fileID: 244446963}
 --- !u!114 &540416933
@@ -2648,6 +2650,8 @@ MonoBehaviour:
   interactableLayer:
     serializedVersion: 2
     m_Bits: 64
+  missProximityRadius: 0.2
+  missDebounce: 0.5
   debug: 0
   sphereDebug: {fileID: 1903367412}
 --- !u!1 &540689707
@@ -9524,7 +9528,7 @@ PrefabInstance:
     - target: {fileID: 7113228099216054980, guid: 39a5a08e669c09042abf53b4b39c2d9d,
         type: 3}
       propertyPath: m_Alpha
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8072334621542151579, guid: 39a5a08e669c09042abf53b4b39c2d9d,
         type: 3}
@@ -11992,7 +11996,7 @@ PrefabInstance:
     - target: {fileID: 8864962406679063762, guid: 8c01e15ef2e63444ea8bdfe129b000cd,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.125
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 8864962406679063762, guid: 8c01e15ef2e63444ea8bdfe129b000cd,
         type: 3}
