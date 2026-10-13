@@ -8,6 +8,11 @@
   - OpenXR / Oculus XR Integration
   - DOTween & Unity UI Extensions
 
+## Documentación
+- `README.md` es el punto de entrada (requisitos, instalación, ejecución, compilación).
+- `docs/` contiene la documentación técnica por subsistema (`architecture`, `development`, `tracking-metrics`, `suggestions`, `gameplay`, `scores-persistence`, `ui-systems`).
+- El detalle del sistema híbrido vive en `Assets/Scripts/TrackingPipeline/ErgonomicDetection/Suggestions/README.md` y no se duplica aquí.
+
 ---
 
 ## Objetivo del Prototipo
@@ -136,7 +141,7 @@ Orienta al paciente **durante el ejercicio** (máx. 2-3 sugerencias, por defecto
 `GetRuntimeSnapshot()` ➔ `MetricsProcessor.Normalize` + `GetDeviation` ➔ `AnalysisContext` ➔ `SuggestionEngine` (por mano) ➔ `ExerciseFeedbackSystem` (selección + anti-spam) ➔ `Debug.Log` + `SnackbarManager.Show(WARNING)`
 
 ### Componentes Clave (`Assets/Scripts/SuggestionSystem/`)
-- **`ExerciseFeedbackSystem`:** punto de entrada (MonoBehaviour). Mantiene **dos engines** (`leftEngine` / `rightEngine`) discriminados por `HandType`, más una regla global de baja actividad. Parametrizable en el Inspector: `warmupTime` (2s), `maxSuggestionsPerExercise` (3), `suggestionCooldown` (8s), `snackbarDuration` (3s), `zoneEvalMinActivity` (0.05).
+- **`ExerciseFeedbackSystem`:** punto de entrada (MonoBehaviour). Mantiene **dos engines** (`leftEngine` / `rightEngine`) discriminados por `HandType`, más una regla global de baja actividad. Parametrizable en el Inspector: `warmupTime` (2s), `maxSuggestionsPerExercise` (3), `suggestionCooldown` (15s por defecto en código), `snackbarDuration` (3s), `zoneEvalMinActivity` (0.05).
 - **`SuggestionEngine`:** ejecuta las `TimedRule` de una mano y devuelve la de mayor severidad.
 - **`TimedRule`:** exige la condición sostenida (`triggerTime`) antes de disparar y aplica `cooldownTime` interno.
 - **Reglas (`IRule`):**
@@ -182,7 +187,7 @@ Los tres ejercicios se ejecutan como escenas independientes y heredan de `Exerci
 
 ### Insert
 
-- **Escena:** `Assets/Scenes/Insert_Config1.unity`.
+- **Escena:** `Assets/Scenes/Insert.unity`.
 - **Controlador:** `Assets/Scripts/Gameplay/Insert/WallInsertExercise.cs` (`WallInsertExercise`).
 - **Objetivo:** tomar piezas físicas y colocarlas en el slot correspondiente de una pared.
 - **Variable específica:** `CompletionTime` (duración del ejercicio) → `SetInsertPiecesData`.

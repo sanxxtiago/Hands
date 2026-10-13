@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "pptx-from-layouts": {
+      "source": "tristan-mcinnis/pptx-from-layouts-skill",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/pptx-from-layouts/SKILL.md",
+      "computedHash": "65cab3a15cfa703ef679c63e139b5b33db64a07cd388d856c11272b2a45562b7"
+    }
+  }
+}
